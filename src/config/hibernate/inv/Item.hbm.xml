@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.item.model">
+	<class name="Item" table="POS_ITEM">
+		<id name="itemId" column="ITEM_ID" type="long">
+			<generator class="native">
+				<param name="sequence">ITEM_SEQ</param>
+			</generator>
+		</id>
+		
+
+		<bag name="listSupplierItem" inverse="true" cascade="save-update, delete-orphan"
+			order-by="SUPPLIER_ITEM_ID asc">
+			<key column="ITEM_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.purchasing.supplier.model.SupplierItem" />
+		</bag>
+
+		<bag name="listItemBom" inverse="true" cascade="save-update, delete-orphan"
+			order-by="BOM_ID asc">
+			<key column="ITEM_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.inv.item.model.ItemBom" />
+		</bag>
+		
+		<many-to-one name="company" column="COMPANY_ID"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join">
+		</many-to-one>
+		
+		<many-to-one name="um" column="UM_ID"
+			class="com.wo.epos.module.inv.um.model.Um" fetch="join">
+		</many-to-one>
+
+		<many-to-one name="um2" column="UM2_ID"
+		class="com.wo.epos.module.inv.um.model.Um" fetch="join">
+		</many-to-one>
+		
+		<property name="unitPerUm2" column="UNIT_PER_UM2" type="long" />
+		<property name="unitCost" column="UNIT_COST" type="double" />
+		<property name="unitPrice" column="UNIT_PRICE" type="double" />
+
+		
+		<many-to-one name="category" column="CATEGORY_ID"
+			class="com.wo.epos.module.inv.category.model.Category" fetch="join">
+		</many-to-one>
+
+
+		<bag name="listItemDiscount" inverse="true" cascade="save-update, delete-orphan"
+			order-by="ITEM_DISCOUNT_ID asc">
+			<key column="ITEM_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.inv.itemDiscount.model.ItemDiscount" />
+		</bag> 
+
+		<property name="itemCode" column="ITEM_CODE" type="string" />
+		<property name="itemName" column="ITEM_NAME" type="string" />
+		<property name="itemDesc" column="ITEM_DESC" type="string" />
+		<property name="stockQty" column="STOCK_QTY" type="long" />
+		<property name="reorderQty" column="REORDER_QTY" type="long" />
+		<property name="averagePrice" column="AVERAGE_PRICE" type="long" />
+		<property name="imageFile" column="IMAGE_FILE" type="byte[]" />
+		<property name="imageFilename" column="IMAGE_FILENAME" type="string" />
+		<property name="barcode" column="BARCODE" type="string" />
+		<property name="compositeFlag" column="COMPOSITE_FLAG" type="string" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

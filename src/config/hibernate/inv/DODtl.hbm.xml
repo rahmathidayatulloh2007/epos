@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.DO.model">
+	<class name="DODtl" table="POS_DO_DTL">
+		<id name="doDtlId" column="DO_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">DO_DTL_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="DO" column="DO_ID"
+			class="com.wo.epos.module.inv.DO.model.DO" fetch="join">
+		</many-to-one>
+		
+		<!-- <many-to-one name="outlet" column="OUTLET_ID"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join">
+		</many-to-one> -->
+		
+		
+		<many-to-one name="deliveryUm" column="DELIVERY_UM"
+			class="com.wo.epos.module.inv.um.model.Um" fetch="join">
+		</many-to-one>
+		
+		 <many-to-one name="item" column="ITEM_ID"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join">
+		</many-to-one> 
+		
+		
+
+		<property name="deliveryQty" column="DELIVERY_QTY" type="long" />
+		
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

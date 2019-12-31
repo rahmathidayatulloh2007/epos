@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.rn.model">
+	<class name="Rn" table="POS_RN">
+		<id name="rnId" column="RN_ID" type="long">
+			<generator class="native">
+				<param name="sequence">RN_SEQ</param>
+			</generator>
+		</id>
+		
+		<property name="companyId" column="COMPANY_ID" type="long" />
+		<many-to-one name="company" column="COMPANY_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join" >
+		</many-to-one>
+				
+		<property name="outletId" column="OUTLET_ID" type="long" />
+		<many-to-one name="outlet" column="OUTLET_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join" >
+		</many-to-one>
+		
+		<property name="rnNo" column="RN_NO" type="string" />
+		<property name="rnDate" column="RN_DATE" type="date" />
+		
+		<property name="rnTypeCode" column="RN_TYPE" type="string" />
+		<many-to-one name="rnType" column="RN_TYPE" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join" >
+		</many-to-one>
+				
+		<property name="supplierId" column="SUPPLIER_ID" type="long" />
+		<many-to-one name="supplier" column="SUPPLIER_ID" insert="false" update="false"
+			class="com.wo.epos.module.purchasing.supplier.model.Supplier" fetch="join" >
+		</many-to-one>
+		
+		<property name="poId" column="PO_ID" type="long" />
+		<many-to-one name="po" column="PO_ID" insert="false" update="false"
+			class="com.wo.epos.module.purchasing.po.model.Po" fetch="join" >
+		</many-to-one>
+		
+		<property name="supplierDocNo" column="SUPPLIER_DOC_NO" type="string" />
+		<property name="supplierDocDate" column="SUPPLIER_DOC_DATE" type="date" />	
+		
+		<property name="outletOriginId" column="OUTLET_ORIGIN" type="long" />
+		<many-to-one name="outletOrigin" column="OUTLET_ORIGIN" insert="false" update="false"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join" >
+		</many-to-one>
+		
+		<property name="doId" column="DO_ID" type="long" />
+		<many-to-one name="DO" column="DO_ID" insert="false" update="false"
+			class="com.wo.epos.module.inv.DO.model.DO" fetch="join" >
+		</many-to-one>
+								
+		<property name="notes" column="NOTES" type="string" />
+		<property name="itemResume" column="ITEM_RESUME" type="string" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+		
+		<bag name="listRnDetail" inverse="true" cascade="save-update, delete-orphan"
+			order-by="RN_DTL_ID asc">
+			<key column="RN_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.inv.rn.model.RnDtl" />
+		</bag>
+		
+			
+	</class>
+</hibernate-mapping>
+

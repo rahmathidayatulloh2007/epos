@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSupplierAddTitle}" rendered="#{supplierInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formSupplierEditTitle}" rendered="#{supplierInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>			   
+		    <p:commandButton value="#{msg.buttonBack}" immediate="true"
+			           actionListener="#{supplierBean.modeSearch}" update=":frm001" styleClass="Fright"/>
+            <p:commandButton value="#{msg.buttonSave}"
+						actionListener="#{supplierBean.modeSave}" update=":frm001" styleClass="Fright"/>
+		</div>
+	</div>
+    <!-- 
+    <table width="100%">
+		<tr align="right">
+			<td>
+			    <p:commandButton value="#{msg.buttonSave}"
+					   actionListener="#{supplierBean.modeSave}" update=":frm001"/>
+			    <p:commandButton value="#{msg.buttonBack}" immediate="true"
+			           actionListener="#{supplierBean.modeSearch}" update=":frm001"/>
+			</td>
+		</tr>
+	</table>
+    -->
+    
+    <div class="Container100">
+       <div class="ContainerIndent">
+    <p:messages id="messagesInput" showDetail="true" showSummary="false" globalOnly="true"/>
+    </div>  
+		<div class="Container50 Responsive"><!-- Grid Sebelah Kiri -->
+			
+			<!-- Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierCompany}" rendered="#{supplierInputBean.adminMode == true}" />
+			        	<h:panelGroup style="color: red;" rendered="#{supplierInputBean.adminMode == true}"> *</h:panelGroup>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="companyId" value="#{supplierInputBean.supplierVO.companyId}" rendered="#{supplierInputBean.adminMode == true}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{supplierInputBean.companySelectItem}"/>						
+						</p:selectOneMenu>			
+					<p:message for="companyId" />	
+					</div>
+				</div>
+			</div>
+			<!-- Perusahaan -->
+			
+			<!-- Supplier Code -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierCode}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="supplierCode" value="#{supplierInputBean.supplierVO.supplierCode}" rendered="#{supplierInputBean.MODE_TYPE == 'ADD'}"/>
+						<p:inputText value="#{supplierInputBean.supplierVO.supplierCode}" rendered="#{supplierInputBean.MODE_TYPE == 'EDIT'}"
+							disabled="true"/>	
+						<p:message for="supplierCode" />			
+					</div>
+				</div>
+			</div>
+			<!-- /Supplier Code -->
+			
+			<!-- Supplier Name -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierName}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="supplierName" value="#{supplierInputBean.supplierVO.supplierName}"/>
+						<p:message for="supplierName" />			
+					</div>
+				</div>
+			</div>
+			<!-- /Supplier Name -->
+			
+			<!-- Supplier PicName -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierPicName}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<div style="float:left;">
+							<p:selectOneMenu id="picTitle" value="#{supplierInputBean.supplierVO.picTitleCode}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{supplierInputBean.picTitleSelectItem}"/>
+							</p:selectOneMenu>			
+							<p:message for="picTitle" />
+						</div>
+						<div style="float:left; margin-left:10px;">
+						    <p:inputText id="picName" value="#{supplierInputBean.supplierVO.picName}" />
+							<p:message for="picName" /> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Supplier Name -->
+			
+			<!-- Phone No -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierPhoneNo}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="phoneNo" value="#{supplierInputBean.supplierVO.phoneNo}"/>
+						<p:message for="phoneNo" />	
+					</div>
+				</div>
+			</div>
+			<!-- / phone no -->
+			
+			<!-- fax no -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierFaxNo}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="faxNo" value="#{supplierInputBean.supplierVO.faxNo}"/>
+					</div>
+				</div>
+			</div>
+			<!-- /fax no -->
+			
+		</div><!-- Grid Sebelah Kiri -->
+		
+		
+		<div class="Container50 Responsive"><!-- Grid Sebelah Kanan -->
+			
+			<!-- Alamat -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierAddress}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="address" cols="50" rows="3" value="#{supplierInputBean.supplierVO.address}" styleClass="Wid90"/>
+						<p:message for="address" />					
+					</div>
+				</div>
+			</div>
+			<!-- /Alamat -->
+			
+			<!-- City -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierCity}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="cityId" value="#{supplierInputBean.supplierVO.cityId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{supplierInputBean.citySelectItem}"/>
+						<p:ajax event="change" listener="#{supplierInputBean.changeCityProvince}" 
+						       update=":frm001:cityId :frm001:provinceName"></p:ajax>
+						</p:selectOneMenu>			
+						<p:message for="cityId" />				
+					</div>
+				</div>
+			</div>
+			<!-- /City -->
+			
+			<!-- Province -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierProvince}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="provinceName" 
+							value="#{supplierInputBean.supplierVO.provinceName}" disabled="true"/>	
+					</div>
+				</div>
+			</div>
+			<!-- /Province -->
+			
+			<!-- Postal Code -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierPostalCode}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="postalCode"
+							value="#{supplierInputBean.supplierVO.postalCode}"/>		
+					</div>
+				</div>
+			</div>
+			<!-- /Postal Code -->
+			
+			<!--  Active -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSupplierActive}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag" value="#{supplierInputBean.supplierVO.activeFlag}" style="width:80px;">
+							<f:selectItems value="#{supplierInputBean.activeSelectItem}"/>
+						</p:selectOneMenu>					
+					<p:message for="dialogActiveFlag" />		
+					</div>
+				</div>
+			</div>
+			<!-- / Active  -->
+			
+		</div><!-- Grid Sebelah Kanan -->
+    
+    </div>  
+ 
+    <!-- 
+		<table width="80%">
+			<tr>
+				<td>
+			        <h:outputText value="#{msg.formSupplierCompany}" rendered="#{supplierInputBean.adminMode == true}" />
+			        <h:panelGroup style="color: red;" rendered="#{supplierInputBean.adminMode == true}"> *</h:panelGroup>
+			    </td>
+				<td>				
+				    <p:selectOneMenu id="companyId" required="true" requiredMessage="#{msg.formSupplierCompany} #{msg.errorMustBeFilled}"
+						value="#{supplierInputBean.supplierVO.companyId}" rendered="#{supplierInputBean.adminMode == true}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+						<f:selectItems value="#{supplierInputBean.companySelectItem}"/>						
+					</p:selectOneMenu>			
+					<p:message for="companyId" />			
+				</td>	
+			    
+				<td width="10%">
+			        <h:outputText value="#{msg.formSupplierAddress}"/><span style="color: red"> *</span>
+			    </td>
+				<td width="5%" rowspan="2">
+				    <p:inputTextarea id="address" cols="50" rows="3"
+						value="#{supplierInputBean.supplierVO.address}" 
+						required="true" requiredMessage="#{msg.formSupplierAddress} #{msg.errorMustBeFilled}"/>
+					<p:message for="address" />		
+				</td>				
+			</tr>									 
+			<tr>
+				<td>
+			        <h:outputText value="#{msg.formSupplierCode}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:inputText id="supplierCode" value="#{supplierInputBean.supplierVO.supplierCode}" rendered="#{supplierInputBean.MODE_TYPE == 'ADD'}"
+						required="true" requiredMessage="#{msg.formSupplierCode} #{msg.errorMustBeFilled}"/>
+					<p:inputText value="#{supplierInputBean.supplierVO.supplierCode}" rendered="#{supplierInputBean.MODE_TYPE == 'EDIT'}"
+						disabled="true"/>	
+					<p:message for="supplierCode" />	
+				</td>
+						
+				<td></td>				
+			 </tr>
+			 <tr>			
+			    <td>
+			        <h:outputText value="#{msg.formSupplierName}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:inputText id="supplierName" value="#{supplierInputBean.supplierVO.supplierName}" 
+						required="true" requiredMessage="#{msg.formSupplierName} #{msg.errorMustBeFilled}"/>
+					<p:message for="supplierName" />		
+				</td>	
+				<td width="10%">
+			        <h:outputText value="#{msg.formSupplierCity}"/><span style="color: red"> *</span>
+			    </td>
+				<td width="10%">				
+				    <p:selectOneMenu id="cityId" required="true" requiredMessage="#{msg.formSupplierCity} #{msg.errorMustBeFilled}"
+						value="#{supplierInputBean.supplierVO.cityId}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+						<f:selectItems value="#{supplierInputBean.citySelectItem}"/>
+						<p:ajax event="change" listener="#{supplierInputBean.changeCityProvince}" 
+						       update=":frm001:cityId :frm001:provinceName"></p:ajax>
+					</p:selectOneMenu>			
+					<p:message for="cityId" />			
+				</td>					
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formSupplierPicName}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+					<div style="float:left;">
+					<p:selectOneMenu id="picTitle" required="true" requiredMessage="#{msg.formSupplierPicTitle} #{msg.errorMustBeFilled}"
+						value="#{supplierInputBean.supplierVO.picTitleCode}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+						<f:selectItems value="#{supplierInputBean.picTitleSelectItem}"/>
+					</p:selectOneMenu>			
+					<p:message for="picTitle" />
+					</div>
+					<div style="float:left; margin-left:10px;">
+				    <p:inputText id="picName" required="true" requiredMessage="#{msg.formSupplierPicName} #{msg.errorMustBeFilled}"
+						value="#{supplierInputBean.supplierVO.picName}" />
+					<p:message for="picName" /> 
+					</div>		
+				</td>
+				<td width="10%">
+			        <h:outputText value="#{msg.formSupplierProvince}"/>
+			    </td>
+				<td width="10%">
+				   <p:inputText id="provinceName" required="true"
+						value="#{supplierInputBean.supplierVO.provinceName}" disabled="true"/>				
+				</td>							
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formSupplierPhoneNo}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+					<p:inputText id="phoneNo" value="#{supplierInputBean.supplierVO.phoneNo}" 
+						required="true" requiredMessage="#{msg.formPhoneNo} #{msg.errorMustBeFilled}"/>
+					<p:message for="phoneNo" />	
+				</td>
+				<td width="10%">
+			        <h:outputText value="#{msg.formSupplierPostalCode}"/>
+			    </td>
+				<td width="10%">
+				   <p:inputText id="postalCode"
+						value="#{supplierInputBean.supplierVO.postalCode}"/>							
+				</td>							
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formSupplierFaxNo}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+					<p:inputText id="faxNo" value="#{supplierInputBean.supplierVO.faxNo}"/>
+				</td>				
+				<td width="10%">
+			        <h:outputText value="#{msg.formSupplierActive}"/>
+			    </td>
+				<td width="10%">				
+				    <p:selectOneMenu id="dialogActiveFlag" required="true" requiredMessage="#{msg.formSupplierActive} #{msg.errorMustBeFilled}"
+						value="#{supplierInputBean.supplierVO.activeFlag}" style="width:80px;">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+						<f:selectItems value="#{supplierInputBean.activeSelectItem}"/>
+					</p:selectOneMenu>					
+					<p:message for="dialogActiveFlag" />
+				</td>	
+			 </tr>
+		</table>
+		 -->
+	
+</ui:composition>

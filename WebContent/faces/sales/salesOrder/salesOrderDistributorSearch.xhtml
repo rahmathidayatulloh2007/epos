@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSalesOrderDistributorTitle}" style="font-weight:bold;"/>
+			<p:messages id="messagesSO" showDetail="true" showSummary="false" globalOnly="true"/>
+		</div>
+	</div>
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					 <p:inputText id="searchAll" readonly="#{salesOrderDistributorSearchBean.disableSearchAll}"
+								value="#{salesOrderDistributorSearchBean.searchAll}" autocomplete="off" styleClass="WidPos" placeholder="#{msg.textSearch} #{msg.formSalesOrderDistributorTitle}"/>
+				</div>
+				<div class="Container30">	
+				     <p:commandButton actionListener="#{salesOrderDistributorSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>		
+					 <p:commandButton actionListener="#{salesOrderDistributorSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableSO"/>
+					 <!-- <p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/> -->		
+				</div>
+			    <div class="Container30">					 
+					 <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{salesOrderDistributorBean.modeDelete}" styleClass="Fright"
+						            update=" :frm001" disabled="#{fn:length(salesOrderDistributorSearchBean.selectedSo) == 0}">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>            
+						            
+					 <p:commandButton id="editBtn" value="#{msg.buttonEdit}" actionListener="#{salesOrderBean.modeEdit}" update=":frm001" styleClass="Fright"
+						            disabled="#{fn:length(salesOrderDistributorSearchBean.selectedSo) == 0 or fn:length(salesOrderDistributorSearchBean.selectedSo)>1}"/>	            
+					 <p:commandButton value="#{msg.buttonAdd}" actionListener="#{salesOrderBean.modeAdd}" update=":frm001" styleClass="Fright"/>	            
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableSO" value="#{salesOrderDistributorSearchBean.pagingSo}" 
+				      selection="#{salesOrderDistributorSearchBean.selectedSo}" var="data" lazy="true" editable="true" 
+				      rowKey="#{data.soId}"
+				      paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{salesOrderDistributorSearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/> 
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>        
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>
+
+				<p:column headerText="#{msg.formDOSoNo}">
+					<h:outputText value="#{data.soNo}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.formCustomerTitle}">
+				<h:outputText value="#{data.customerName}" />
+				</p:column>
+				<p:column headerText="#{msg.formSalesOrderDate}">
+					<h:outputText value="#{data.soDate}" />
+				</p:column>
+				<p:column headerText="#{msg.formSoDtlProduct}">
+				<h:outputText value="#{data.productResume}" />
+				</p:column>
+				<p:column headerText="#{msg.formDOStatus}">
+				<h:outputText value="#{data.statusName}" />
+				</p:column>
+								
+			</p:dataTable>
+		</div>
+	</div>		
+<!-- 	
+	<p:dialog widgetVar="dialogSearch" id="dialogSearchSO" modal="true" position="center"
+					width="500" header="#{msg.textSearchs} #{msg.formUmTitle}" styleClass="dialogClose">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	    <p:outputPanel id="outputPanleDialog">
+	        <p:outputPanel rendered="#{salesOrderDistributorSearchBean.userSession.companyId == null}">
+		       <div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+		                     <h:outputText value="#{msg.formUmCompany}"/>
+		                </div>
+					    <div class="Container70">
+			                 <p:selectOneMenu value="#{salesOrderDistributorSearchBean.salesOrderVOSearchDialog.companyId}">
+								  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+								  <f:selectItems value="#{salesOrderDistributorSearchBean.companySelectItem}"/>
+							 </p:selectOneMenu>	
+		                </div>
+					</div>
+				</div>
+			</p:outputPanel>		
+	        <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	                     <h:outputText value="#{msg.formUmName}"/>
+	           		</div>
+				    <div class="Container70">
+	               		 <p:inputText value="#{salesOrderDistributorSearchBean.salesOrderVOSearchDialog.soNo}" autocomplete="off" styleClass="Wid90"/>
+	           		</div>
+				</div>
+			</div>	
+	        <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	                     <h:outputText value="#{msg.formUmDesc}"/>
+	           		</div>
+				    <div class="Container70">
+	               		 <p:inputText value="#{salesOrderDistributorSearchBean.salesOrderVOSearchDialog.soTypeName}" autocomplete="off" styleClass="Wid90"/>
+	           		</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">	
+	                 <p:commandButton value="#{msg.buttonSearch}" update=":frm001:searchAll"
+	                        actionListener="#{salesOrderDistributorSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	                 <p:commandButton value="#{msg.buttonClear}" actionListener="#{salesOrderDistributorSearchBean.clearDialog}"
+	                        oncomplete="PF('dialogSearch').show();" update=" :frm001:searchAll :frm001:dialogSearch"/>
+	            </div>
+	        </div>  
+	   </p:outputPanel>  
+	</p:dialog> -->
+	
+</ui:composition>

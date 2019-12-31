@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.sales.register.model">
+	<class name="Register" table="POS_REGISTER">
+		<id name="regId" column="REG_ID" type="long">
+			<generator class="native">
+				<param name="sequence">REGISTER_SEQ</param>
+			</generator>
+		</id>
+
+		<property name="outletId" column="OUTLET_ID" type="long" />		
+        <many-to-one name="outlet" column="OUTLET_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join">
+		</many-to-one>
+		
+		<property name="cashierId" column="CASHIER_ID" type="long" />		
+        <many-to-one name="cashier" column="CASHIER_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.employee.model.Employee" fetch="join">
+		</many-to-one>
+				
+		<property name="startTime" column="START_TIME" type="timestamp" />
+		<property name="endTime" column="END_TIME" type="timestamp" />        
+        
+        <property name="totalPayment" column="TOTAL_PAYMENT" type="double" />
+        
+        <property name="statusCode" column="STATUS" type="string" />		
+        <many-to-one name="status" column="STATUS" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+			
+		<bag name="registerDtlList" inverse="true" cascade="save-update, delete-orphan"
+			order-by="REG_DTL_ID asc">
+			<key column="REG_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.sales.register.model.RegisterDtl" />
+		</bag>
+			
+	</class>
+</hibernate-mapping>

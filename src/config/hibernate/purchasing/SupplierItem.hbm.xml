@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.purchasing.supplier.model">
+	<class name="SupplierItem" table="POS_SUPPLIER_ITEM">
+		  
+		<id name="supplierItemId" column="SUPPLIER_ITEM_ID" type="long">
+			<generator class="native">
+				<param name="sequence">SUPPLIER_ITEM_SEQ</param>
+			</generator>
+		</id>
+		<!--
+		<id name="supplierItemId" column="SUPPLIER_ITEM_ID" type="long">
+			<generator class="assigned" />
+		</id>
+		-->
+
+		<many-to-one name="item" column="ITEM_ID"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join">
+		</many-to-one>
+		
+		<many-to-one name="supplier" column="SUPPLIER_ID"
+			class="com.wo.epos.module.purchasing.supplier.model.Supplier" fetch="join">
+		</many-to-one>
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+
+	</class>
+</hibernate-mapping>

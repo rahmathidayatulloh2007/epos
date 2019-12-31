@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">
+			
+			<h:outputText value="#{msg.formParameterAddTitle}" rendered="#{parameterInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formParameterEditTitle}" rendered="#{parameterInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>
+		 	 <p:commandButton value="#{msg.buttonBack}" process="@this" actionListener="#{parameterBean.modeSearch}" 
+			         update=":frm001" styleClass="Fright"/>
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{parameterBean.modeSave}" 
+			         update=":frm001" styleClass="Fright"/>
+			 <p:messages id="paramDtlMessage" showDetail="true" showSummary="false" globalOnly="true" />
+		</div>
+    </div>
+    
+    <div class="Container100">
+		
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.formParameterCode}"/><span style="color:red"> *</span>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="parameterCode"  rendered="#{parameterInputBean.MODE_TYPE eq 'ADD'}"
+						        
+								value="#{parameterInputBean.parameterVO.parameterCode}" styleClass="Wid90"/>							
+						 		
+							
+						 <p:inputText rendered="#{parameterInputBean.MODE_TYPE eq 'EDIT'}" readonly="true"
+								value="#{parameterInputBean.parameterVO.parameterCode}" styleClass="Wid90 readonly-bg"/>	
+					</div>
+				</div>
+		    </div>		 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.formParameterName}"/><span style="color:red"> *</span>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="parameterName" 
+							   value="#{parameterInputBean.parameterVO.parameterName}" styleClass="Wid90"/>
+					     	
+					</div>
+				</div>
+		    </div>	
+		</div>   	
+		
+		<!-- Grid Sebelah Kanan --> 
+		<div class="Container50 Responsive">
+			 <div class="Container100">
+				  <div class="EposContainerIndent">
+					   <div class="Container30 Responsive">
+					        <h:outputText value="#{msg.formParameterDescription}"/>
+					   </div>
+				       <div class="Container70 Responsive">
+						    <p:inputTextarea id="parameterDesc" value="#{parameterInputBean.parameterVO.parameterDesc}" 
+						            styleClass="Wid90"/>
+					   </div>
+				  </div>				 
+		      </div>	 
+		</div>
+	</div>
+	
+					 
+					 <!-- <tr>
+					    <td>
+					        <h:outputText value="Aktif"/>
+					    </td>
+						<td>
+						   <p:selectOneMenu id="dialogActiveFlag"
+								value="#{parameterInputBean.parameterVO.activeFlag}" style="width:70px;">
+								<f:selectItems value="#{parameterInputBean.activeSelectItem}"/>
+							</p:selectOneMenu>
+						</td>					
+					 </tr> -->
+				
+    <div class="Container100">
+		 <div class="ContainerIndent">
+			  <p:commandButton value="#{msg.buttonAdd}"
+					update="frm001:parameterDtlTable" process="@this frm001:parameterDtlTable"
+					action="#{parameterInputBean.reinit()}">
+					<!-- <p:collector value="#{parameterInputBean.parameterDtlVO}"   
+		               addTo="#{vo.details}" />   -->
+				</p:commandButton>
+		  </div>
+	</div>
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+ 
+			 <p:dataTable var="voDtl" value="#{parameterInputBean.parameterVO.listDetail}"
+					rowIndexVar="statDetailIndex" id="parameterDtlTable">
+					
+					<p:column headerText="#{msg.formParameterDetailCode}">
+						<p:inputText id="detailCode" value="#{voDtl.parameterDtlCode}" 
+							rendered="#{parameterInputBean.MODE_TYPE eq 'ADD'}" styleClass="Wid90" />						
+						<p:inputText value="#{voDtl.parameterDtlCode}" 
+							rendered="#{parameterInputBean.MODE_TYPE eq 'EDIT'}" styleClass="Wid90 readonly-bg" />	
+						
+					</p:column>
+					
+					<p:column headerText="#{msg.formParameterDetailName}">
+						<p:inputText id="detailName" value="#{voDtl.parameterDtlName}" styleClass="Wid90" />
+												
+					</p:column>
+					
+					<p:column headerText="#{msg.formParameterDescription}">
+						<p:inputText value="#{voDtl.parameterDtlDesc}" styleClass="Wid90" />
+					</p:column>
+					
+					<p:column headerText="#{msg.buttonAction}" styleClass="Wid10">
+						<p:commandLink id="deleteLink" value="#{msg.buttonDelete}" update=":frm001:parameterDtlTable" process="@this :frm001:parameterDtlTable"
+						  actionListener="#{parameterInputBean.deleteDetail(voDtl)}" >							
+						</p:commandLink>
+					</p:column>
+					
+			 </p:dataTable>
+		</div>
+	</div>
+			 
+	
+</ui:composition>

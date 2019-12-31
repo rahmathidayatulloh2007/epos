@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>POS</title>
+	<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+	<h:outputScript library="js" name="demo_time.js" />
+	<h:outputStylesheet library="css" name="style.css" />
+</h:head>
+<h:body>
+	<noscript>EREC requires Javascript to run. Please check your
+		browser for Javascript compatibility.</noscript>
+	<p id="timePara">
+		<p:commandButton onclick="getDateTime()" value="Get Date and Time" />
+	</p>
+
+	<p>
+		<p:graphicImage value="/resources/images/btpn.png" width="336" height="69" />
+	</p>
+
+	<p>Try opening this page, then go offline, and reload the page. The
+		script and the image should still work.</p>
+
+</h:body>
+</html>

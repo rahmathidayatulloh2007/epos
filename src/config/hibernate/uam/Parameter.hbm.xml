@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.uam.parameter.model">
+	<class name="Parameter" table="POS_PARAMETER">
+		<id name="parameterCode" column="PARAMETER_CODE" type="string">
+			<generator class="assigned" />
+		</id>
+
+		<bag name="listDetail" inverse="true" cascade="save-update, delete-orphan"
+			order-by="PARAMETER_DTL_CODE asc">
+			<key column="PARAMETER_CODE"/>
+			<one-to-many
+				class="com.wo.epos.module.uam.parameter.model.ParameterDtl" />
+		</bag>
+
+		<property name="parameterName" column="PARAMETER_NAME" type="string" />
+		<property name="parameterDesc" column="PARAMETER_DESC" type="string" />
+		
+		<property name="detailResume" column="DETAIL_RESUME" type="string" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

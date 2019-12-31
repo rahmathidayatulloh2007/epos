@@ -1,0 +1,546 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+	<div class="Container100">
+		<div class="ContainerIndent">
+		
+			<h:outputText value="#{msg.formItemAddTitle}" rendered="#{itemInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formItemEditTitle}" rendered="#{itemInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>	
+		    
+		    <p:commandButton value="#{msg.buttonBack}" process="@this" actionListener="#{itemBean.modeSearch}" update=":frm001"  styleClass="Fright"/>
+		    <p:commandButton value="#{msg.buttonSave}" actionListener="#{itemBean.modeSave}" update=":frm001" styleClass="Fright"/>
+		    <p:messages id="messagesItem" showDetail="true" showSummary="false" globalOnly="true"/>
+		</div>
+	</div>
+	
+	<!-- 
+    <table width="100%">
+		<tr align="right">
+			<td>
+			    <p:commandButton value="#{msg.buttonSave}"
+					   actionListener="#{companyBean.modeSave}" update=":frm001"/>
+			    <p:commandButton value="#{msg.buttonBack}" immediate="true"
+			           actionListener="#{companyBean.modeSearch}" update=":frm001"/>
+			</td>
+		</tr>
+	</table>
+	 -->
+    <div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+    <div class="ContainerIndent">
+    	<h:outputText value="#{msg.formItemTitle}"></h:outputText>
+    	</div>
+    </div> 
+	<div class="Container100">
+		<!-- <ui:define name="heading">
+			<h:outputText value="#{msg.formItemTitle}"></h:outputText>
+		</ui:define>  -->
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+		
+			<!-- Nama Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemCompany}" rendered="#{itemInputBean.adminMode == true}" />
+						<h:panelGroup style="color: red;" rendered="#{itemInputBean.adminMode == true}"> *</h:panelGroup>
+					</div>
+					<div class="Container70 Responsive">
+						
+						<p:selectOneMenu id="companyId" 
+							value="#{itemInputBean.itemVO.companyId}" rendered="#{itemInputBean.adminMode == true}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{itemInputBean.companySelectItem}"/>						
+								<p:ajax event="change" listener="#{itemInputBean.companyOnChange}" process="@this" 
+								        update="supplierItemTable :frm001:umId :frm001:categoryId  :frm001:um2Id itemBomTable"/>				
+						</p:selectOneMenu>			
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Kode Barang -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemCode}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						
+						<p:inputText id="itemCode" value="#{itemInputBean.itemVO.itemCode}" rendered="#{itemInputBean.MODE_TYPE == 'ADD'}"
+							 styleClass="Wid90"/>
+						<p:inputText value="#{itemInputBean.itemVO.itemCode}" rendered="#{itemInputBean.MODE_TYPE == 'EDIT'}"
+							readonly="true" styleClass="Wid90 readonly-bg"/>
+						
+						
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemBarcode}"/>
+					</div>
+					<div class="Container70 Responsive">						
+						<p:inputText id="barcode" value="#{itemInputBean.itemVO.barcode}" max="32"/>							
+					</div>
+				</div>
+			</div>
+			
+			<!-- Nama Barang -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemName}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="itemName" value="#{itemInputBean.itemVO.itemName}" 
+							 styleClass="Wid90"/>
+												
+					</div>
+				</div>
+			</div>
+			
+			<!-- Deskripsi -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemDesc}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						 <p:inputTextarea id="itemDesc" cols="50" rows="3"
+							value="#{itemInputBean.itemVO.itemDesc}" styleClass="Wid90"
+							required="false" requiredMessage="#{msg.formItemDesc} #{msg.errorMustBeFilled}"/>
+						<p:message for="itemDesc" />							
+					</div>
+				</div>
+			</div>
+			
+			<!-- Satuan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemUm}"/><span class="redText"> *</span>
+					</div>
+
+
+					<div class="Container20 Responsive">
+						<p:remoteCommand name="onChangeuM"
+							actionListener="#{itemInputBean.onChangeuM()}"
+							update="frm001:labelUm"></p:remoteCommand>
+						<p:selectOneMenu id="umId" onchange="onChangeuM()"
+							value="#{itemInputBean.itemVO.umId}"  style="width:75%">
+							
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{itemInputBean.umSelectItem}" />
+							<p:ajax event="change" update=":frm001:labelUm" 
+							listener="#{itemInputBean.onChangeuM()}" />
+						</p:selectOneMenu>
+						<p:message for="umId" />
+					</div>
+	
+					<div class="Container20 Responsive">
+						<p:inputText id="itemPerUm2"
+							value="#{itemInputBean.itemVO.unitPerUm2}" 
+							style="width:50%" onkeypress="return checkNumeric(event,this,false)"/>
+						<p:message for="itemPerUm2" />
+					</div>
+					
+						<div class="Container10 Responsive">
+							<h:outputText id="labelUm" value="#{itemInputBean.itemVO.umName}" />
+						</div>
+					
+					<div class="Container20 Responsive">
+						<p:selectOneMenu id="um2Id" 
+							value="#{itemInputBean.itemVO.um2Id}" style="width:60%">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{itemInputBean.umSelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="um2Id" />
+					</div>
+				</div>
+			</div>
+			
+			<!-- Kategori -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemCategory}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="categoryId" 
+							value="#{itemInputBean.itemVO.categoryId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{itemInputBean.categorySelectItem}"/>						
+						</p:selectOneMenu>		
+								
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		
+		<!-- Grid Sebelah Kanan -->
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemPic}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:fileUpload
+				            id="upload"
+				            widgetVar="wvFileUpload"
+				            value="#{itemInputBean.uploadedFile}"
+				            mode="simple"  />
+				        <p:commandButton value="Submit Foto" ajax="false"
+				        	actionListener="#{itemInputBean.handleUploadedFile}">
+				        </p:commandButton>
+					
+						<p:graphicImage
+							rendered="#{itemInputBean.streamUploadId != null}"
+							value="#{mbImageStreamer.image}" width="180" height="200">
+							<f:param name="funcId"
+								value="#{itemInputBean.getUploadFuncId()}" />
+							<f:param name="uploadId"
+								value="#{itemInputBean.streamUploadId}" />
+						</p:graphicImage>
+												
+						
+						<!-- <p:fileUpload value="#{itemInputBean.itemVO.imageFilename}" mode="simple" skinSimple="true"/> 
+    					<p:commandButton value="Submit" ajax="false" actionListener="#{itemInputBean.upload}" disabled="true" />
+						
+						<p:fileUpload style="padding-left: 20px" allowTypes="*.jpg; *.png; *.gif;" description="images" 
+							fileUploadListener="#{itemInputBean.itemVO.imageFilename}" height="38" width="48" image="/slike/upload.png" auto="true" update="panel"/>
+							<p:panel style="border-style: dotted" id="panel">
+							    <p:graphicImage height="675" width="675" value="#{itemInputBean.itemVO.imageFile}"/>
+							</p:panel>
+						
+						<p:graphicImage value="#{itemInputBean.itemVO.imageFile}" >
+                    		<f:param name="file" value="#{itemInputBean.itemVO.imageFilename}" />
+                		</p:graphicImage>	 -->
+                		 
+					</div>
+				</div>
+			</div>
+			 
+			<!-- Aktif -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemActive}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{itemInputBean.itemVO.activeFlag}" style="width:80px;">
+							<f:selectItems value="#{itemInputBean.activeSelectItem}"/>
+						</p:selectOneMenu>						
+					</div>
+				</div>
+			</div>
+
+			<!-- Composite -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formItemComposite}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogCompositeFlag"
+							value="#{itemInputBean.itemVO.compositeFlag}" style="width:80px;">
+							<f:selectItems value="#{itemInputBean.compositeSelectItem}"/>
+							<p:ajax event="change" listener="#{itemInputBean.onChangeCompositeFlag}" 
+							        update="outputPanelItemBomList" process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						 <h:outputText value="#{msg.formProductUnitCost}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+					     <p:inputText value="IDR" readonly="true" styleClass="Wid10 readonly-bg"/>
+						 <p:inputText id="unitCost2" disabled="#{itemInputBean.sellChecked == true}" styleClass="Wid60" style="text-align:right"
+						 value="#{itemInputBean.itemVO.unitCost}"
+						       
+						       onkeypress="return checkNumeric(event,this,false)"/>
+						      		
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductUnitPrice}"/><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+					     <p:inputText value="IDR" readonly="true" styleClass="Wid10 readonly-bg"/>
+						 <p:inputText id="unitPrice2" disabled="#{itemInputBean.sellChecked == true}" styleClass="Wid60" style="text-align:right"
+						 value="#{itemInputBean.itemVO.unitPrice}"
+						        
+						        onkeypress="return checkNumeric(event,this,false)"/>
+						        		
+					</div>
+				</div>
+			</div>					
+		</div>
+	</div>
+	
+	<p:spacer><br></br></p:spacer>
+	<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+	<div class="ContainerIndent">
+    	<h:outputText value="#{msg.formSupplierItemTitle}"></h:outputText>
+    	</div>
+    </div> 
+	<div class="Container100">
+
+		<div class="ContainerIndent">
+			  <p:commandButton value="#{msg.buttonAdd}"
+					update="frm001:supplierItemTable"  immediate="true" process="@this frm001:supplierItemTable"
+					action="#{itemInputBean.reinit()}">
+					<!-- <p:collector value="#{parameterInputBean.parameterDtlVO}"   
+		               addTo="#{vo.details}" />   -->
+				</p:commandButton>
+		  </div>
+	</div>
+	
+	<div class="Container100">
+		<div class="ContainerIndent">	
+		<p:messages for="supplierItemTable" id="messageSupplierItem" showDetail="true" showSummary="false" globalOnly="true"></p:messages>  
+			 <p:dataTable var="voDtl" value="#{itemInputBean.supplierItemList}"
+			 		 rowIndexVar="statDetailIndex" id="supplierItemTable"  editable="true" lazy="true">
+			 		 
+			 		<!-- 
+			 		<p:column> 
+						<p:selectBooleanCheckbox value="#{itemInputBean.selectedSupplierItems}" />
+					</p:column>
+       				 --> 	
+       				<!--	
+       				<p:column selectionMode="multiple" style="width:27px;text-align:center"/> 
+       				--> 
+					<p:column headerText="#{msg.formSupplierItemTitle}">						
+						<p:selectOneMenu id="supplierId" required="false" requiredMessage="#{msg.formSupplierItemTitle} #{msg.errorMustBeFilled}"
+						value="#{voDtl.supplierId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{itemInputBean.supplierSelectItem}"/>						
+						</p:selectOneMenu>	
+					</p:column>
+					
+					<p:column headerText="#{msg.buttonAction}" >
+						<p:commandLink id="deleteLink" value="#{msg.buttonDelete}"  actionListener="#{itemInputBean.deleteDetail(voDtl)}"
+						 process="@this supplierItemTable" update="supplierItemTable">
+							<p:collector value="#{voDtl}" removeFrom="#{itemInputBean.supplierItemList}" />
+						</p:commandLink>
+					</p:column>
+					
+			 </p:dataTable>
+		</div>
+	</div>
+	
+	<!-- Item Bom List [start] -->
+	<p:spacer><br></br></p:spacer>
+	<p:outputPanel id="outputPanelItemBomList">
+		<p:outputPanel rendered="#{itemInputBean.isShowItemBomList()}">
+			<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+		    	<h:outputText value="#{msg.formItemBom}"></h:outputText>
+		    </div> 
+			<div class="Container100">
+				<div class="ContainerIndent">
+					  <p:commandButton value="#{msg.buttonAdd}"
+							update="frm001:itemBomTable"  immediate="true" process="@this frm001:itemBomTable"
+							action="#{itemInputBean.addItemBom()}">
+							<!-- <p:collector value="#{parameterInputBean.parameterDtlVO}"   
+				               addTo="#{vo.details}" />   -->
+						</p:commandButton>
+				  </div>
+			</div>
+			
+			<div class="Container100">
+				<div class="ContainerIndent">	
+					<p:messages for="itemBomTable" id="messageItemBom" showDetail="true" showSummary="false" globalOnly="true"></p:messages>  
+					<p:dataTable var="voDtl" value="#{itemInputBean.itemBomList}"
+					 		 rowIndexVar="statDetailIndex" id="itemBomTable" editable="true" lazy="true">
+				 		<!-- 
+				 		<p:column> 
+							<p:selectBooleanCheckbox value="#{itemInputBean.selectedSupplierItems}" />
+						</p:column>
+		   				--> 	
+		   				<!--	
+		   				<p:column selectionMode="multiple" style="width:27px;text-align:center"/> 
+		   				--> 
+						<p:column headerText="#{msg.formItemBom}">						
+							<p:selectOneMenu id="itemCompositionId" required="false" 
+								requiredMessage="#{msg.formItemBom} #{msg.errorMustBeFilled}"
+								value="#{voDtl.itemCompositionId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{itemInputBean.itemNonCompositeSelectItem}"/>
+									<p:ajax event="change" listener="#{itemInputBean.onChangeItemBomItem(voDtl)}" 
+									        update="itemBomTable" />
+							</p:selectOneMenu>
+							<h:inputHidden id="itemCompositionName" value="#{voDtl.itemCompositionName}"></h:inputHidden>	
+						</p:column>
+			
+						<p:column headerText="#{msg.formItemQty}">
+							<p:inputText id="itemQty" value="#{voDtl.itemQty}" 
+								required="false" requiredMessage="#{msg.formItemQty} #{msg.errorMustBeFilled}" styleClass="Wid60"
+								style="text-align:right" onkeypress="return checkNumeric(event, this, false)">
+							</p:inputText>											
+						</p:column>
+						
+						<p:column headerText="#{msg.buttonAction}" >
+							<p:commandLink id="deleteLinkItemBom" value="#{msg.buttonDelete}" actionListener="#{itemInputBean.delItemBom(voDtl)}"
+							 process="@this itemBomTable" update="itemBomTable">
+								<p:collector value="#{voDtl}" removeFrom="#{itemInputBean.itemBomList}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:outputPanel>
+	<!-- Item Bom List [end] -->
+	
+	<p:spacer><br></br></p:spacer>
+	<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+	<div class="ContainerIndent">
+    	<h:outputText value="#{msg.formProductTitle}"></h:outputText>
+    	</div>
+    </div>
+    
+    <h:panelGroup rendered="#{itemInputBean.MODE_TYPE == 'EDIT'}">
+    	<div class="Container100">
+    	<div class="ContainerIndent">
+    		<p:dataTable id="dataTableProductBom" value="#{itemInputBean.productList}" var="bom"
+    			rowIndexVar="statDetailIndex">
+    			<p:column headerText="#{msg.formProductCode}">
+					<h:outputText value="#{bom.productCode}" />
+				</p:column>		    				    				    
+			
+				<p:column headerText="#{msg.formProductName}" >
+					<h:outputText value="#{bom.productName}" />
+				</p:column>
+			</p:dataTable>
+    	</div>
+    	</div>
+    </h:panelGroup>
+    
+    <h:panelGroup rendered="#{itemInputBean.MODE_TYPE == 'ADD'}">
+	<div class="Container100">
+	
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+		
+			<!-- barang penjualan? -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductSell}"/>
+					</div>
+					<div class="Container70 Responsive">
+						 <h:selectBooleanCheckbox id="checkboxId" value="#{itemInputBean.sellChecked}" >
+       						 <p:ajax event="change" update=":frm001:panelId :frm001:unitPrice2 :frm001:unitCost2" />
+  						 </h:selectBooleanCheckbox>						
+						
+					</div>
+				</div>
+			</div>
+			
+			<h:panelGroup id="panelId">
+			<h:panelGroup rendered="#{itemInputBean.sellChecked == true}">
+			<!-- Tgl Diluncurkan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductLaunchingDate}"/>
+					</div>
+					<div class="Container70 Responsive">
+					
+						<p:calendar id="launchingDate" navigator="true" value="#{itemInputBean.productVO.launchingDt}" showOn="button"
+							 pattern="#{itemInputBean.dateFormat}" locale="#{itemInputBean.dateLocale}" maxlength="11"/>
+						<p:message for="launchingDate" /> 	
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Harga Beli -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductUnitCost}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="IDR" value="IDR" readonly="true" styleClass="Wid30"/>
+						
+						<p:inputText id="unitCost" value="#{itemInputBean.productVO.unitCost}" 
+							 styleClass="Wid60" onkeypress="return checkNumeric(event,this,false)"/>
+						<p:message for="unitCost" />						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Harga Jual -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductUnitPrice}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="IDR2" value="IDR" readonly="true" styleClass="Wid30"/>
+						
+						<p:inputText id="unitPrice" value="#{itemInputBean.productVO.unitPrice}"
+							styleClass="Wid60" onkeypress="return checkNumeric(event,this,false)"/>
+						<p:message for="unitPrice" />						
+					</div>
+				</div>
+			</div>
+			</h:panelGroup>
+			</h:panelGroup>
+		</div>
+		
+	</div>
+
+	</h:panelGroup>
+	<p:spacer><br></br></p:spacer>
+	<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+	<div class="ContainerIndent">
+    	<h:outputText value= "#{msg.formItemDiscountTitle}"></h:outputText>
+    	</div>
+    </div>
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<p:dataTable id="dataDiscount"
+					value="#{itemInputBean.itemDiscountList}" var="data"
+					rowIndexVar="index">
+
+					<p:column headerText="#{msg.formCustomerType2}">
+						<h:outputText value="#{data.parameterDtl.parameterDtlName}" style="center" />
+					</p:column>
+					<p:column headerText="#{msg.formItemDiscount1}">
+						<p:inputText id="discount1"
+							value="#{data.discount1}" style="width:95%" 
+							onkeypress="return checkNumeric(event,this,false)"/>
+					</p:column>
+					<p:column headerText="#{msg.formItemDiscount2}">
+						<p:inputText id="discount2"
+							value="#{data.discount2}" style="width:95%" 
+							onkeypress="return checkNumeric(event,this,false)"/>
+					</p:column>
+					<p:column headerText="#{msg.formItemDiscount3}">
+						<p:inputText id="discount3"
+							value="#{data.discount3}" style="width:95%" 
+							onkeypress="return checkNumeric(event,this,false)"/>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</div>
+
+</ui:composition>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.usm.job.model">
+	<class name="JobOptima" table="WO_MST_JOBS">
+		<id name="jobId" column="JOB_ID" type="long">
+		</id>
+
+		<!-- <property name="jobCode" column="JOB_CODE" type="string" /> -->
+		<property name="jobDesc" column="NAME" type="string" />
+		
+		<!-- <bag name="positionList" inverse="true"
+			lazy="true" fetch="select" batch-size="5">
+			<key column="JOB_ID"></key>
+			<one-to-many class="com.wo.epos.module.mst.position.model.Position" />
+		</bag> -->
+
+
+	</class>
+</hibernate-mapping>

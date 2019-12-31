@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formOutletTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+	<p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					 <p:inputText id="searchAll" readonly="#{outletSearchBean.disableSearchAll}"
+								value="#{outletSearchBean.searchAll}" placeholder="#{msg.textSearch} #{msg.formOutletTitle}" styleClass="WidPos"/>
+				</div>
+				<div class="Container30">			
+					 <p:commandButton actionListener="#{outletSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>		
+					 <p:commandButton actionListener="#{outletSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableOutlet"/>
+					 <p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/>		
+				</div>
+				<div class="Container30">			
+					<p:commandButton id="viewBtn" value="#{msg.buttonEmployee}" actionListener="#{outletBean.modeView}"
+				            update=":frm001" styleClass="Fright"
+						    disabled="#{fn:length(outletSearchBean.selectedOutlet) == 0 or fn:length(outletSearchBean.selectedOutlet)>1}"/>		     
+
+				     <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{outletBean.modeDelete}" rendered="#{outletSearchBean.companyId == null}"
+						    update="frm001:outputPanelSearch :frm001:messages" styleClass="Fright"
+						    disabled="#{fn:length(outletSearchBean.selectedOutlet) == 0}">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>	    
+						    
+				     <p:commandButton id="editBtn" value="#{msg.buttonEdit}" actionListener="#{outletBean.modeEdit}" rendered="#{outletSearchBean.companyId == null}"
+				            update=":frm001" styleClass="Fright"
+						    disabled="#{fn:length(outletSearchBean.selectedOutlet) == 0 or fn:length(outletSearchBean.selectedOutlet)>1}"/>
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{outletBean.modeAdd}" rendered="#{outletSearchBean.companyId == null}"
+				            update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableOutlet" value="#{outletSearchBean.pagingOutlet}" 
+				      selection="#{outletSearchBean.selectedOutlet}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.outletId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{outletSearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn :frm001:viewBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn :frm001:viewBtn"/>  
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn :frm001:viewBtn"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn :frm001:viewBtn"/>     
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+										
+					<p:column headerText="#{msg.formOutletCompany}" rendered="#{outletSearchBean.getUserLevel() eq 'ADMIN_LEVEL'}">
+						<h:outputText value="#{data.companyName}" />
+					</p:column>		
+					<p:column headerText="#{msg.formOutletName}">
+						<h:outputText value="#{data.outletName}" />
+					</p:column>
+					<p:column headerText="#{msg.formOutletAddress}">
+						<h:outputText value="#{data.address}" />
+					</p:column>			
+					<p:column headerText="#{msg.formOutletCity}">
+						<h:outputText value="#{data.cityName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formOutletProvince}">
+						<h:outputText value="#{data.provinceName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formOutletPicName}">
+						<h:outputText value="#{data.picName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formOutletPicPhoneno}">
+						<h:outputText value="#{data.picPhoneno}" />
+					</p:column>	
+					
+				</p:dataTable>
+		 </div>
+	</div>		
+	
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+					width="500" header="#{msg.textSearchs} #{msg.formOutletTitle}" styleClass="dialogClose">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	    <p:outputPanel id="outputPanleDialog"> 
+	       <div class="Container100">		
+	       		<p:outputPanel rendered="#{outletSearchBean.companyId == null}">
+		        <div class="Container100" >
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	                           <h:outputText value="#{msg.formOutletCompany}"/>
+	           			  </div>
+					 	  <div class="Container70">         
+				               <p:selectOneMenu value="#{outletSearchBean.outletVOSearchDialog.companyId}" >
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{outletSearchBean.companySelectItem}"/>
+							   </p:selectOneMenu>
+	           		  	  </div>
+					 </div>
+				</div>	
+				</p:outputPanel>		
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formOutletName}"/>
+	           			  </div>
+					 	  <div class="Container70"> 
+		          			   <p:inputText value="#{outletSearchBean.outletVOSearchDialog.outletName}" styleClass="Wid90"/>
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formOutletAddress}"/>
+	           			  </div>
+					 	  <div class="Container70">
+	               			   <p:inputText value="#{outletSearchBean.outletVOSearchDialog.address}" styleClass="Wid90"/>
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	                           <h:outputText value="#{msg.formOutletProvince}"/>
+	           			  </div>
+					 	  <div class="Container70">
+				               <p:selectOneMenu value="#{outletSearchBean.outletVOSearchDialog.provinceId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									<f:selectItems value="#{outletSearchBean.provinceSelectItem}"/>
+							   </p:selectOneMenu>	
+	          			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formOutletCity}"/>
+	           			  </div>
+					 	  <div class="Container70">
+				               <p:selectOneMenu value="#{outletSearchBean.outletVOSearchDialog.cityId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									<f:selectItems value="#{outletSearchBean.citySelectItem}"/>
+							   </p:selectOneMenu>	
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formOutletPicName}"/>
+	           			  </div>
+					 	  <div class="Container70">
+				               <p:inputText value="#{outletSearchBean.outletVOSearchDialog.picName}"
+				                    styleClass="cal-input Wid90"/>
+	          			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	                           <h:outputText value="#{msg.formOutletPicPhoneno}"/>
+	          			  </div>
+					 	  <div class="Container70">
+				               <p:inputText value="#{outletSearchBean.outletVOSearchDialog.picPhoneno}" 
+				                    styleClass="cal-input Wid90"/>
+	            		  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+			              <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableOutlet :frm001:searchAll"
+			                    actionListener="#{outletSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+			              <p:commandButton value="#{msg.buttonClear}" actionListener="#{outletSearchBean.clearDialog}"
+			                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableOutlet :frm001:searchAll :frm001:dialogSearch"/>
+	          		 </div>
+			    </div>
+		  </div>		
+	   </p:outputPanel>  
+	</p:dialog>	
+</ui:composition>

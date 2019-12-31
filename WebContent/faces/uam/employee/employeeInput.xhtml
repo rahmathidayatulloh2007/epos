@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+   <div class="Container100">
+		<div class="ContainerIndent">
+
+			<h:outputText value="#{msg.formEmployeeAddTitle}" rendered="#{employeeInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formEmployeeEditTitle}" rendered="#{employeeInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>	
+			 <p:commandButton value="#{msg.buttonBack}"  actionListener="#{employeeBean.modeSearch}" process="@this" update=":frm001" styleClass="Fright"/>
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{employeeBean.modeSave}" update=":frm001" styleClass="Fright"/>          
+				<p:messages id="messagesEmployee" showDetail="true" showSummary="false" globalOnly="true"/>
+		 </div>
+		 
+   </div>	
+   		
+   <div class="Container100">    
+         <!-- Grid Kiri --> 
+		 <div class="Container50 Responsive">
+		      <p:outputPanel rendered="#{employeeInputBean.userSession.companyId == null}">			
+				  <div class="Container100">
+					   <div class="EposContainerIndent">
+						    <div class="Container30 Responsive">
+				                 <h:outputText value="#{msg.formEmployeeCompany}"/><span style="color: red"> *</span>
+				   			</div>
+					        <div class="Container70 Responsive">				
+					        	<p:remoteCommand name="onChangeCompany" actionListener="#{employeeInputBean.onChangeCompany()}" update=":frm001"></p:remoteCommand>
+							     <p:selectOneMenu id="companyId" value="#{employeeInputBean.employeeVO.companyId}" onchange="onChangeCompany();" rendered="#{employeeInputBean.MODE_TYPE == 'ADD'}">
+									  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									  <f:selectItems value="#{employeeInputBean.companySelectItem}"/>
+									  <p:ajax event="change" update="frm001:outletId"/>	
+								 </p:selectOneMenu>		
+								 
+								 <p:inputText id="companyId2" value="#{employeeInputBean.employeeVO.companyName}" rendered="#{employeeInputBean.MODE_TYPE == 'EDIT'}"
+								   readonly="true" styleClass="Wid90 readonly-bg"/>
+								   
+								 <!-- <p:message  for="companyId" rendered="#{employeeInputBean.MODE_TYPE == 'ADD'}"/>	 -->	
+							</div>
+							
+					   </div>
+			      </div>
+			  </p:outputPanel>   
+			  		
+			  	 <div class="Container100">
+					   <div class="EposContainerIndent">
+						    <div class="Container30 Responsive">
+				                 <h:outputText value="#{msg.formEmployeeOutlet}"/><span style="color: red"> *</span>
+				   			</div>
+					        <div class="Container70 Responsive">
+					        				
+							     <p:selectOneMenu id="outletId" value="#{employeeInputBean.employeeVO.outletId}" rendered="#{employeeInputBean.MODE_TYPE == 'ADD'}">
+									  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									  <f:selectItems value="#{employeeInputBean.outletSelectItem}"/>						
+								 </p:selectOneMenu>	
+								 
+								 <p:inputText id="outletId2" value="#{employeeInputBean.employeeVO.outletName}" rendered="#{employeeInputBean.MODE_TYPE == 'EDIT'}"
+								   readonly="true" styleClass="Wid90 readonly-bg"/>	
+								 		
+							</div>
+					   </div>
+			      </div> 	
+		 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			       			 <h:outputText value="#{msg.formEmployeeNo}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:inputText id="employeeNo" value="#{employeeInputBean.employeeVO.employeeNo}" rendered="#{employeeInputBean.MODE_TYPE == 'ADD'}"
+						     	   styleClass="Wid90" 
+								   onkeypress="return checkHuruf(event,this)"/>
+							 <p:inputText value="#{employeeInputBean.employeeVO.employeeNo}" rendered="#{employeeInputBean.MODE_TYPE == 'EDIT'}"
+								   readonly="true" styleClass="Wid90"/>	
+							 <!-- <p:message for="employeeNo" rendered="#{employeeInputBean.MODE_TYPE == 'ADD'}"/> -->	
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeFullName}"/><span style="color: red"> *</span>
+			   			</div>
+				        <div class="Container70 Responsive">
+						     <p:inputText id="fullName" value="#{employeeInputBean.employeeVO.fullName}" 
+						     styleClass="Wid90"	/>
+							 		
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeBirthPlace}"/><span style="color: red"> *</span>
+			   			</div>
+				        <div class="Container70 Responsive">
+							  <p:inputText id="birthPlace" 
+									value="#{employeeInputBean.employeeVO.birthPlace}" styleClass="Wid90"/>
+							  		
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeBirthDate}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:calendar id="birthDate" navigator="false" value="#{employeeInputBean.employeeVO.birthDate}" showOn="button"
+								 pattern="#{employeeInputBean.dateFormat}" locale="#{employeeInputBean.dateLocale}" maxlength="11" 
+								  yearRange="c-50:c+10" readonlyInput="false"/>
+							 <br />
+							 <h:outputText value="#{msg.textExDate}"/>
+							 	
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeGender}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:selectOneMenu id="gender" 
+								  value="#{employeeInputBean.employeeVO.genderCode}" >
+								  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								 <f:selectItems value="#{employeeInputBean.genderSelectItem}"/>
+							 </p:selectOneMenu>
+							 							
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeReligion}"/><span style="color: red"> *</span>
+			   			</div>
+				        <div class="Container70 Responsive">
+						     <p:selectOneMenu id="religion" 
+								  value="#{employeeInputBean.employeeVO.religionCode}" >
+								  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								  <f:selectItems value="#{employeeInputBean.religionSelectItem}"/>
+							 </p:selectOneMenu>
+							 							
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeMaritalStatus}"/><span style="color: red"> *</span>
+			   	 		</div>
+				        <div class="Container70 Responsive">
+						     <p:selectOneMenu id="maritalStatus" 
+								   value="#{employeeInputBean.employeeVO.maritalStatusCode}" >
+								  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								  <f:selectItems value="#{employeeInputBean.maritalStatSelectItem}"/>
+							 </p:selectOneMenu>
+							 							
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeActive}"/>
+			   			</div>
+				        <div class="Container70 Responsive">
+						     <p:selectOneMenu id="activeFlag" value="#{employeeInputBean.employeeVO.activeFlag}">
+								  <f:selectItems value="#{employeeInputBean.activeSelectItem}"/>
+							 </p:selectOneMenu>						
+						</div>
+				   </div>
+		      </div>
+		      			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			         		 <h:outputText value="#{msg.formEmployeeStatus}"/><span style="color: red"> *</span>
+			  			</div>
+				        <div class="Container70 Responsive">
+							 <p:selectOneMenu id="employeeStatus" 
+									value="#{employeeInputBean.employeeVO.employeeStatusCode}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{employeeInputBean.employeeStatSelectItem}"/>
+							 </p:selectOneMenu>
+							  							
+						</div>
+				   </div>
+		      </div>	
+		      
+		      <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formEmployeePicFlag}"/>
+					</div>
+					<div class="Container70 Responsive">
+						 <h:selectBooleanCheckbox id="checkboxId" value="#{employeeInputBean.employeeVO.picFlagChecked}" >
+  						 </h:selectBooleanCheckbox>						
+					</div>
+				</div>
+			</div>	
+			<div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeJoinDt}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:calendar id="joinDt" navigator="true"
+								  value="#{employeeInputBean.employeeVO.joinDt}" showOn="button"
+								  pattern="#{employeeInputBean.dateFormat}" locale="#{employeeInputBean.dateLocale}" maxlength="11" 
+								   />
+							 <br />
+							 <h:outputText value="#{msg.textExDate}"/>
+							 					
+						</div>
+				   </div>
+		      </div>					
+		 </div>		
+		 
+		 <!-- Grid Kanan --> 
+		 <div class="Container50 Responsive">	
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeAddress}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:inputTextarea id="address" styleClass="Wid90"
+								  value="#{employeeInputBean.employeeVO.address}" 
+								  />
+							 	
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			       			 <h:outputText value="#{msg.formEmployeeCity}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">			
+						     <p:selectOneMenu id="cityId" 
+								    value="#{employeeInputBean.employeeVO.cityId}">
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{employeeInputBean.citySelectItem}"/>
+							 </p:selectOneMenu>			
+							 			
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeePostalCode}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:inputText id="postalCode" value="#{employeeInputBean.employeeVO.postalCode}" 
+						     	styleClass="Wid90" maxlength="8" onkeypress="return checkNumeric(event,this,true)" />						
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeHpNo}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+				   			 <p:inputText id="hpNo" value="#{employeeInputBean.employeeVO.hpNo}" styleClass="Wid90" maxlength="32"/>							
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formEmployeeWorkEmail}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">			
+				    		 <p:inputText id="workEmail" value="#{employeeInputBean.employeeVO.workEmail}" styleClass="Wid90"/>		
+						</div>
+				   </div>
+		      </div>			 
+			  
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formEmployeeImage}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:fileUpload id="upload" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+									widgetVar="wvFileUpload" value="#{employeeInputBean.uploadedFile}"
+									mode="simple" /> <p:commandButton value="Submit" ajax="false" 
+									actionListener="#{employeeInputBean.handleUploadedFile()}" update=":frm001"
+									styleClass="style-button">
+								</p:commandButton>	
+											
+					</div>
+				</div>
+			</div>	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="View #{msg.formEmployeeImage}"/>
+					</div>
+					<div class="Container70 Responsive">
+							<p:graphicImage id="imageView"
+									rendered="#{employeeInputBean.streamUploadId != null}"
+									value="#{mbImageStreamer.image}" width="180" height="200">
+									<f:param name="funcId"
+										value="#{employeeInputBean.getUploadFuncId()}" />
+									<f:param name="uploadId"
+										value="#{employeeInputBean.streamUploadId}" />
+								</p:graphicImage>	
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+	
+</ui:composition>

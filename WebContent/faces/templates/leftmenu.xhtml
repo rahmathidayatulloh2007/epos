@@ -1,0 +1,48 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+
+    <div id="layout-menubar" class="bigmenu Unselectable fontRegular">
+	   <div class="layout-menubarinner-box" id="buttonArea">
+              <a href="javascript:;" id="layout-menubar-resize" class="BordRad3" title="Menu Resize"><i class="icon-th-list-2"></i></a>
+              <a href="javascript:;" id="layout-menubar-resize2" class="BordRad3" title="Open Menu"><i class="icon-menu"></i></a>
+	</div>
+
+	<ul class="layout-menubar-container">
+
+        <li id="sm_0" class="layout-menubar-default layout-menubar-active firstnode"><a onclick="Sentinel.openSubMenu(this);" href="http://192.168.0.23:8080/epos/faces/login/dashboard.jsf"><i class="icon-home-outline yellow i"></i> Dashboard</a></li>
+
+        <ui:repeat value="#{dashboardBean.menuList}" var="data" varStatus="status">
+          <li id="sm_#{status.index+1}" class="layout-menubar-default firstnode">
+               <a onclick="Sentinel.openSubMenu(this);" class="level-1">
+                     <i class="icon-folder yellow i"></i> 
+                     <h:outputText value="#{data.menuName}"/>
+                     <i class="icon-angle-down Fright"></i>
+               </a>      
+               <ul class="layout-menubar-submenu-container level_1">      
+		            <ui:repeat value="#{data.childMenuList}" var="child">	     
+			               <!--  <li id="sm_1_0" class="layout-menubar-default"><a onclick="goToMenu('#{request.contextPath}', '#{child.action}');" href="#" class="marginLevel-1"><i class="icon-doc yellow i"></i> 
+			               -->   
+			               <li id="sm_1_0" class="layout-menubar-default">
+			                   <a href="#{request.contextPath}#{child.action}" class="marginLevel-1">
+						               <i class="icon-doc yellow i"></i> 			           
+						               <h:outputText value="#{child.menuName}"/>
+			                   </a>
+			               </li> 
+			         </ui:repeat>   
+		       </ul> 
+           </li>
+        </ui:repeat>
+	</ul>	
+</div>
+
+<!-- <script type="text/javascript">
+	function goToMenu(rootPath, url) {
+		$("#iframeContent").prop('src', rootPath + url);
+	}
+</script> -->
+</ui:composition>

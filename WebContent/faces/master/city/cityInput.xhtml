@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCityAddTitle}"
+				rendered="#{cityInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formCityEditTitle}"
+				rendered="#{cityInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}" immediate="true"
+				actionListener="#{cityBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{cityBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="ContainerIndent">
+					<p:messages id="messagesInput" showDetail="true"
+						showSummary="false" globalOnly="true" />
+				</div>
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCityCode}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="cityCode"
+							value="#{cityInputBean.cityVO.cityCode}"
+							rendered="#{cityInputBean.MODE_TYPE == 'ADD'}" />
+						<p:inputText id="cityCode2"
+							value="#{cityInputBean.cityVO.cityCode}"
+							rendered="#{cityInputBean.MODE_TYPE == 'EDIT'}"
+							styleClass="Wid90 readonly-bg" />
+						<p:message for="cityCode" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCityName}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="cityName"
+							value="#{cityInputBean.cityVO.cityName}" styleClass="Wid90" />
+						<p:message for="cityName" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCityProvince}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="province"
+							value="#{cityInputBean.cityVO.provinceId}">
+							<f:selectItems value="#{cityInputBean.provinceSelect}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message for="province" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCityActive}" />
+					</div>
+					<div class="Container70 Responsive">
+						<!-- 
+							<p:selectBooleanCheckbox value="#{cityInputBean.activeFlagCB}" />
+							 -->
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{cityInputBean.cityVO.activeFlag}" required="true"
+							requiredMessage="#{msg.formCityActive} #{msg.errorMustBeFilled}">
+							<f:selectItems value="#{cityInputBean.activeSelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="dialogActiveFlag" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

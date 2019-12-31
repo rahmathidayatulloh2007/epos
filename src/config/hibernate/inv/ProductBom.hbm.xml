@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.item.model">
+	<class name="ProductBom" table="POS_PRODUCT_BOM">
+		<id name="bomId" column="BOM_ID" type="long">
+			<generator class="native">
+				<param name="sequence">PRODUCT_BOM_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="product" column="PRODUCT_ID"
+			class="com.wo.epos.module.inv.item.model.Product" fetch="join">
+		</many-to-one>
+		
+		<many-to-one name="item" column="ITEM_ID"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join">
+		</many-to-one>
+		
+		<property name="itemQty" column="ITEM_QTY" type="double" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

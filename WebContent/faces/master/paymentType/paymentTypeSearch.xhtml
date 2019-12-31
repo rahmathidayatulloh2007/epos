@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formPaymentTypeTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{paymentTypeSearchBean.disableSearchAll}" value="#{paymentTypeSearchBean.searchAll}" styleClass="Wid100" placeholder="#{msg.textSearch} #{msg.formPaymentTypeTitle}"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton icon="ui-icon-refresh" actionListener="#{paymentTypeSearchBean.clear}" update=":frm001"></p:commandButton>
+					<p:commandButton icon="ui-icon-search" actionListener="#{paymentTypeSearchBean.search}" update=":frm001:dataTablePaymentType"></p:commandButton>
+					<p:commandButton icon="ui-icon-circle-arrow-s" oncomplete="PF('dialogSearch').show();" update=":frm001:dialogSearch"></p:commandButton>
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{paymentTypeBean.modeDelete}"
+						update="frm001:outputPanelSearch :frm001:messages"
+						disabled="#{fn:length(paymentTypeSearchBean.selectedPaymentType) == 0}"
+						styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}"  actionListener="#{paymentTypeBean.modeEdit}" update=":frm001"
+				            disabled="#{fn:length(paymentTypeSearchBean.selectedPaymentType) == 0 or fn:length(paymentTypeSearchBean.selectedPaymentType)>1}" styleClass="Fright"/>
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{paymentTypeBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 	
+	<table width="100%">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><p:inputText id="searchAll" size="50" readonly="#{companySearchBean.disableSearchAll}"
+								value="#{companySearchBean.searchAll}" /></td>
+						<td><p:commandButton actionListener="#{companySearchBean.clear}"
+								value="X" update=":frm001"></p:commandButton></td>		
+						<td><p:commandButton actionListener="#{companySearchBean.search}"
+								value="#{msg.buttonSearch}" update=":frm001:dataTableCompany"></p:commandButton></td>
+						<td><p:commandButton oncomplete="PF('dialogSearch').show();"
+						        update=":frm001:dialogSearch" value="Lanjutan"/></td>			
+					</tr>
+				</table>
+			</td>
+			<td></td>
+			<td>
+				<table width="100%">
+					<tr align="right">
+						<td>
+						     <p:commandButton value="#{msg.buttonAdd}" 
+						            actionListener="#{companyBean.modeAdd}" update=":frm001"/>
+						     <p:commandButton id="editBtn" value="#{msg.buttonEdit}" 
+						            actionListener="#{companyBean.modeEdit}" update=":frm001"
+						            disabled="#{fn:length(companySearchBean.selectedCompany) == 0 or fn:length(companySearchBean.selectedCompany)>1}"/>
+						     <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{companyBean.modeDelete}" 
+						            update="frm001:outputPanelSearch" 
+						            disabled="#{fn:length(companySearchBean.selectedCompany) == 0}"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+ 	-->
+ 	
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+			<p:dataTable id="dataTablePaymentType" value="#{paymentTypeSearchBean.pagingPaymentType}"
+						selection="#{paymentTypeSearchBean.selectedPaymentType}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.paytypeId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{paymentTypeSearchBean.paging}" paginator="true" rowIndexVar="index">
+			      
+				<p:ajax event="rowSelectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="rowUnselectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="toggleSelect"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn" />
+	
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>  
+     			
+     			<p:column headerText="#{msg.formPaymentTypeCompany}" rendered="#{paymentTypeSearchBean.adminMode == true}">
+					<h:outputText value="#{data.companyName}" />
+				</p:column>		    				    				    
+			
+				<p:column headerText="#{msg.formPaymentTypeCode}" >
+					<h:outputText value="#{data.paytypeCode}" />
+				</p:column>
+				<p:column headerText="#{msg.formPaymentTypeName}" >
+					<h:outputText value="#{data.paytypeName}" />
+				</p:column>			
+				<p:column headerText="#{msg.formPaymentTypeMethod}" >
+					<h:outputText value="#{data.paymentMethodName}" />
+				</p:column>	
+
+			</p:dataTable>
+		</div>
+ 	</div>
+ 	
+	 
+	<p:dialog	widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender dialogClose"
+				width="560" header="#{msg.textSearchs} #{msg.formPaymentTypeTitle}">
+				<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputPanel id="outputPanelDialog">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPaymentTypeCompany}" rendered="#{paymentTypeInputBean.adminMode == true}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{paymentTypeSearchBean.paymentTypeVOSearchDialog.companyId}" rendered="#{paymentTypeInputBean.adminMode == true}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{paymentTypeSearchBean.companySelectItem}"/>
+					</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPaymentTypeCode}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{paymentTypeSearchBean.paymentTypeVOSearchDialog.paytypeCode}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPaymentTypeName}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{paymentTypeSearchBean.paymentTypeVOSearchDialog.paytypeName}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPaymentTypeMethod}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{paymentTypeSearchBean.paymentTypeVOSearchDialog.paymentMethodCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{paymentTypeSearchBean.paymentMethodSelectItem}"/>
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPaymentTypeActive}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{paymentTypeSearchBean.paymentTypeVOSearchDialog.activeFlag}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{paymentTypeSearchBean.activeSelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTablePaymentType :frm001:searchAll"
+						actionListener="#{paymentTypeSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+					<p:commandButton value="#{msg.buttonClear}" actionListener="#{paymentTypeSearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();" update=":frm001:dataTablePaymentType :frm001:searchAll :frm001:dialogSearch"/>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	
+</ui:composition>

@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formStockOpnameTitle}"
+				style="font-weight:bold;" />
+		</div>
+	</div>
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" closable="true" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll"
+						readonly="#{stockOpnameSearchBean.disableSearchAll}"
+						value="#{stockOpnameSearchBean.searchAll}" styleClass="WidPos" placeholder="#{msg.textSearch} #{msg.formStockOpnameTitle}"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton actionListener="#{stockOpnameSearchBean.clear}"
+						icon="ui-icon-refresh" update=":frm001" />
+					<p:commandButton actionListener="#{stockOpnameSearchBean.search}"
+						icon="ui-icon-search" update=":frm001:dataTableStockOpname" />
+					<p:commandButton oncomplete="PF('dialogSearch').show();"
+						icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch" />
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						update="frm001:outputPanelSearch :frm001:messages" styleClass="Fright"
+						oncomplete="PF('dialogDelete').show();"
+						disabled="#{fn:length(stockOpnameSearchBean.selectedStockOpname) == 0}" >
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+					
+					<p:commandButton id="closeBtn" value="#{msg.buttonClose}"
+						disabled="#{fn:length(stockOpnameSearchBean.selectedStockOpname) == 0 or fn:length(stockOpnameSearchBean.selectedStockOpname)>1}"
+						oncomplete="PF('dialogClose').show();"
+						actionListener="#{stockOpnameBean.modeClose}" update=":frm001"
+						styleClass="Fright" />
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}"
+						actionListener="#{stockOpnameBean.modeEdit}"
+						update=":frm001 :frm001:outputPanelDetail" styleClass="Fright"
+						disabled="#{fn:length(stockOpnameSearchBean.selectedStockOpname) == 0 or fn:length(stockOpnameSearchBean.selectedStockOpname)>1}" />
+					<p:commandButton value="#{msg.buttonAdd}"
+						actionListener="#{stockOpnameBean.modeAdd}" update=":frm001"
+						styleClass="Fright" />
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:dataTable id="dataTableStockOpname"
+				value="#{stockOpnameSearchBean.pagingStockOpname}"
+				selection="#{stockOpnameSearchBean.selectedStockOpname}" var="data"
+				lazy="true" editable="true" rowKey="#{data.opnameId}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				rows="#{stockOpnameSearchBean.paging}" paginator="true"
+				rowIndexVar="index">
+
+				<p:ajax event="rowSelectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn :frm001:closeBtn" />
+				<p:ajax event="rowUnselectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn :frm001:closeBtn" />
+				<p:ajax event="toggleSelect"
+					update=":frm001:deleteBtn :frm001:editBtn :frm001:closeBtn" />
+				<p:ajax event="rowSelect"
+					update=":frm001:deleteBtn :frm001:editBtn :frm001:closeBtn" />
+
+				<p:column selectionMode="multiple"
+					style="width:27px;text-align:center" />
+
+				<p:column headerText="#{msg.formStockOpnameCompany}"
+					rendered="#{stockOpnameSearchBean.userPosition eq 'ADMIN_LEVEL'}">
+					<h:outputText value="#{data.company.companyName}" />
+				</p:column>
+
+				<p:column headerText="#{msg.formStockOpnameOutlet}"
+					rendered="#{stockOpnameSearchBean.userPosition eq 'ADMIN_LEVEL' or stockOpnameSearchBean.userPosition eq 'COMPANY_LEVEL'}">
+					<h:outputText value="#{data.outlet.outletName}" />
+				</p:column>
+
+				<p:column headerText="#{msg.formStockOpnameNomorPerhitungan}">
+					<h:outputText value="#{data.opnameNo}" />
+				</p:column>
+
+				<p:column headerText="#{msg.formStockOpnameTanggalPerhitungan}">
+					<h:outputText value="#{data.opnameDate}">
+						<f:convertDateTime pattern="#{stockOpnameSearchBean.dateFormat}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msg.formStockOpnamePeriodePerhitungan}">
+					<h:outputText value="#{data.period}" />
+				</p:column>
+
+				<p:column headerText="#{msg.formStockOpnameDeskripsi}">
+					<h:outputText value="#{data.notes}" />
+				</p:column>
+
+				<p:column headerText="#{msg.formStockOpnameStatus}">
+					<h:outputText value="#{data.paramStatus.parameterDtlName}" />
+				</p:column>
+			</p:dataTable>
+		</div>
+	</div>
+
+	<p:dialog widgetVar="dialogClose" id="dialogClose" modal="true"
+		position="center" styleClass="dialog-calender dialogClose"
+		header="#{msg.formStockOpnameKonfirmasi}">
+		<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputLabel value="#{msg.formStockOpnameKonfirmasiTutupOpname}" />
+		<div class="Container100">
+			<div class="EposContainerIndent">
+				<p:commandButton value="#{msg.textYes}" update=":frm001"
+					actionListener="#{stockOpnameSearchBean.closeOpname}"
+					oncomplete="PF('dialogClose').hide()" />
+				<p:commandButton value="#{msg.textNo}"
+					oncomplete="PF('dialogClose').hide();" />
+			</div>
+		</div>
+	</p:dialog>
+
+	<p:dialog widgetVar="dialogDelete" id="dialogDelete" modal="true"
+		position="center" styleClass="dialog-calender dialogClose"
+		header="#{msg.formStockOpnameKonfirmasi}">
+		<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputLabel value="#{msg.konfirmasiDelete}" />
+		<div class="Container100">
+			<div class="EposContainerIndent">
+				<p:commandButton value="#{msg.textYes}" update=":frm001"
+					actionListener="#{stockOpnameBean.modeDelete}"
+					oncomplete="PF('dialogDelete').hide()" />
+				<p:commandButton value="#{msg.textNo}"
+					oncomplete="PF('dialogDelete').hide();" />
+			</div>
+		</div>
+	</p:dialog>
+
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true"
+		position="center" styleClass="dialog-calender dialogClose" width="650"
+		header="#{msg.textSearchs} #{msg.formVehicleTitle}">
+		<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputPanel id="outputPanelDialog">
+			<div class="Container100">
+				<p:outputPanel id="outputPanelCompanyDialog"
+					rendered="#{stockOpnameSearchBean.userPosition eq 'ADMIN_LEVEL'}">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container30">
+								<h:outputText value="#{msg.formStockOpnameCompany}" />
+							</div>
+							<div class="Container70">
+								<p:selectOneMenu
+									value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.companyId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+									<f:selectItems
+										value="#{stockOpnameSearchBean.companySelectItem}" />
+									<p:ajax event="change"
+										listener="#{stockOpnameSearchBean.changeCompanyToOutlet}"
+										oncomplete="PF('dialogSearch').show()"
+										update=":frm001:outletIdDialog"></p:ajax>
+								</p:selectOneMenu>
+							</div>
+						</div>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel id="outputPanelOutletDialog"
+					rendered="#{stockOpnameSearchBean.userPosition eq 'ADMIN_LEVEL' or stockOpnameSearchBean.userPosition eq 'COMPANY_LEVEL'}">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container30">
+								<h:outputText value="#{msg.formStockOpnameOutlet}" />
+							</div>
+							<div class="Container70">
+								<p:selectOneMenu id="outletIdDialog"
+									value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.outletId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems
+										value="#{stockOpnameSearchBean.outletSelectItem}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+					</div>
+				</p:outputPanel>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formStockOpnameNomorPerhitungan}" />
+						</div>
+						<div class="Container70">
+							<p:inputText
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.opnameNo}"
+								styleClass="Wid90" />
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formStockOpnameTanggalPerhitungan}" />
+						</div>
+						<div class="Container70">
+							<p:calendar
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.opnameDateAwal}"
+								showOn="button" pattern="#{stockOpnameInputBean.dateFormat}">
+							</p:calendar>
+							<p:calendar
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.opnameDateAkhir}"
+								showOn="button" pattern="#{stockOpnameInputBean.dateFormat}">
+							</p:calendar>
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formStockOpnamePeriodePerhitungan}" />
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.periodBulan}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{stockOpnameSearchBean.bulanSelectItem}" />
+							</p:selectOneMenu>
+							<p:selectOneMenu
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.periodTahun}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{stockOpnameSearchBean.tahunSelectItem}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formStockOpnameDeskripsi}" />
+						</div>
+						<div class="Container70">
+							<p:inputText
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.notes}"
+								styleClass="Wid90" />
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formStockOpnameStatus}" />
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu
+								value="#{stockOpnameSearchBean.stockOpnameVOSearchDialog.status}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{stockOpnameSearchBean.opnameStatusSelectItem}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<p:commandButton value="#{msg.buttonSearch}"
+							update=":frm001:dataTableStockOpname :frm001:searchAll"
+							actionListener="#{stockOpnameSearchBean.searchDialog}"
+							oncomplete="PF('dialogSearch').hide()" />
+						<p:commandButton value="#{msg.buttonClear}"
+							actionListener="#{stockOpnameSearchBean.clearDialog}"
+							oncomplete="PF('dialogSearch').show();"
+							update=":frm001:dataTableStockOpname :frm001:searchAll :frm001:dialogSearch" />
+					</div>
+				</div>
+			</div>
+
+		</p:outputPanel>
+	</p:dialog>
+
+</ui:composition>

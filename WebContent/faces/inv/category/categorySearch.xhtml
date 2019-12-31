@@ -1,0 +1,102 @@
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets" >
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCategoryTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>				
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+				
+    <div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container10">
+					<h:outputText value="#{msg.formUmCompany}" rendered="#{categorySearchBean.getCompanyIdFromUser()==null}" />
+				</div>
+				<div class="Container60">
+					<p:selectOneMenu value="#{categorySearchBean.companyId}" 
+						disabled="#{categorySearchBean.getCompanyIdFromUser()!=null}">
+						<p:ajax event="change" listener="#{categorySearchBean.changeCompany}" 
+								process="@this" update="frm001:frmCategoryTreeTable" />
+						<f:selectItem itemValue="0" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{categorySearchBean.companySelectItem}"/>
+					</p:selectOneMenu>
+				</div>
+				<div class="Container30">
+					   <p:commandButton value="Add" icon="ui-icon-plus" actionListener="#{categoryBean.modeAddNew}"
+					            update=":frm001" styleClass="Fright"/>
+				</div>
+	        </div>
+		</div>
+	</div>
+	
+	<!-- <div class="Container100">
+			<div class="ContainerIndent">
+			<p:dataTable id="frmCategoryDataTable" var="category" value="#{categorySearchBean.categoryList}" paginator="false" emptyMessage="#{msg.common_textNodata}" 
+					rendered="#{categorySearchBean.isRowEmpty}">
+				<p:column headerText="#{msg.formCategoryName}">
+					<h:outputText value="#{category.categoryName}" />
+				</p:column>
+			</p:dataTable>
+		</div>
+	</div>		 -->
+	
+	<div class="Container100">
+			<div class="ContainerIndent">
+			<p:treeTable id="frmCategoryTreeTable" value="#{categorySearchBean.root}" var="category" >
+				<p:column style="width:200px;" >
+					<f:facet name="header"><h:outputText value="#{msg.formCategoryName}"></h:outputText></f:facet>					
+					<h:outputText value="#{category.categoryName}" />
+				</p:column>
+				<p:column style="width:200px;" rendered="#{categorySearchBean.getUserLevel() eq 'ADMIN_LEVEL'}" >
+					<f:facet name="header"><h:outputText value="#{msg.formUmCompany}" ></h:outputText></f:facet>
+					<h:outputText value="#{category.company.companyName}" rendered="#{category.categoryLevel == '1'}" />
+				</p:column>
+				<p:column style="width:150px;">
+					<f:facet name="header"><h:outputText value="#{msg.common_textAction}"></h:outputText></f:facet>
+					<table border="0" cellspacing="3" cellpadding="0" style="width: 130px;"> 
+						<tr > 
+							<td align="center" style="border: 0px !important;">
+							<p:commandButton value="Add" rendered="#{category.categoryLevel == '1'}" icon="ui-icon-plus"
+						            actionListener="#{categoryBean.modeAddFromParent(category)}" update=":frm001"/>
+						    <p:commandButton value="Edit" icon="ui-icon-pencil"
+						            actionListener="#{categoryBean.modeEdit(category)}" update=":frm001"/>
+						    <p:commandButton value="Delete" rendered="#{category.categoryLevel == '2' or category.detailSize == 0}" icon="ui-icon-trash"
+						            actionListener="#{categoryBean.modeDelete(category)}" update=":frm001">
+						             <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+						    </p:commandButton>
+					
+				  		</td>
+						</tr>
+					</table>
+					
+					<!-- <p:commandLink value="#{msg.buttonEdit}" actionListener="#{categorySearchBean.updateCategory}" update=":frm001" disabled="#{categorySearchBean.categoryUpdate}">
+						<f:attribute name="attribCategoryId" value="#{category.categoryId}"/>
+					</p:commandLink>
+					<h:outputText value="| "></h:outputText>
+					<p:commandLink value="#{msg.buttonDelete}" onclick="confirmation.show()" disabled="#{categorySearchBean.categoryUpdate}">
+						<f:setPropertyActionListener value="#{category.categoryId}" target="#{categorySearchBean.del_category_id}"/>
+					</p:commandLink>
+					<p:commandLink value="#{msg.buttonDelete}" actionListener="#{categorySearchBean.deleteCategory}" update=":frm001" disabled="#{categorySearchBean.categoryUpdate}">
+						<f:attribute name="attribCategoryId" value="#{category.categoryId}"/>
+					</p:commandLink> -->
+				</p:column>
+			</p:treeTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+		    
+		</div>
+	</div>
+				
+</ui:composition>

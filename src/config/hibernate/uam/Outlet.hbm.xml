@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.uam.outlet.model">
+	<class name="Outlet" table="POS_OUTLET">
+		<id name="outletId" column="OUTLET_ID" type="long">
+			<generator class="native">
+				<param name="sequence">OUTLET_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="company" column="COMPANY_ID"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join">
+		</many-to-one>
+
+		<property name="outletCode" column="OUTLET_CODE" type="string" />
+		<property name="outletName" column="OUTLET_NAME" type="string" />
+
+        <property name="address" column="ADDRESS" type="string" />
+        
+        <!-- property name="cityId" column="CITY_ID" type="long" / -->
+        <many-to-one name="city" column="CITY_ID"
+			class="com.wo.epos.module.master.city.model.City" fetch="join">
+		</many-to-one>
+		        
+        <property name="postalCode" column="POSTAL_CODE" type="string" />
+        <!-- <property name="picName" column="PIC_NAME" type="string" />
+        <property name="picPhoneno" column="PIC_PHONENO" type="string" /> -->
+        
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+	</class>
+</hibernate-mapping>

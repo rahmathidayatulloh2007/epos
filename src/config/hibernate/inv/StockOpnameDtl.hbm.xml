@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.stockOpname.model">
+	<class name="StockOpnameDtl" table="POS_STOCK_OPNAME_DTL">
+		<id name="opnameDtlId" column="OPNAMEDTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">STOCK_OPNAME_DTL_SEQ</param>
+			</generator>
+		</id>
+
+		<property name="stockQty" column="STOCK_QTY" type="double" />
+		<property name="opnameQty" column="OPNAME_QTY" type="double" />
+        
+        <many-to-one name="stockOpname" column="OPNAME_ID"
+			class="com.wo.epos.module.inv.stockOpname.model.StockOpname" fetch="join">
+		</many-to-one>
+		
+		<many-to-one name="item" column="ITEM_ID"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join">
+		</many-to-one>
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formDiscountAddTitle}" rendered="#{discountInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formDiscountEditTitle}" rendered="#{discountInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>
+		    <p:commandButton value="#{msg.buttonBack}" process="@this" actionListener="#{discountBean.modeSearch}" update=":frm001"  styleClass="Fright"/>
+		    <p:commandButton value="#{msg.buttonSave}" actionListener="#{discountBean.modeSave}" update=":frm001" styleClass="Fright"/>
+		</div>
+	</div>
+     
+	<div class="Container100" style="margin-bottom:20px;">
+	
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+		
+			<!-- Nama Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountCompany}" rendered="#{discountInputBean.adminMode == true}" />
+						<h:panelGroup style="color: red;" rendered="#{discountInputBean.adminMode == true}"> *</h:panelGroup>
+					</div>
+					<div class="Container70 Responsive">
+						
+						<p:selectOneMenu id="companyId" required="true" requiredMessage="#{msg.formSupplierCompany} #{msg.errorMustBeFilled}"
+						value="#{discountInputBean.discountVO.companyId}" rendered="#{discountInputBean.adminMode == true}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{discountInputBean.companySelectItem}"/>						
+						</p:selectOneMenu>			
+						<p:message for="companyId" />
+						
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Kode Diskon -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountCode}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						
+						<p:inputText id="discountCode" value="#{discountInputBean.discountVO.discountCode}" rendered="#{discountInputBean.MODE_TYPE == 'ADD'}"
+							required="true" requiredMessage="#{msg.formDiscountCode} #{msg.errorMustBeFilled}" styleClass="Wid90"/>
+						<p:inputText value="#{discountInputBean.discountVO.discountCode}" rendered="#{discountInputBean.MODE_TYPE == 'EDIT'}"
+							readonly="true" styleClass="Wid90"/>
+						<p:message for="discountCode" />	
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Nama Diskon -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountName}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="discountName" value="#{discountInputBean.discountVO.discountName}" 
+							required="true" requiredMessage="#{msg.formDiscountName} #{msg.errorMustBeFilled}" styleClass="Wid90"/>
+						<p:message for="discountName" />						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Nilai Diskon -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountValue}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="discountValue" value="#{discountInputBean.discountVO.discountValue}" 
+							required="true" requiredMessage="#{msg.formDiscountValue} #{msg.errorMustBeFilled}" styleClass="Wid90"/>
+						<p:message for="discountValue" />						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Kategori Diskon -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountCategory}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="discountCategory" required="true" requiredMessage="#{msg.formDiscountType} #{msg.errorMustBeFilled}"
+							value="#{discountInputBean.discountVO.discountCategoryCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{discountInputBean.discountCategorySelectItem}"/>					
+						</p:selectOneMenu>		
+						<p:message for="discountCategory" />							
+					</div>
+				</div>
+			</div>
+			
+			<!-- Pemberi Diskon -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountProvider}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="discountProvider" required="true" requiredMessage="#{msg.formDiscountProvider} #{msg.errorMustBeFilled}"
+							value="#{discountInputBean.discountVO.discountProviderCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{discountInputBean.discountProviderSelectItem}"/>					
+						</p:selectOneMenu>		
+						<p:message for="discountProvider" />							
+					</div>
+				</div>
+			</div>
+			 
+			<!-- Aktif -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formDiscountActive}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{discountInputBean.discountVO.activeFlag}" style="width:80px;">
+							<f:selectItems value="#{discountInputBean.activeSelectItem}"/>
+						</p:selectOneMenu>						
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+		
+		<!-- Grid Sebelah Kanan -->
+		<div class="Container50 Responsive">
+
+			
+		</div>
+		
+		
+					<div class="Container100">
+				<div class="ContainerIndent">
+					<h:outputText value="#{msg.formDiscountCategoryTitle}"
+						style="font-weight:bold;"></h:outputText>
+				</div>
+				<p:separator />
+				<div class="ContainerIndent">
+					<p:selectManyCheckbox id="grid"
+						value="#{discountInputBean.selectedCategories}" layout="grid"
+						columns="3">
+						<f:selectItems value="#{discountInputBean.categorySelectList}"
+							var="category" itemLabel="#{category.categoryName}"
+							itemValue="#{category.categoryId}" />
+					</p:selectManyCheckbox>
+				</div>
+			</div>
+	</div>
+	
+	<!-- 
+	<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+    	<h:outputText value="#{msg.formDiscountCategoryTitle}"></h:outputText>
+    </div> 
+     -->
+
+
+	
+</ui:composition>

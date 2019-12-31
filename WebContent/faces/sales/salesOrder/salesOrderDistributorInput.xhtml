@@ -1,0 +1,870 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			jQuery("#frm001\\:completeSearchProductDistributor_input").focus();
+		});
+	</script>
+
+	<style>
+.readonly-bg input {
+	opacity: 0.75;
+	background-color: #f4f4f4;
+}
+
+.Wid60 input {
+	width: 60%;
+}
+
+.Wid90 input {
+	width: 90%;
+}
+</style>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSalesOrderDistributorTitle}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}" immediate="true"
+				actionListener="#{salesOrderBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:messages id="messagesSOin" showDetail="true" showSummary="false"
+				globalOnly="true" />
+
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:outputPanel id="outputPanelHeaderDistributor">
+				<!-- 			    <p:selectOneMenu style="margin-left:5px;"
+				           value="#{salesOrderDistributorInputBean.salesOrderVoHeader.registerId}" styleClass="Fright">
+				     <f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+				     <f:selectItems value="#{salesOrderDistributorInputBean.registerSelectItemList}"/>
+			    </p:selectOneMenu> -->
+				<p:inputText
+					value="#{salesOrderDistributorInputBean.salesOrderVoHeader.registerName}"
+					styleClass="Fright" style="margin-left:5px;" />
+				<h:outputText value="Register" styleClass="Fright"
+					style="margin-left:10px;" />
+
+				<!-- 			    <p:inputText value="#{salesOrderDistributorInputBean.salesOrderVoHeader.statusName}" styleClass="Fright" style="margin-left:5px;"/>
+			    <h:outputText value="Status" styleClass="Fright" style="margin-left:10px;"/> -->
+
+				<p:inputText
+					value="#{salesOrderDistributorInputBean.sdf.format(salesOrderDistributorInputBean.salesOrderVoHeader.soDate)}"
+					styleClass="Fright readonly-bg" readonly="true"
+					style="width:80px;margin-left:5px;" />
+				<h:outputText value="Tanggal" styleClass="Fright"
+					style="margin-left:10px;" />
+
+				<!-- 			    <p:inputText  styleClass="Fright" style="margin-left:5px;"/>
+			    <h:outputText value="Nomor" styleClass="Fright" style="margin-left:10px;"/> -->
+			</p:outputPanel>
+
+		</div>
+	</div>
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:outputPanel id="outputPanelCustomerDetail">
+				<p:panel>
+					<h:panelGrid columns="2">
+						<h:panelGrid columns="1">
+							<h:panelGrid columns="1">
+								<h:outputText value="#{msg.formCustomerTitle}"
+									style="margin-left:5px; font-weight:bold;" />
+							</h:panelGrid>
+
+							<!-- 	<div class="Container100">
+								<div class="ContainerIndent">
+									<div style="padding-right: 14px;">
+										 <h:inputHidden id="completeBarcode" value="#{salesOrderDistributorInputBean.completeBarcode}" />
+										<p:autoComplete id="doViewCustomer"
+											completeMethod="#{salesOrderDistributorInputBean.completeSearchCustomer}"
+											value="#{salesOrderDistributorInputBean.salesOrderVoHeader.customerId}"
+											styleClass="salesorder-ac"
+											>
+											<p:ajax event="change"
+												listener="#{salesOrderDistributorInputBean.viewDetailCustomer}"
+												update=":frm001:formCustomerDetail :frm001:formPpn :frm001:completeSearchProductDistributor "></p:ajax>
+											<p:ajax event="change"
+												listener="#{salesOrderDistributorInputBean.changeCustomer}"
+												update=":frm001:soIdMenu"></p:ajax>
+										</p:autoComplete>
+									</div>
+								</div>
+							</div> -->
+							<h:panelGrid columns="1">
+								<p:selectOneMenu id="doViewCustomer" style="margin-left:5px;"
+									value="#{salesOrderDistributorInputBean.salesOrderVoHeader.customerId}"
+									styleClass="Fleft"
+									disabled="#{salesOrderDistributorInputBean.chooseSo2}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+									<f:selectItems
+										value="#{salesOrderDistributorInputBean.customerSelectItem}" />
+									<p:ajax event="change"
+										listener="#{salesOrderDistributorInputBean.viewDetailCustomer}"
+										update=":frm001:formCustomerDetail :frm001:formPpn :frm001:completeSearchProductDistributor "></p:ajax>
+									<p:ajax event="change"
+										listener="#{salesOrderDistributorInputBean.changeCustomer}"
+										update=":frm001:soIdMenu"></p:ajax>
+
+								</p:selectOneMenu>
+								<p:message for="doViewCustomer" />
+							</h:panelGrid>
+						</h:panelGrid>
+
+						<h:panelGroup id="formPpn">
+							<h:panelGrid columns="1">
+								<h:panelGrid columns="1">
+									<h:outputText value="PPN"
+										style="margin-left:5px; font-weight:bold;" />
+								</h:panelGrid>
+								<h:panelGrid columns="1">
+
+									<p:selectOneMenu id="ppn"
+										value="#{salesOrderDistributorInputBean.salesOrderVoHeader.ppn}">
+										<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+										<f:selectItems
+											value="#{salesOrderDistributorInputBean.choseeSoSelectItem}" />
+										<p:ajax event="change"
+											listener="#{salesOrderDistributorInputBean.changePPN}"
+											update=" :frm001:outputTotalPpn outputTotalPpn2 sumTotalDistributor" />
+									</p:selectOneMenu>
+
+
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGroup>
+
+						<!-- 						<h:panelGroup id="formChoosee">
+							<h:panelGrid columns="1">
+								<h:panelGrid columns="1">
+									<h:outputText value="chooseSoDraft"
+										style="margin-left:5px; font-weight:bold;" />
+								</h:panelGrid>
+								<h:panelGrid columns="1">
+						<p:selectOneMenu id="companyType" required="true" requiredMessage="#{msg.formCompanyType} #{msg.errorMustBeFilled}"
+							value="#{salesOrderDistributorInputBean.soDtlVO.soActiveFlag}" >
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{salesOrderDistributorInputBean.choseeSoSelectItem}"/>
+							<p:ajax event="change" listener="#{salesOrderDistributorInputBean.changeDraftSo}"
+							         update=":frm001:formChooseSo :frm001:soIdMenu :frm001:completeSearchProductDistributor soIdMenu"/>
+						</p:selectOneMenu>
+						
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGroup> -->
+
+
+						<h:panelGroup id="formChooseSo">
+							<h:panelGrid columns="1">
+								<h:panelGrid columns="1">
+									<div class="Container30 Responsive">
+										<h:outputText value="#{msg.formDrafSalesOrderNomor}"
+											style="margin-left:5px; font-weight:bold;" />
+									</div>
+								</h:panelGrid>
+
+								<h:panelGrid columns="1">
+									<p:remoteCommand immediate="true" name="changeSO"
+										actionListener="#{salesOrderDistributorInputBean.changeSo}"
+										update="outputPanelTableOrderDistributor panelSumTotalOrderDistributor
+										:frm001:completeSearchProductDistributor :frm001:doViewCustomer :frm001:formPpn" />
+									<!-- onchange="changeSO([{name:'paramSOId',value:$('#frm001\\:soIdMenu').val()}])" -->
+									<h:selectOneMenu id="soIdMenu"
+										styleClass="ui-selectonemenu ui-widget ui-state-default ui-corner-all Fleft"
+										value="#{salesOrderDistributorInputBean.salesOrderVoHeader.soId}"
+										onchange="changeSO([{name:'paramSOId',value:$('#frm001\\:soIdMenu').val()}])"
+										panelStyle="width:280px" effect="fade" style="width:260px"
+										disabled="#{salesOrderDistributorInputBean.disableSeacrh==false}">
+										<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+										<f:selectItems
+											value="#{salesOrderDistributorInputBean.draftSelesOrderSelectItem}" />
+										<!--  										<p:ajax event="change" immediate="true"
+											listener="#{salesOrderDistributorInputBean.changeSo}"
+											update="outputPanelTableOrderDistributor panelSumTotalOrderDistributor 
+								 :frm001:completeSearchProductDistributor " /> -->
+									</h:selectOneMenu>
+
+									<p:message for="soIdMenu" />
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGroup>
+
+					</h:panelGrid>
+				</p:panel>
+			</p:outputPanel>
+
+
+
+
+			<h:panelGroup id="formCustomerDetail">
+				<h:panelGroup
+					rendered="#{salesOrderDistributorInputBean.viewCustomer == true}">
+
+
+					<p:accordionPanel>
+						<p:tab title="Informasi Customer">
+							<h:panelGrid columns="2">
+								<h:panelGrid columns="1">
+									<h:panelGrid columns="2">
+										<h:panelGrid columns="1">
+											<h:outputText value="#{msg.formSystemPropertyTypeOfBusiness}" />
+											<p:inputText id="businessType"
+												value="#{salesOrderDistributorInputBean.customerSales.businessType.businessTypeName}"
+												autocomplete="off" readonly="true"
+												styleClass="Wid90 readonly-bg" />
+										</h:panelGrid>
+										<h:panelGrid columns="1">
+											<h:outputText value="#{msg.formCustomerGroupOutlet}" />
+											<p:inputText id="groupOutlet"
+												value="#{salesOrderDistributorInputBean.customerSales.groupOutlet.groupOutletName}"
+												autocomplete="off" readonly="true"
+												styleClass="Wid90 readonly-bg" />
+										</h:panelGrid>
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText value="#{msg.formCustomerAlamat}" />
+										<p:inputTextarea id="address" cols="46"
+											value="#{salesOrderDistributorInputBean.customerSales.address}"
+											autoResize="false" autocomplete="off" readonly="true"
+											styleClass="Wid90 readonly-bg" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="2">
+										<h:panelGrid columns="1">
+											<h:outputText value="#{msg.formCustomerTelepon}" />
+											<p:inputText id="tlp"
+												value="#{salesOrderDistributorInputBean.customerSales.phoneNo}"
+												autocomplete="off" readonly="true"
+												styleClass="Wid90 readonly-bg" />
+										</h:panelGrid>
+										<h:panelGrid columns="1">
+											<h:outputText value="#{msg.formCustomerTelepon} 2" />
+											<p:inputText id="tlp2"
+												value="#{salesOrderDistributorInputBean.customerSales.phoneNo2}"
+												autocomplete="off" readonly="true"
+												styleClass="Wid90 readonly-bg" />
+										</h:panelGrid>
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText value="#{msg.formCustomerSalesman}" />
+										<p:inputText id="salesman"
+											value="#{salesOrderDistributorInputBean.customerSales.salesman}"
+											size="48" autocomplete="off" readonly="true"
+											styleClass="Wid90 readonly-bg" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="2">
+										<h:panelGrid columns="1">
+											<h:outputText value="#{msg.formCustomerLimitKredit}" />
+											<p:inputText id="limitCredit"
+												value="#{salesOrderDistributorInputBean.customerSales.depositBalance}"
+												autocomplete="off" readonly="true"
+												styleClass="Wid90 readonly-bg" />
+										</h:panelGrid>
+										<h:panelGrid columns="1">
+											<h:outputText value="Sisa #{msg.formCustomerLimitKredit}" />
+											<p:inputText id="limitCredit2" value="" autocomplete="off"
+												readonly="true" styleClass="Wid90 readonly-bg" />
+										</h:panelGrid>
+									</h:panelGrid>
+								</h:panelGrid>
+
+								<h:panelGrid columns="1">
+									<h:panelGrid columns="1">
+										<h:outputText value="NPWP" style="font-weight:bold" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText value="#{msg.formCustomerFullName}" />
+										<p:inputText id="namaNpwp"
+											value="#{salesOrderDistributorInputBean.customerSales.fullNameNpwp}"
+											size="48" autocomplete="off" readonly="true"
+											styleClass="Wid90 readonly-bg" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText value="#{msg.formCustomerAlamat}" />
+										<p:inputTextarea id="addressNpwp" cols="46"
+											value="#{salesOrderDistributorInputBean.customerSales.addressNpwp}"
+											autoResize="false" autocomplete="off" readonly="true"
+											styleClass="Wid90 readonly-bg" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText value="#{msg.formCustomerNpwp}" />
+										<p:inputText id="noNpwp"
+											value="#{salesOrderDistributorInputBean.customerSales.npwpNo}"
+											size="48" autocomplete="off" readonly="true"
+											styleClass="Wid90 readonly-bg" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText value="#{msg.formCustomerType2}" />
+										<p:inputText id="customerType"
+											value="#{salesOrderDistributorInputBean.customerSales.customerType.parameterDtlName}"
+											size="48" autocomplete="off" readonly="true"
+											styleClass="Wid90 readonly-bg" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="1">
+										<h:outputText>&nbsp;</h:outputText>
+										<h:outputText>&nbsp;</h:outputText>
+										<h:outputText>&nbsp;</h:outputText>
+										<h:outputText>&nbsp;</h:outputText>
+										<h:outputText>&nbsp;</h:outputText>
+									</h:panelGrid>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:tab>
+					</p:accordionPanel>
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</div>
+	</div>
+
+
+
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div style="padding-right: 14px;">
+				<!--  <h:inputHidden id="completeBarcode" value="#{salesOrderDistributorInputBean.completeBarcode}" /> -->
+
+				<p:autoComplete id="completeSearchProductDistributor"
+					completeMethod="#{salesOrderDistributorInputBean.completeSearchProductDistributor}"
+					value="#{salesOrderDistributorInputBean.completeSearchProductDistributor}"
+					styleClass="salesorder-ac"
+					disabled="#{!salesOrderDistributorInputBean.disableSeacrh}"
+					placeholder="#{msg.textSearch} #{msg.formProductName}">
+					<p:ajax event="change"
+						listener="#{salesOrderDistributorInputBean.handleKeyPressProduct}"
+						update=":frm001:dataTableSODistributor :frm001:completeSearchProductDistributor 
+			                      :frm001:outputPanelTableOrderDistributor" />
+					<p:ajax event="itemSelect"
+						listener="#{salesOrderDistributorInputBean.handleSelectProduct}"
+						update=":frm001:dataTableSODistributor :frm001:completeSearchProductDistributor 
+			                      :frm001:outputPanelTableOrderDistributor" />
+				</p:autoComplete>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:outputPanel id="outputPanelTableOrderDistributor">
+				<p:panel style="height:250px;overflow:auto;">
+					<p:dataTable id="dataTableSODistributor" var="data"
+						value="#{salesOrderDistributorInputBean.salesOrderDtlVOList}"
+						rowKey="#{data.productId}" rowIndexVar="indexRow" editable="true"
+						lazy="true"
+						selection="#{salesOrderDistributorInputBean.salesOrderDtlTableDel}"
+						selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{salesOrderDistributorInputBean.onRowSelect}"
+							update=":frm001:btnHapusDistributor :frm001:btnUbahDistributor" />
+						<p:ajax event="rowUnselect"
+							listener="#{salesOrderDistributorInputBean.onRowUnSelect}"
+							update=":frm001:btnHapusDistributor :frm001:btnUbahDistributor" />
+
+						<p:column headerText="#{msg.formProductTitle}" styleClass="Wid33">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText value="#{data.productName}" styleClass="Wid50"
+										readonly="true" />
+								</div>
+							</div>
+						</p:column>
+						<p:column headerText="#{msg.formStockOpnameJumlah}"
+							styleClass="Wid9">
+							<div class="Container100">
+								<div class="Container100">
+									<!-- <p:inputText value="#{data.orderQty}" styleClass="Wid60"
+										style="text-align:right"
+										disabled="#{!salesOrderDistributorInputBean.disableSeacrh}"
+										onkeypress="return checkNumeric(event,this,false)">
+
+										<p:ajax event="change"
+											listener="#{salesOrderDistributorInputBean.changeQtyProduct(data)}"
+											update=":frm001:outputPanelTableOrderDistributor :frm001:dataTableSODistributor " />
+									</p:inputText> -->
+
+									<pe:inputNumber id="orderQty" value="#{data.orderQty}"
+										styleClass="Wid60"
+										disabled="#{!salesOrderDistributorInputBean.disableSeacrh}"
+										thousandSeparator="." decimalSeparator="," decimalPlaces="0"
+										emptyValue="0">
+
+										<p:ajax event="change"
+											listener="#{salesOrderDistributorInputBean.changeQtyProduct(data)}"
+											update=":frm001:outputPanelTableOrderDistributor :frm001:dataTableSODistributor " />
+
+									</pe:inputNumber>
+
+								</div>
+							</div>
+						</p:column>
+						<p:column headerText="#{msg.formPoPrice}" styleClass="Wid15">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText value="#{data.unitPrice}" styleClass="Wid80"
+										style="text-align:right" readonly="true">
+										<f:convertNumber pattern="###,###,###,###.###" />
+									</p:inputText>
+								</div>
+							</div>
+						</p:column>
+
+						<p:column headerText="#{msg.formItemDiscount1}" styleClass="Wid10">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText value="#{data.discount1}" styleClass="Wid70"
+										style="text-align:right" readonly="true" />
+								</div>
+							</div>
+						</p:column>
+
+						<p:column headerText="#{msg.formItemDiscount2}" styleClass="Wid10">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText value="#{data.discount2}" styleClass="Wid70"
+										style="text-align:right" readonly="true" />
+								</div>
+							</div>
+						</p:column>
+
+						<p:column headerText="#{msg.formItemDiscount3}" styleClass="Wid10">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText value="#{data.discount3}" styleClass="Wid70"
+										style="text-align:right" readonly="true" />
+								</div>
+							</div>
+						</p:column>
+
+						<p:column headerText="#{msg.formPoTotal}" styleClass="Wid25">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText value="#{data.totalPrice}" styleClass="Wid90"
+										style="text-align:right" readonly="true">
+										<f:convertNumber pattern="###,###,###,###.###" />
+									</p:inputText>
+								</div>
+							</div>
+						</p:column>
+
+						<p:column
+							headerText="#{msg.formPoTotal}  (#{msg.formDiscountTitle})"
+							styleClass="Wid25">
+							<div class="Container100">
+								<div class="Container100">
+									<p:inputText id="discount" value="#{data.totalPriceDiscount}"
+										styleClass="Wid90" style="text-align:right" readonly="true">
+										<f:convertNumber pattern="###,###,###,###.###" />
+									</p:inputText>
+								</div>
+							</div>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+				<p:panel id="panelSumTotalOrderDistributor">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container50">
+								<p:commandButton icon="ui-icon-cart" />
+								&nbsp;
+								<h:outputText id="salesOrderSizeDistributor"
+									value="#{salesOrderDistributorInputBean.salesOrderVoHeader.itemAmount}" />
+								&nbsp;
+								<h:outputText value="Barang" />
+							</div>
+
+							<p:outputPanel
+								rendered="#{salesOrderDistributorInputBean.salesOrderVoHeader.taxTypeCode eq 'TAX_EXCLUDE'}">
+								<div class="Container100">
+									<div class="Container50">&nbsp;</div>
+									<div class="Container30" style="text-align: center;">
+										<h:outputText
+											value="Pajak #{salesOrderDistributorInputBean.salesOrderVoHeader.taxValue}%" />
+									</div>
+									<div class="Container20">
+										<p:inputText
+											value="#{salesOrderDistributorInputBean.salesOrderVoHeader.subTaxValue}"
+											style="text-align: right;" styleClass="Wid80" readonly="true">
+										</p:inputText>
+									</div>
+								</div>
+							</p:outputPanel>
+						</div>
+					</div>
+				</p:panel>
+
+				<!-- PPN -->
+				<p:outputPanel id="outputTotalPpn">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container50">&nbsp;</div>
+							<div class="Container30" style="text-align: center;">
+								<p:outputPanel id="outputTotalPpn2"
+									rendered="#{salesOrderDistributorInputBean.ppnFlag == true}">
+									<h:outputText value="PPN 10%"
+										rendered="#{salesOrderDistributorInputBean.ppnFlag == true}"
+										style="text-align: center;" />
+								</p:outputPanel>
+							</div>
+							<div class="Container20">
+								<p:inputText id="sumTotalPPn"
+									value="#{salesOrderDistributorInputBean.salesOrderVoHeader.sumTotalNoPpn}"
+									style="text-align: right;" styleClass="Wid80" readonly="true"
+									rendered="#{salesOrderDistributorInputBean.ppnFlag == true}">
+									<f:convertNumber pattern="###,###,###,###.###" />
+								</p:inputText>
+							</div>
+						</div>
+					</div>
+				</p:outputPanel>
+
+				<p:outputPanel>
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container50">&nbsp;</div>
+							<div class="Container30" style="text-align: center;">
+								<p:outputPanel id="outputTotal">
+									<h:outputText value="Total" />
+								</p:outputPanel>
+							</div>
+							<div class="Container20">
+								<p:inputText id="sumTotalDistributor"
+									value="#{salesOrderDistributorInputBean.salesOrderVoHeader.sumTotal}"
+									style="text-align: right;" styleClass="Wid80" readonly="true">
+									<f:convertNumber pattern="###,###,###,###.###" />
+								</p:inputText>
+							</div>
+						</div>
+					</div>
+				</p:outputPanel>
+			</p:outputPanel>
+		</div>
+	</div>
+	<div class="Container100">
+		<div style="margin: 0 10px 0 8px">
+			<p:outputPanel id="outputPanelButtonDistributor">
+				<div class="Container100" style="margin: 0 0 3px 0;">
+					<p:commandButton id="btnHapusDistributor" value="Hapus"
+						styleClass="Wid4section2 btn-red"
+						update=":frm001:dataTableSODistributor :frm001:outputPanelButtonDistributor :frm001:salesOrderSizeDistributor :frm001:sumTotalDistributor"
+						actionListener="#{salesOrderDistributorInputBean.buttonDelete}"
+						disabled="#{salesOrderDistributorInputBean.disableButtonOnRowClicked == false}" />
+					<p:commandButton id="btnUbahDistributor" value="Ubah Barang"
+						styleClass="Wid4section2 btn-pesanan"
+						actionListener="#{salesOrderDistributorInputBean.buttonEditProduct}"
+						oncomplete="PF('dialogUbahBarangDistributor').show()"
+						update=":frm001:outputPanelUbahBarangDistributor"
+						disabled="#{salesOrderDistributorInputBean.disableButtonOnRowClicked == false}" />
+					<p:commandButton value="Save" styleClass="Wid4section2 btn-green"
+						actionListener="#{salesOrderBean.modeSave}" update=":frm001 :frm001:dataTableSO " />
+				</div>
+				<div class="Container100" style="margin: 0 0 3px 0;">
+					<p:commandButton value="Batal" styleClass="Wid4section2 btn-red"
+						actionListener="#{salesOrderDistributorInputBean.buttonCancel}"
+						update=":frm001:outputPanelHeaderDistributor :frm001:completeSearchProductDistributor :frm001:dataTableSODistributor :frm001:salesOrderSizeDistributor
+		                   :frm001:doViewCustomer :frm001:sumTotalDistributor :frm001:salesOrderSizeDistributor" />
+					<!-- <p:commandButton value="Save " styleClass="Wid4section2 btn-green"
+						actionListener="#{salesOrderBean.modeSave}" update=":frm001">
+						<p:dataExporter type="pdf" target="dataTableSODistributor"
+							fileName="salesOrderDtlVOList" />
+					</p:commandButton> -->
+					<!-- <p:commandButton value="Pelanggan" oncomplete="PF('dialogCustomerDistributor').show()"
+						   styleClass="Wid4section2 btn-pesanan" actionListener="#{salesOrderDistributorInputBean.buttonCancelDialogCustomer}" 
+						   update=":frm001:outputPanelCustomerDistributor"/>
+		             <p:commandButton value="Pembayaran" styleClass="Wid4section2 btn-green" actionListener="#{salesOrderDistributorInputBean.buttonPayment}"
+	                       update=":frm001:outputPanelDialogPayment :frm001:outputPanelTablePaymentType :frm001:tableDialogPayment 
+	                               :frm001:paymentAmountDistributor :frm001:totalBillDistributor :frm001:growl" /> -->
+				</div>
+			</p:outputPanel>
+		</div>
+	</div>
+
+	<!-- <p:dialog widgetVar="dialogCustomerDistributor" id="dialogCustomerDistributor" modal="true" position="center"
+				width="610" header="Customer" styleClass="dialog-calender">
+	    <p:outputPanel id="outputPanelCustomerDistributor" >		
+			<div class="Container100">		
+	           <div class="Container100">	
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Nama" />
+						 </div>
+						 <div class="Container70">
+			    				<p:inputText value="#{salesOrderDistributorInputBean.customerVO.title}" styleClass="Wid20" />
+			    				<p:inputText value="#{salesOrderDistributorInputBean.customerVO.fullName}" styleClass="Wid60"/>
+						 </div>   
+					 </div>
+				  </div>			  
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Nomor HP" />
+						 </div>
+						 <div class="Container70">
+						      <p:inputText value="#{salesOrderDistributorInputBean.customerVO.phoneNo}" styleClass="Wid90" />
+						 </div> 
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Alamat Email" />
+						 </div>
+						 <div class="Container70">
+						      <p:inputText value="#{salesOrderDistributorInputBean.customerVO.emailAddress}" styleClass="Wid90" />
+						 </div> 
+					  </div>
+				  </div>		
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Tanggal Lahir" />
+						 </div>
+						 <div class="Container70">
+						      <p:calendar navigator="true" value="#{salesOrderDistributorInputBean.customerVO.birthDate}"
+									showOn="button" pattern="#{salesOrderDistributorInputBean.dateFormat}" locale="#{salesOrderDistributorInputBean.dateLocale}" 
+									maxlength="11" />	
+						 </div> 
+					  </div>
+				  </div>	
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Alamat" />
+						 </div>
+						 <div class="Container70">
+						      <p:inputTextarea value="#{salesOrderDistributorInputBean.customerVO.address}" styleClass="Wid90" />
+						 </div> 
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Kota" />
+						 </div>
+						 <div class="Container70">
+						      <p:selectOneMenu value="#{salesOrderDistributorInputBean.customerVO.cityId}">
+								   <f:selectI	tem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{salesOrderDistributorInputBean.citySelectItem}"/>								 		
+							 </p:selectOneMenu>		
+						 </div> 
+					  </div>
+				  </div>
+				  			     	 
+			  </div>
+			  <div class="Container100">
+					<div class="EposContainerIndent">
+						<p:commandButton value="#{msg.buttonCancel}" actionListener="#{salesOrderDistributorInputBean.buttonCancelDialogCustomer}"
+							  oncomplete="PF('dialogCustomerDistributor')hide();" update=":frm001:outputPanelCustomerDistributor" styleClass="Fright"/>					
+						<p:commandButton value="#{msg.buttonSave}" oncomplete="PF('dialogCustomerDistributor').hide()" update=":frm001:outputPanelCustomerDistributor" 
+						      actionListener="#{salesOrderDistributorInputBean.buttonSaveDialogCustomer}" styleClass="Fright"/>	
+					</div>
+			  </div>
+		   </div> 
+		 </p:outputPanel>   		 	
+    </p:dialog>  -->
+
+	<p:dialog widgetVar="dialogUbahBarangDistributor"
+		id="dialogUbahBarangDistributor" modal="true" position="center"
+		width="610" header="Barang">
+		<p:outputPanel id="outputPanelUbahBarangDistributor">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Nama" />
+					</div>
+					<div class="Container70">
+						<p:inputText
+							value="#{salesOrderDistributorInputBean.soDtlVoDialogProduct.productName}"
+							styleClass="Wid80 readonly-bg" readonly="true" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Jumlah" />
+					</div>
+					<div class="Container70">
+						<p:inputText
+							value="#{salesOrderDistributorInputBean.soDtlVoDialogProduct.orderQty}"
+							styleClass="Wid30" style="text-align:right"
+							onkeypress="return checkNumeric(event,this,false)" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Harga" />
+					</div>
+					<div class="Container70">
+						<p:inputText
+							value="#{salesOrderDistributorInputBean.soDtlVoDialogProduct.unitPrice}"
+							styleClass="Wid30 readonly-bg" style="text-align:right"
+							readonly="true" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Diskon" />
+					</div>
+					<div class="Container70">
+						<p:inputText
+							value="#{salesOrderDistributorInputBean.soDtlVoDialogProduct.discValue}"
+							styleClass="Wid30 readonly-bg" style="text-align:right"
+							readonly="true" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Catatan" />
+					</div>
+					<div class="Container70">
+						<p:inputTextarea
+							value="#{salesOrderDistributorInputBean.soDtlVoDialogProduct.notes}"
+							styleClass="Wid80" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonCancel}"
+						actionListener="#{salesOrderDistributorInputBean.buttonCancelDialogProduct}"
+						oncomplete="PF('dialogUbahBarangDistributor')hide();"
+						update=":frm001:outputPanelUbahBarangDistributor"
+						styleClass="Fright" />
+					<p:commandButton value="#{msg.buttonSave}"
+						update=":frm001:outputPanelTableOrderDistributor :frm001:doViewCustomer"
+						styleClass="Fright"
+						actionListener="#{salesOrderDistributorInputBean.buttonSaveDialogProduct}"
+						oncomplete="PF('dialogUbahBarangDistributor').hide()" />
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+
+	<!--  <p:dialog widgetVar="dialogPembayaranDistributor" id="dialogPembayaranDistributor" modal="true" position="center"
+				width="680" header="Pembayaran" >
+	    <p:outputPanel id="outputPanelDialogPaymentDistributor">
+			<div class="Container100">		
+	           <div class="Container100">	
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">
+						    <p:panel>
+						        <ui:repeat var="data" value="#{salesOrderDistributorInputBean.paymentTypeVoList}">
+						            <p:column>
+									   <p:panel styleClass="Wid4section margin-right-bottom" style="float:left;">
+									      <div align="center"> 
+									         <p:commandLink style="text-decoration:none;" actionListener="#{salesOrderDistributorInputBean.buttonDialogPayment(data)}"
+									                 update=":frm001:tableDialogPaymentDistributor">										    
+										     	  <h:outputText value="#{data.paytypeName}"/>
+										     </p:commandLink> 
+										   </div> 
+									   </p:panel>
+								     </p:column>
+						        </ui:repeat>
+						    </p:panel>
+						 </div>   
+					 </div>
+				  </div>	
+				  			  
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">
+						    <p:panel>
+						    	<div style="height:170px;overflow:auto;">
+						    	<p:outputPanel id="outputPanelTablePaymentTypeDistributor">
+							        <p:dataTable id="tableDialogPaymentDistributor" var="data" value="#{salesOrderDistributorInputBean.dataPaymentTypeVoList}">
+							            <p:column headerText="#{msg.buttonAction}">
+										   <p:commandLink actionListener="#{salesOrderDistributorInputBean.buttonDelTablePayment(data)}" 
+										       value="Hapus" update=":frm001:tableDialogPaymentDistributor" />
+									     </p:column>
+									     <p:column headerText="Jenis Pembayaran">
+										     <p:inputText value="#{data.paytypeName}"/>
+									     </p:column>
+									     <p:column headerText="Jumlah">
+										      <p:inputText value="#{data.totalPayment}" style="text-align:right"
+										            onkeypress="return checkNumeric(event,this,false)" >
+										              <p:ajax event="change" listener="#{salesOrderDistributorInputBean.changeTotalPayment(data)}" 
+										                     update=":frm001:changeAmountDistributor :frm001:paymentAmountDistributor tableDialogPaymentDistributor" 
+										                     oncomplete="PF('dialogPembayaranDistributor').show()"/>
+										      </p:inputText>        
+									     </p:column>
+							        </p:dataTable>
+						        </p:outputPanel>
+						        </div>
+						    </p:panel>
+						 </div>   
+					 </div>
+				  </div>
+				  
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">					 
+						      <p:inputText id="totalBillDistributor" value="#{salesOrderDistributorInputBean.salesOrderVoHeader.sumTotalPayment}" styleClass="Fright" 
+						            style="text-align:right;margin-left:10px;" readonly="true" />
+						      <h:outputText value="Jumlah Tagihan" styleClass="Fright"/>
+						 </div>
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">					 
+						      <p:inputText id="paymentAmountDistributor" value="#{salesOrderDistributorInputBean.salesOrderVoHeader.paymentAmount}" styleClass="Fright" 
+						             style="text-align:right;margin-left:10px;" onkeypress="return checkNumeric(event,this,false)"/>
+						      <h:outputText value="Pembayaran" styleClass="Fright"/>
+						 </div>
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">					 
+						      <p:inputText id="changeAmountDistributor" value="#{salesOrderDistributorInputBean.salesOrderVoHeader.changeAmount}" styleClass="Fright" 
+						             style="text-align:right;margin-left:10px;" readonly="true"/>
+						      <h:outputText value="Kembalian" styleClass="Fright"/>
+						 </div>
+					  </div>
+				  </div>
+				  <div class="Container100">
+					<div class="EposContainerIndent">
+						<p:commandButton value="#{msg.buttonCancel}" oncomplete="PF('dialogPembayaranDistributor').hide();" styleClass="Fright"/>					
+						<p:commandButton value="#{msg.buttonSave}" actionListener="#{salesOrderDistributorInputBean.savePayment}"  styleClass="Fright"
+						      update=":frm001:outputPanelHeaderDistributor :frm001:outputPanelTableOrderDistributor :frm001:dataTableSODistributor 
+						              :frm001:outputPanelButtonDistributor :frm001:growl :frm001:outputPanelDialogPaymentDistributor :frm001:paymentAmountDistributor"/>	
+					</div>
+				</div>	  	 
+			  </div>
+			</div>
+		</p:outputPanel>				    		 	
+    </p:dialog> -->
+
+
+</ui:composition>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	
+<hibernate-mapping package="com.wo.epos.module.usm.person_responsibility.model">
+	<class name="RoleResponsibility" table="WO_MST_ROLE_RESPONSIBILITY">
+		<id name="roleResponsibilityId" column="ROLE_RESPONSIBILITY_ID"
+			type="long">
+			<generator class="native">
+				<param name="sequence">ROLE_RESPONSIBILITY_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="job" column="JOB_ID"
+			class="com.wo.epos.module.usm.job.model.JobOptima" fetch="join" />
+
+		<many-to-one name="employee" column="PERSON_NIK"
+			property-ref="npk" class="com.wo.epos.module.mst.employee.model.Employee"
+			fetch="join" />
+
+		<many-to-one name="responsibility" column="RESPONSIBILITY_ID"
+			class="com.wo.epos.module.usm.responsibility.model.Responsibility"
+			fetch="join" />
+
+		<property name="enabled_flag" column="ENABLED_FLAG" type="string" />
+
+		<property name="creation_date" column="CREATION_DATE" type="timestamp" />
+		<property name="created_by" column="CREATED_BY" type="string" />
+		<property name="last_update_date" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="last_update_by" column="LAST_UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

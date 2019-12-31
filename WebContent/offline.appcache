@@ -1,0 +1,15 @@
+CACHE MANIFEST
+# 2012-02-21 v1.0.0
+javax.faces.resource/style.css.jsf?ln=css
+javax.faces.resource/demo_time.js.jsf?ln=js
+
+resources/images/btpn.png
+
+javax.faces.resource/primefaces.css.jsf?ln=primefaces&amp;v=5.1
+javax.faces.resource/primefaces.js.jsf?ln=primefaces&amp;v=5.1
+javax.faces.resource/jquery/jquery.js.jsf?ln=primefaces&amp;v=5.1
+javax.faces.resource/jquery/jquery-plugins.js.jsf?ln=primefaces&amp;v=5.1
+javax.faces.resource/theme.css.jsf?ln=primefaces-aristo
+
+FALLBACK:
+offline.html

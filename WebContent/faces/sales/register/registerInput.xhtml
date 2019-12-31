@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formRegisterAddTitle}" rendered="#{registerInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formRegisterEditTitle}" rendered="#{registerInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>
+		    <p:commandButton value="#{msg.buttonBack}" immediate="true" actionListener="#{registerBean.modeSearch}" update=":frm001" styleClass="Fright"/>
+		    <p:commandButton value="#{msg.buttonSave}" actionListener="#{registerBean.modeSave}" update=":frm001" styleClass="Fright"/>
+		</div>
+	</div>     
+	<div class="Container100">		
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+			<p:outputPanel id="outputPanelCompany" rendered="#{registerInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRegisterCompany}"/><span class="redText"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:autoComplete id="companyName" dropdown="true" completeMethod="#{registerInputBean.completeCompany}" 
+							                value="#{registerInputBean.completeCompany}"
+							                required="true" requiredMessage="#{msg.formRegisterCompany} #{msg.errorMustBeFilled}">
+					              <p:ajax event="itemSelect" listener="#{registerInputBean.handleSelectCompany}" update=":frm001"/>
+					        </p:autoComplete>		
+							<p:message for="companyName" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelOutlet" rendered="#{registerInputBean.userSession.outletId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRegisterOutlet}"/><span class="redText"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:autoComplete id="outletName" dropdown="true" completeMethod="#{registerInputBean.completeOutlet}" 
+							                value="#{registerInputBean.completeOutlet}"
+							                required="true" requiredMessage="#{msg.formRegisterOutlet} #{msg.errorMustBeFilled}">
+					              <p:ajax event="itemSelect" listener="#{registerInputBean.handleSelectOutlet}"/>
+					        </p:autoComplete>		
+							<p:message for="outletName" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRegisterStartTime}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:calendar id="startTime" navigator="true" size="13"
+							value="#{registerInputBean.registerVO.startTime}" showOn="button"
+							pattern="#{registerInputBean.dateFormat}" locale="#{registerInputBean.dateLocale}" maxlength="11" 
+							required="true" requiredMessage="#{msg.formRegisterStartTime} #{msg.errorMustBeFilled}" />
+						<p:inputText styleClass="Wid10" value="#{registerInputBean.registerVO.time}"/>
+						<p:message for="startTime" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRegisterCashier}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<!-- <p:autoComplete id="cashierName" dropdown="true" completeMethod="#{registerInputBean.completeCashier}" 
+						           value="#{registerInputBean.completeCashier}"
+						           required="true" requiredMessage="#{msg.formRegisterCashier} #{msg.errorMustBeFilled}">
+						     <p:ajax event="itemSelect" listener="#{registerInputBean.handleSelectCashier}"/>      
+				        </p:autoComplete> -->
+				        <p:selectOneMenu id="cashierName" value="#{registerInputBean.registerVO.cashierId}"
+							required="true" requiredMessage="#{msg.formRegisterCashier} #{msg.errorMustBeFilled}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+								<f:selectItems value="#{registerInputBean.cashierSelectItem}"/>
+						</p:selectOneMenu>
+						<p:message for="cashierName" />
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Grid Sebelah Kanan -->
+		<div class="Container50 Responsive">
+		     <div class="Container100">
+				<div class="ContainerIndent">		
+				  <p:outputPanel id="outputPanelTablePaymentMethod">
+			         <p:dataTable id="dataTableBarang" var="data" value="#{registerInputBean.registerDtlVOList}"
+			              rowIndexVar="indexRow" editable="true" lazy="true">
+			            <p:column headerText="#{msg.formRegisterPaymentType}" styleClass="Wid23">
+			            	<div class="Container100">
+				            	 <div class="Container100">
+				            	     <h:outputText value="#{data.paymentMethodName}"/>  		              	   
+				    		     </div>	
+			    		    </div>                     
+			            </p:column>			            
+			            <p:column headerText="#{msg.formRegisterInitialFund}" styleClass="Wid20">
+			                 <p:inputText value="#{data.initFund}" styleClass="Wid90" style="text-align:right"
+			                            onkeypress="return checkNumeric(event,this,true)" disabled="#{data.disableInitFund}">
+			                       <p:ajax process="@this"/>       
+			                 </p:inputText>
+			            </p:column>	          
+			         </p:dataTable>	    
+			       </p:outputPanel>	         
+			    </div>
+			</div>
+		</div>
+	</div>
+</ui:composition>

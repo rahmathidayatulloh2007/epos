@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+	<div class="Container100">
+		<div class="ContainerIndent">
+		
+			<h:outputText value="#{msg.formProductAddTitle}" rendered="#{productInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formProductEditTitle}" rendered="#{productInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>
+		    <p:commandButton value="#{msg.buttonBack}" immediate="true" actionListener="#{productBean.modeSearch}" update=":frm001" styleClass="Fright"/>
+		    <p:commandButton value="#{msg.buttonSave}" actionListener="#{productBean.modeSave}" update=":frm001" styleClass="Fright"/>
+		<p:messages id="messagesProduct" showDetail="true" showSummary="false" globalOnly="true"/>	
+		</div>
+		
+	</div>     
+	<div class="Container100">	
+		
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+		    <p:outputPanel id="outputPanelCompany" rendered="#{productInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formProductCompany}"/><span class="redText"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:autoComplete id="companyName" dropdown="true" completeMethod="#{productInputBean.completeCompany}" 
+							                value="#{productInputBean.completeCompany}"
+							                >
+					              <p:ajax event="itemSelect" listener="#{productInputBean.handleSelectCompany}" update=":frm001"/>
+					        </p:autoComplete>		
+							<p:message for="companyName" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductCode}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="productCode" value="#{productInputBean.productVO.productCode}" maxlength="8" rendered="#{productInputBean.MODE_TYPE eq 'ADD'}"
+							    styleClass="Wid90"/>
+						<p:message for="productCode" rendered="#{productInputBean.MODE_TYPE eq 'ADD'}"/>
+						<p:inputText value="#{productInputBean.productVO.productCode}" readonly="true" 
+						       rendered="#{productInputBean.MODE_TYPE eq 'EDIT'}" styleClass="Wid90 readonly-bg"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductBarcode}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="barcode" value="#{productInputBean.productVO.barcode}" maxlength="32" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductName}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="productName" value="#{productInputBean.productVO.productName}" maxlength="128"
+							   styleClass="Wid90"/>
+											
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductDesc}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="productDesc" value="#{productInputBean.productVO.productDesc}" 
+						       styleClass="Wid90" maxlength="512"/>	    
+					</div>
+				</div>
+			</div>
+<!-- Satuan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductUm}"/><span class="redText"> *</span>
+					</div>
+
+
+					<div class="Container20 Responsive">
+						<p:remoteCommand name="onChangeuM"
+							actionListener="#{productInputBean.onChangeuM()}"
+							update="frm001:labelUm"></p:remoteCommand>
+						<p:selectOneMenu id="umId" onchange="onChangeuM()"
+							value="#{productInputBean.productVO.umId}"  style="width:75%">
+							
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{productInputBean.umSelectItem}" />
+							<p:ajax event="change" update=":frm001:labelUm" 
+							listener="#{productInputBean.onChangeuM()}" />
+						</p:selectOneMenu>
+						
+					</div>
+	
+					<div class="Container20 Responsive">
+						<p:inputText id="itemPerUm2"
+							value="#{productInputBean.productVO.unitPerUm2}" 
+							style="width:50%"
+							onkeypress="return checkNumeric(event,this,false)"/>
+						
+					</div>
+					<h:panelGroup id="panelUm">
+						<div class="Container10 Responsive">
+							<h:outputText id="labelUm" value="#{productInputBean.productVO.umName}" />
+						</div>
+					</h:panelGroup>
+					<div class="Container20 Responsive">
+						<p:selectOneMenu id="um2Id" 
+							value="#{productInputBean.productVO.um2Id}" style="width:60%">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{productInputBean.umSelectItem}" />
+						</p:selectOneMenu>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductCategories}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:autoComplete id="categoryName" dropdown="true" completeMethod="#{productInputBean.completeCategory}" value="#{productInputBean.completeCategory}"
+						                >
+				              <p:ajax event="itemSelect" listener="#{productInputBean.handleSelectCategory}"/>
+				        </p:autoComplete>		
+									
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductLaunchingDate}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:calendar id="launchingDt" navigator="true" size="13"
+							value="#{productInputBean.productVO.launchingDt}" showOn="button"
+							pattern="#{productInputBean.dateFormat}" locale="#{productInputBean.dateLocale}" maxlength="11" 
+							 />						
+							
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						 <h:outputText value="#{msg.formProductUnitCost}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+					     <p:inputText value="IDR" readonly="true" styleClass="Wid10 readonly-bg"/>
+						 <p:inputText id="unitCost" value="#{productInputBean.productVO.unitCost}" styleClass="Wid60" style="text-align:right"
+						      
+						       onkeypress="return checkNumeric(event,this,false)"/>
+						      		
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductUnitPrice}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+					     <p:inputText value="IDR" readonly="true" styleClass="Wid10 readonly-bg"/>
+						 <p:inputText id="unitPrice" value="#{productInputBean.productVO.unitPrice}" styleClass="Wid60" style="text-align:right"
+						        
+						        onkeypress="return checkNumeric(event,this,false)"/>
+						       		
+					</div>
+				</div>
+			</div>		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductActive}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{productInputBean.productVO.activeFlag}">
+							<f:selectItems value="#{productInputBean.activeSelectItem}"/>
+						</p:selectOneMenu>						
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductIngredientFlag}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu value="#{productInputBean.productVO.ingredientFlag}">
+							<f:selectItems value="#{productInputBean.ingredientSelectItem}"/>
+						</p:selectOneMenu>						
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+		     <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.textImage}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:fileUpload
+				            id="upload"
+				            widgetVar="wvFileUpload"
+				            value="#{productInputBean.uploadedFile}"
+				            mode="simple"  />
+		    
+				        <p:commandButton value="Submit Foto" ajax="false" process="@this"
+				        	actionListener="#{productInputBean.handleUploadedFile}" update=":frm001:upload">
+				        </p:commandButton>
+				        <p:message id="uploadMessage" for="upload"/>
+					
+						<p:graphicImage
+							rendered="#{productInputBean.streamUploadId != null}"
+							value="#{mbImageStreamer.image}" width="180" height="200">
+							<f:param name="funcId"
+								value="#{productInputBean.getUploadFuncId()}" />
+							<f:param name="uploadId"
+								value="#{productInputBean.streamUploadId}" />
+						</p:graphicImage>						
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProductBufferStock}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="bufferStock"
+							value="#{productInputBean.productVO.bufferStock}" 
+							style="width:50%" onkeypress="return checkNumeric(event,this,false)"/>
+						
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	
+	<div class="Container100">
+		<div class="ContainerIndent">			    
+			 <p:commandButton value="#{msg.buttonAdd}" update=":frm001:dataTableBarang" 
+			     actionListener="#{productInputBean.addItem}"  process="@this"/>       
+		</div>
+    </div>
+    <div class="Container100">
+		<div class="ContainerIndent">		
+		  <!-- <p:messages id="messagesTable" showDetail="true" showSummary="false" globalOnly="true"/>	 -->	
+		  <p:outputPanel id="outputPanelTableBarang">
+	         <p:dataTable id="dataTableBarang" var="data" value="#{productInputBean.productBomVoList}"
+	              rowIndexVar="indexRow" editable="true" lazy="true">
+	              
+	            <p:column headerText="#{msg.action}" style="text-align:center" styleClass="Wid7">	           
+	                 <p:commandLink id="deleteLink" value="#{msg.buttonDelete}" process="@this dataTableBarang"
+									update="dataTableBarang">
+						<p:collector value="#{data}" removeFrom="#{productInputBean.productBomVoList}" unique="true" />
+					</p:commandLink>					
+	            </p:column>	    
+	            <p:column headerText="#{msg.formProductItem}" styleClass="Wid23">
+	            	<div class="Container100">
+	            		<p:outputPanel>   
+		            	  <div class="Container100">
+		            	      <p:autoComplete id="itemName" dropdown="true" completeMethod="#{productInputBean.completeItem}" 
+					              value="#{data.completeItem}">
+					              <p:ajax event="itemSelect" listener="#{productInputBean.indexDialogItem(indexRow)}" update="dataTableBarang"/>  
+					              <p:ajax event="itemSelect" listener="#{productInputBean.handleSelectItem}" update="dataTableBarang"/>   
+					          </p:autoComplete>			            	   
+		    		     </div>	
+		    		    </p:outputPanel> 
+	    		    </div>                     
+	            </p:column>
+	            <p:column headerText="#{msg.formProductUm}" styleClass="Wid20">
+	           		 <p:inputText value="#{data.umName}" readonly="true" styleClass="Wid90 readonly-bg" />
+	            </p:column>
+	            <p:column headerText="#{msg.formProductQty}" styleClass="Wid20">
+	                 <p:inputText value="#{data.itemQty}" styleClass="Wid90" style="text-align:right"
+	                              onkeypress="return checkNumeric(event,this,false)">
+	                       <p:ajax process="@this"/>       
+	                 </p:inputText>
+	            </p:column>	          
+	         </p:dataTable>	    
+	       </p:outputPanel>	         
+	    </div>
+	</div>
+		<p:spacer><br></br></p:spacer>
+	<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+	<div class="ContainerIndent">
+    	<h:outputText value= "#{msg.formItemDiscountTitle}"></h:outputText>
+    	</div>
+    </div>
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<p:dataTable id="dataDiscount"
+					value="#{productInputBean.itemDiscountList}" var="data"
+					rowIndexVar="index">
+
+					<p:column headerText="#{msg.formCustomerType2}">
+						<h:outputText value="#{data.parameterDtl.parameterDtlName}" style="center" />
+					</p:column>
+					<p:column headerText="#{msg.formItemDiscount1}">
+						<p:inputText id="discount1"
+							value="#{data.discount1}" style="width:95%" 
+							onkeypress="return checkNumeric(event,this,false)"/>
+					</p:column>
+					<p:column headerText="#{msg.formItemDiscount2}">
+						<p:inputText id="discount2"
+							value="#{data.discount2}" style="width:95%" 
+							onkeypress="return checkNumeric(event,this,false)"/>
+					</p:column>
+					<p:column headerText="#{msg.formItemDiscount3}">
+						<p:inputText id="discount3"
+							value="#{data.discount3}" style="width:95%" 
+							onkeypress="return checkNumeric(event,this,false)"/>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</div>
+	
+</ui:composition>

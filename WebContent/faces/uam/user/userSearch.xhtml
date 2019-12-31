@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formUserTitle}" style="font-weight:bold;"/>
+			<!-- <p:growl id="growlMessage" showDetail="true" showSummary="false" /> -->
+			<p:messages id="messages" showDetail="true" showSummary="false"/>
+		</div>
+	</div>	
+		
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+						<p:inputText id="searchAll" readonly="#{userSearchBean.disableSearchAll}"
+								value="#{userSearchBean.searchAll}" placeholder="#{msg.textSearch} #{msg.formUserTitle}" autocomplete="off" styleClass="WidPos"/>
+				</div>
+				<div class="Container30">				
+						<p:commandButton actionListener="#{userSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>	
+						<p:commandButton actionListener="#{userSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableUser"/>
+						<p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/>			
+			    </div>
+			    <div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{userBean.modeDelete}"
+						update="frm001:outputPanelSearch" styleClass="Fright"
+						disabled="#{fn:length(userSearchBean.selectedUsers) == 0}">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+					
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}" styleClass="Fright"
+						            actionListener="#{userBean.modeEdit}" update=":frm001"
+						            disabled="#{fn:length(userSearchBean.selectedUsers) == 0 or fn:length(userSearchBean.selectedUsers)>1}"/>
+						<p:commandButton value="#{msg.buttonAdd}" styleClass="Fright"
+						            actionListener="#{userBean.modeAdd}" update=":frm001"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableUser" value="#{userSearchBean.pagingUser}" 
+				      selection="#{userSearchBean.selectedUsers}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.userId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{userSearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>      
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      
+      								    
+				    <p:column headerText="#{msg.formUserCompany}" rendered="#{userSearchBean.userSession.companyId == null}">
+						<h:outputText value="#{data.companyName}" />
+					</p:column>
+										
+					<p:column headerText="#{msg.formUserCode}">
+						<h:outputText value="#{data.userCode}" />
+					</p:column>			
+					<p:column headerText="#{msg.formUserEmployeeNo}">
+						<h:outputText value="#{data.employeeNo}" />
+					</p:column>		
+					<p:column headerText="#{msg.formUserEmployeeName}">
+						<h:outputText value="#{data.employeeName}" />
+					</p:column>		
+					<p:column headerText="#{msg.formUserRole}">
+						<h:outputText value="#{data.roleName}" />
+					</p:column>		
+				</p:dataTable>
+			</div>
+ 	</div>
+ 	
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+					width="500" header="#{msg.textSearchs} #{msg.formUmTitle}" styleClass="dialogClose">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	    <p:outputPanel id="outputPanleDialog">
+	       <p:outputPanel rendered="#{userSearchBean.userSession.companyId == null}"> 
+		       <div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+		                    <h:outputText value="#{msg.formUserCompany}"/>
+		                </div>
+					    <div class="Container70">
+				            <p:selectOneMenu value="#{userSearchBean.userVOSearchDialog.companyId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									<f:selectItems value="#{userSearchBean.companySelectItem}"/>
+							</p:selectOneMenu>	
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>		
+	        <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	                    <h:outputText value="#{msg.formUserCode}"/>
+	                </div>
+				    <div class="Container70">
+	                    <p:inputText value="#{userSearchBean.userVOSearchDialog.userCode}" autocomplete="off" styleClass="Wid90"/>
+	                </div> 
+	             </div>
+	         </div>            
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	                    <h:outputText value="#{msg.formUserEmployeeNo}"/>
+	                </div>
+				    <div class="Container70">
+	                    <p:inputText value="#{userSearchBean.userVOSearchDialog.employeeNo}" autocomplete="off" styleClass="Wid90"/>
+	                </div>
+	             </div>
+	          </div>          
+	          <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	                    <h:outputText value="#{msg.formUserEmployeeName}"/>
+	                </div>
+	                <div class="Container70">    	           
+	               		<p:inputText value="#{userSearchBean.userVOSearchDialog.employeeName}" autocomplete="off" styleClass="Wid90"/>
+	           		</div>
+	             </div>
+	          </div>     
+	          <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		<h:outputText value="#{msg.formUserRole}"/>
+	           		</div>
+	                <div class="Container70"> 
+		               <p:selectOneMenu value="#{userSearchBean.userVOSearchDialog.roleId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{userSearchBean.roleSelectItem}"/>
+						</p:selectOneMenu>	
+	           		</div>
+	             </div>
+	          </div>     
+	          <div class="Container100">
+				<div class="EposContainerIndent">
+	               <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableUser :frm001:searchAll"
+	                    actionListener="#{userSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	               <p:commandButton value="#{msg.buttonClear}" actionListener="#{userSearchBean.clearDialog}"
+	                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableUser :frm001:searchAll :frm001:dialogSearch"/>
+	            </div>
+	          </div>
+	   </p:outputPanel>  
+	</p:dialog>
+	
+</ui:composition>

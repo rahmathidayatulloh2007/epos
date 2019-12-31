@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.itemStock.model">
+	<class name="ItemStock" table="POS_ITEM_STOCK">
+		<id name="itemStockId" column="STOCK_ID" type="long">
+			<generator class="native">
+				<param name="sequence">ITEM_STOCK_SEQ</param>
+			</generator>
+		</id>
+		
+		<property name="companyId" column="COMPANY_ID" type="long" />
+		<many-to-one name="company" column="COMPANY_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join" >
+		</many-to-one>
+		
+		<property name="outletId" column="OUTLET_ID" type="long" />
+		<many-to-one name="outlet" column="OUTLET_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join" >
+		</many-to-one>
+				
+		<property name="itemId" column="ITEM_ID" type="long" />
+		<many-to-one name="item" column="ITEM_ID" insert="false" update="false"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join" >
+		</many-to-one>
+			
+		<property name="stockQty" column="STOCK_QTY" type="double" />		
+		<property name="outgoingQty" column="OUTGOING_QTY" type="double" />
+		<property name="incomingQty" column="INCOMING_QTY" type="double" />
+		<property name="reorderQty" column="REORDER_QTY" type="double" />
+		<property name="averagePrice" column="AVERAGE_PRICE" type="double" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+	</class>
+</hibernate-mapping>
+

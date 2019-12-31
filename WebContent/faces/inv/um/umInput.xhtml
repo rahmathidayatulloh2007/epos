@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">	
+		
+			<h:outputText value="#{msg.formUmAddTitle}" rendered="#{umInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formUmEditTitle}" rendered="#{umInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>			    
+			
+			 <p:commandButton value="#{msg.buttonBack}" immediate="true" actionListener="#{umBean.modeSearch}" 
+			        update=":frm001" styleClass="Fright"/>
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{umBean.modeSave}" 
+			        update=":frm001" styleClass="Fright"/>   
+			 <p:messages id="messagesUM" showDetail="true" showSummary="false" globalOnly="true"/>              
+		</div>
+    </div>
+     
+    <div class="Container100">     
+		<div class="Container50 Responsive">	
+		     <p:outputPanel rendered="#{umInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+				             <h:outputText value="#{msg.formUmCompany}"/><span style="color: red"> *</span>
+				    	</div>
+					    <div class="Container70 Responsive">
+						   	 <p:selectOneMenu id="companyId" value="#{umInputBean.umVO.companyId}">							
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{umInputBean.companySelectItem}"/>				
+							 </p:selectOneMenu>			
+						</div>
+					</div>
+			    </div>	    
+		    </p:outputPanel>			 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formUmName}"/><span style="color: red"> *</span>
+			    	</div>
+				    <div class="Container70 Responsive">
+					     <p:inputText id="umName" 
+							 value="#{umInputBean.umVO.umName}" maxlength="16" autocomplete="off" styleClass="Wid90"/>		
+						 							
+					</div>
+				</div>
+		    </div>		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formUmDesc}"/>
+			        </div>
+				    <div class="Container70 Responsive">
+					     <p:inputTextarea id="umDesc" maxlength="64" value="#{umInputBean.umVO.umDesc}" styleClass="Wid90"/>						
+					</div>
+				</div>
+		    </div>		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	<h:outputText value="#{msg.formUmActive}"/>
+			        </div>
+				    <div class="Container70 Responsive">
+						 <p:selectOneMenu id="activeFlag" value="#{umInputBean.umVO.activeFlag}">
+								<f:selectItems value="#{umInputBean.activeSelectItem}"/>
+						 </p:selectOneMenu>						
+				    </div>
+			    </div>
+			</div>   
+		</div>
+	</div>
+				    
+</ui:composition>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.sales.receipt.model">
+	<class name="ReceiptDtl" table="POS_SALES_RECEIPT_DTL">
+		<id name="receiptDtlId" column="RECEIPT_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">RECEIPT_DTL_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="receipt" column="RECEIPT_ID"
+			class="com.wo.epos.module.sales.receipt.model.Receipt" fetch="join">
+		</many-to-one>
+
+		<property name="paymentTypeId" column="PAYTYPE_ID" type="long" />
+		<many-to-one name="paymentType" column="PAYTYPE_ID"
+			insert="false" update="false"
+			class="com.wo.epos.module.master.paymentType.model.PaymentType"
+			fetch="join">
+		</many-to-one>
+
+		<property name="paymentAmount" column="PAYMENT_AMOUNT" type="double" />
+
+		<property name="chequeNumber" column="CHEQUE_NUMBER" type="string" />
+		<property name="accountNumber" column="ACCOUNT_NUMBER" type="string" />
+		<property name="orderName" column="ORDER_NAME" type="string" />
+		<property name="underName" column="UNDER_NAME" type="string" />
+		<property name="invFileName" column="INV_FILE_NAME" type="string" />
+
+		<property name="invFile" column="INV_FILE" type="byte[]" />
+
+		<property name="chequeCashDate" column="CHEQUE_CASH_DATE"
+			type="date" />
+		<property name="transferDate" column="TRANSFER_DATE" type="date" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+
+	</class>
+</hibernate-mapping>

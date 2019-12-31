@@ -1,0 +1,876 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+   
+   <div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSalesOrderBistroTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>
+   
+   <div class="Container100">		
+        <div class="Container100 Responsive">
+			<div id="tes1">					
+				<div style="" id="tes2">
+		          <div class="Container100">
+					<div class="EposContainerIndent">
+					    <p:outputPanel id="outputPanelHeader">	
+						  <div class="Container100 Responsive" style="text-align:right;">
+						      <div class="Container-NW Fright" style="width:15%;">	
+					              <p:inputText value="#{salesOrderBistroInputBean.salesOrderVoHeader.soNo}" 
+					                   styleClass="Fright readonly-bg" readonly="true" style="width:80px;margin-left:5px;"/>
+					              <h:outputText value="Nomor" styleClass="Fright" style="margin-top:5px;"/>
+					         </div>
+					         <div class="Container-NW Fright" style="width:15%">	
+					           	  <p:inputText id="soTypeName" value="#{salesOrderBistroInputBean.salesOrderVoHeader.soTypeName}" 
+					           	       styleClass="Fright readonly-bg" readonly="true" style="width:100px;margin-left:5px;"/>
+					           	  <h:outputText value="Jenis" styleClass="Fright" style="margin-top:5px;"/>
+					         </div>	
+					         <div class="Container-NW Fright" style="width:15%">								         
+					              <p:inputText id="equipmentName" value="#{salesOrderBistroInputBean.salesOrderVoHeader.equipmentName}" 
+					                   styleClass="Fright readonly-bg" readonly="true" style="width:100px;margin-left:5px;"/>
+					              <h:outputText value="Meja" styleClass="Fright" style="margin-top:5px;"/>					         
+					         </div>					         
+						     <div class="Container-NW Fright" style="width:18%">			     
+					              <p:inputText value="#{salesOrderBistroInputBean.sdf.format(salesOrderBistroInputBean.salesOrderVoHeader.soDate)}" 
+					                   styleClass="Fright readonly-bg" readonly="true" style="width:100px;margin-left:5px;"/>
+							      <h:outputText value="Tanggal" styleClass="Fright" style="margin-top:5px;"/>
+							 </div>			
+							  <div class="Container-NW Fright" style="width:17%">								         
+					              <p:inputText id="tableNo" 
+					                   styleClass="Fright readonly-bg" readonly="true" style="width:100px;margin-left:5px;"/>
+					              <h:outputText value="Status" styleClass="Fright" style="margin-top:5px;"/>					         
+					         </div>	         
+					         <div class="Container-NW Fright" style="width:20%">
+						          <p:selectOneMenu id="registerId" style="margin-left:5px;"
+									  value="#{salesOrderBistroInputBean.salesOrderVoHeader.registerId}" styleClass="Fright">
+									  <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									  <f:selectItems value="#{salesOrderBistroInputBean.registerSelectItemList}"/>
+								  </p:selectOneMenu>
+						          <h:outputText value="Register" styleClass="Fright" style="margin-top:5px;"/>							          
+						     </div>
+					         				          
+					      </div> 
+					    </p:outputPanel>     
+		            </div>
+		           </div> 
+				</div>
+		
+				<div class="Container50" style="" id="tes3">	
+				    <div class="Container100">
+					   <div class="EposContainerIndent">
+						    <div class="Container100">
+						     <p:panel id="panelCategory" header="Kategori">
+						         <ui:repeat var="data" value="#{salesOrderBistroInputBean.categoryVoList}" varStatus="statusCategory">
+									 <p:column>
+									   <p:panel styleClass="Wid6section margin-right-bottom" style="float:left;">
+									      <div align="center"> 
+									         <p:commandLink update=":frm001:panelProduct" style="text-decoration:none;"
+										         actionListener="#{salesOrderBistroInputBean.buttonCategery(statusCategory.index, data)}">										    
+										     	  <h:outputText value="#{data.categoryName}"/>
+										     </p:commandLink> 
+										   </div> 
+									   </p:panel>
+								     </p:column>
+								     <h:outputText value="&lt;/tr&gt;&lt;tr&gt;" escape="false" rendered="#{(statusCategory.index + 1 ) mod 6 eq 0}"/> 
+								  </ui:repeat>						         
+						      </p:panel>
+							    
+						    </div>						
+					   </div>
+				    </div>
+				    <div class="Container100">
+					   <div class="EposContainerIndent">
+						    <div class="Container100">
+						      <p:panel id="panelProduct" header="Product Kategori">
+						           <ui:repeat var="data" value="#{salesOrderBistroInputBean.productVoList}" varStatus="statusOrder"> 
+						                <p:column>
+											<p:panel styleClass="Wid6section margin-right-bottom" style="float:left;">
+											  <p:commandLink actionListener="#{salesOrderBistroInputBean.selectProduct(data)}" process="@this" 
+											          update=":frm001:outputPanelTableOrder :frm001:dataTableSalesOrder :frm001:outputPanelTagihan :frm001:tableDialogTagihan" rendered="#{data.imageFile ne null}">
+												<p:graphicImage value="#{mbImageStreamer.image}" width="80"
+													height="80">
+													<f:param name="funcId" value="#{data.productId}" />
+													<f:param name="uploadId" value="#{salesOrderBistroInputBean.streamUploadId}" />													
+												</p:graphicImage>											  
+											  </p:commandLink>
+											  <div align="center">
+											    <p:commandLink actionListener="#{salesOrderBistroInputBean.selectProduct(data)}" process="@this"
+											          update=":frm001:outputPanelTableOrder :frm001:dataTableSalesOrder :frm001:outputPanelTagihan :frm001:tableDialogProductTagihan">		
+												   <h:outputText value="#{data.productName}"/>
+												</p:commandLink>   
+											  </div>		
+											</p:panel>
+										</p:column>
+										<h:outputText value="&lt;/tr&gt;&lt;tr&gt;" escape="false" rendered="#{(statusOrder.index + 1 ) mod 6 eq 0}"/> 
+							     	</ui:repeat>
+						      </p:panel>							     
+						    </div>						
+					   </div>
+				    </div>
+				</div>
+		
+				<div class="Container50" style="" id="tes4">
+				     <div class="Container100">
+					     <div class="Container100">
+							<div class="ContainerIndent">		
+							  <p:outputPanel id="outputPanelTableOrder">
+							    <p:panel style="height:250px;overflow:auto;">
+						            <p:dataTable id="dataTableSalesOrder" var="data" value="#{salesOrderBistroInputBean.salesOrderDtlVOList}" rowKey="#{data.productId}"
+						                 rowIndexVar="indexRow" editable="true" lazy="true" selection="#{salesOrderBistroInputBean.salesOrderDtlTableDel}" 
+						                 selectionMode="single">						              
+							           <!--    <f:facet name="header">
+							              
+									       </f:facet>
+									        <p:ajax event="rowSelectCheckbox" />		    
+							     			<p:ajax event="rowUnselectCheckbox" />  
+							     			<p:ajax event="rowSelect"/>       
+									       
+									       <p:column selectionMode="single" styleClass="Wid5"/> -->
+									       
+									       <p:ajax event="rowSelect" listener="#{salesOrderBistroInputBean.onRowSelect}" update=":frm001:outputPanelButton"/>      
+								           <p:ajax event="rowUnselect" listener="#{salesOrderBistroInputBean.onRowUnSelect}" update=":frm001:outputPanelButton"/>  
+								                  
+							               <p:column headerText="Product" styleClass="Wid33">
+							            	    <div class="Container100">
+								            	     <div class="Container100">
+														<!-- <p:inputText value="#{data.productName}" styleClass="Wid90 readonly-bg" readonly="true"/> -->
+														<h:outputText value="#{data.productName}" />
+													</div>	
+							    		        </div>                     
+							               </p:column>
+							               <p:column headerText="Jumlah" styleClass="Wid9">
+							            	    <div class="Container100">
+								            	     <div class="Container100" align="right">
+														<!-- <p:inputText value="#{data.orderQty}" styleClass="Wid60 readonly-bg" style="text-align:right" readonly="true"/> -->
+												        <h:outputText value="#{data.orderQty}" />
+													</div>	
+							    		        </div>                     
+							               </p:column>
+							               <p:column headerText="Harga" styleClass="Wid15">
+							            	    <div class="Container100">
+								            	     <div class="Container100" align="right">
+														<!-- <p:inputText value="#{data.unitPrice}" styleClass="Wid80 readonly-bg" style="text-align:right" readonly="true"/> -->
+														<h:outputText value="#{data.unitPrice}"/>
+													</div>	
+							    		        </div>                     
+							               </p:column>					            
+							               <p:column headerText="Diskon" styleClass="Wid10">
+							            	    <div class="Container100">
+								            	     <div class="Container100" align="right">
+														<!-- <p:inputText value="#{data.discPercent}" styleClass="Wid70 readonly-bg" style="text-align:right" readonly="true"/> -->
+														<h:outputText value="#{data.discPercent}" />
+													</div>	
+							    		        </div>                     
+							               </p:column>	
+							               <p:column headerText="Total" styleClass="Wid25">
+							            	    <div class="Container100">
+								            	     <div class="Container100" align="right">
+														<!-- <p:inputText value="#{data.totalPrice}" styleClass="Wid90 readonly-bg" style="text-align:right" readonly="true"/> -->
+														<h:outputText value="#{data.totalPrice}" />
+													</div>	
+							    		        </div>                     
+							               </p:column>	
+							         </p:dataTable>	
+							      </p:panel>
+							      <p:panel id="panelSumTotalOrder">
+							        <div class="Container100">
+							          <div class="EposContainerIndent">
+								         <div class="Container50">
+								              <p:commandButton icon="ui-icon-cart"/>&nbsp;
+								              <h:outputText id="salesOrderSize" value="#{salesOrderBistroInputBean.salesOrderVoHeader.itemAmount}"/>&nbsp;
+								              <h:outputText value="Barang" />
+								         </div>									       
+								         <div class="Container30" style="text-align: center;">
+								              <h:outputText value="Sub Total" />
+								         </div>
+								         <div class="Container20">
+								              <p:inputText id="subtotal" value="#{salesOrderBistroInputBean.salesOrderVoHeader.subTotal}" 
+								                     style="text-align: right;" styleClass="Wid80 readonly-bg" readonly="true"/>
+								         </div>
+									     <div class="Container100">
+								              <div class="Container50">&nbsp;</div>									       
+								              <div class="Container30" style="text-align: center;">
+								                   <h:outputText value="#{salesOrderBistroInputBean.salesOrderVoHeader.titelDiscount}" />
+								              </div>
+									          <div class="Container20">
+									             <p:inputText id="subDiskon" value="#{salesOrderBistroInputBean.salesOrderVoHeader.subDiskon}" 
+									                     style="text-align: right;" styleClass="Wid80 readonly-bg" readonly="true"/>
+									          </div>
+									     </div>
+									     
+									     <p:outputPanel rendered="#{salesOrderBistroInputBean.salesOrderVoHeader.taxTypeCode eq 'TAX_EXCLUDE'}">
+										     <div class="Container100">
+									              <div class="Container50">&nbsp;</div>									       
+									              <div class="Container30" style="text-align: center;">
+									                   <h:outputText value="Pajak #{salesOrderBistroInputBean.salesOrderVoHeader.taxValue}%" />
+									              </div>
+										          <div class="Container20">
+										             <p:inputText value="#{salesOrderBistroInputBean.salesOrderVoHeader.subTaxValue}" 
+										                     style="text-align: right;" styleClass="Wid80 readonly-bg" readonly="true">
+										             </p:inputText>        
+										          </div>
+										     </div>
+									     </p:outputPanel>
+									     
+									     <p:outputPanel rendered="#{salesOrderBistroInputBean.salesOrderVoHeader.soTypeCode eq 'SO_DELIVERY'}">
+										     <div class="Container100">
+									              <div class="Container50">&nbsp;</div>									       
+									              <div class="Container30" style="text-align: center;">
+									                   <h:outputText value="Biaya Pengiriman" />
+									              </div>
+										          <div class="Container20">
+										             <p:inputText value="#{salesOrderBistroInputBean.salesOrderVoHeader.deliveryCost}" 
+										                     style="text-align: right;" styleClass="Wid80">
+										                   <p:ajax event="change" listener="#{salesOrderBistroInputBean.sumTotal}" 
+										                           update=":frm001:sumTotal"/>  
+										             </p:inputText>        
+										          </div>
+										     </div>
+									     </p:outputPanel>
+									     
+									     <!-- <div class="Container100">
+								                <div class="Container50">
+								                   <h:outputText value="Pengiriman" style="float:left;margin-top:7px;"/>&nbsp;
+								                   <p:selectOneRadio value="#{salesOrderBistroInputBean.salesOrderVoHeader.orderTypeOption}" 
+								                            style="float:left;">
+											            <f:selectItem itemLabel="Bawa Pulang" itemValue="1" />
+											            <f:selectItem itemLabel="Dikirim" itemValue="2" />
+											        </p:selectOneRadio>								                  
+								              </div>									       
+								              <div class="Container30" style="text-align: center;">
+								                   <h:outputText value="Biaya Pengiriman" />
+								              </div>
+									          <div class="Container20">
+									             <p:inputText value="#{salesOrderBistroInputBean.salesOrderVoHeader.orderPrice}" 
+									                     style="text-align: right;" styleClass="Wid80">
+									                   <p:ajax event="change" listener="#{salesOrderBistroInputBean.sumTotal}" 
+									                           update=":frm001:sumTotal"/>  
+									             </p:inputText>        
+									          </div>
+									       </div> -->
+								       </div>
+								     </div>        
+							      </p:panel> 
+							      <p:panel>
+							         <div class="Container100">
+							            <div class="EposContainerIndent">
+							              <div class="Container50">&nbsp;</div>									       
+								              <div class="Container30" style="text-align: center;">
+								                   <h:outputText value="Total" />
+								              </div>
+									          <div class="Container20">
+									             <p:inputText id="sumTotal" value="#{salesOrderBistroInputBean.salesOrderVoHeader.sumTotal}" 
+									                     style="text-align: right;" styleClass="Wid80 readonly-bg" readonly="true"/>
+									          </div>
+									      </div>    
+								     </div>
+							      </p:panel> 	        
+						       </p:outputPanel>	         
+						    </div>
+						   </div> 
+						   <!-- Fungsi CommondButton -->
+						   <div class="Container100">
+					          <div style="margin: 0 10px 0 8px">
+					             <p:outputPanel id="outputPanelButton">
+					                <div class="Container100" style="margin: 0 0 3px 0;">
+							             <p:commandButton value="Buat Pemesanan" oncomplete="PF('dialogPemesanan').show()" update=":frm001:outputPanleDialog"
+							                      rendered="#{salesOrderBistroInputBean.disableButtonOrder}" styleClass="Wid4section2 btn-pesanan"/>		
+							           
+							             <p:outputPanel rendered="#{salesOrderBistroInputBean.salesOrderVoHeader.statusCode eq 'SO_PROCEED' and salesOrderBistroInputBean.userSession.picFlag eq 'Y'}">
+								             <p:commandButton value="Hapus" actionListener="#{salesOrderBistroInputBean.buttonDelete}" update=":frm001:outputPanelTableOrder"
+								                      rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-red" 
+								                      disabled="#{!salesOrderBistroInputBean.disableButtonOnRowClicked}"/>
+								             <p:commandButton value="Ubah Barang" actionListener="#{salesOrderBistroInputBean.buttonEditProduct}" 
+								                      oncomplete="PF('dialogUbahBarang').show()" update=":frm001:outputPanelUbahBarang"			
+								                      disabled="#{!salesOrderBistroInputBean.disableButtonOnRowClicked}"		                      
+								                      rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-pesanan"/>								               
+							             </p:outputPanel> 
+							             
+							             <p:outputPanel rendered="#{salesOrderBistroInputBean.salesOrderVoHeader.statusCode ne 'SO_PROCEED'}">
+								             <p:commandButton value="Hapus" actionListener="#{salesOrderBistroInputBean.buttonDelete}" update=":frm001:outputPanelTableOrder"
+								                      rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-red"
+								                      disabled="#{!salesOrderBistroInputBean.disableButtonOnRowClicked}"/>
+								             <p:commandButton value="Ubah Barang" actionListener="#{salesOrderBistroInputBean.buttonEditProduct}" 
+								                      oncomplete="PF('dialogUbahBarang').show()" update=":frm001:outputPanelUbahBarang"
+								                      rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-pesanan"
+								                      disabled="#{!salesOrderBistroInputBean.disableButtonOnRowClicked}"/>
+							             </p:outputPanel>     
+							             
+							        </div>
+							        <div class="Container100" style="margin: 0 0 3px 0;">
+							       		 <p:commandButton value="kosong" style="visibility:hidden;" styleClass="Wid4section2 btn-pesanan"/>
+							             <p:commandButton value="Batal" actionListener="#{salesOrderBistroInputBean.buttonCancel}"  
+							                    rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-red" 
+							                    update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:panelProduct :frm001:outputPanelTableOrder 
+							                            :frm001:panelSumTotalOrder :frm001:outputPanelButton"/>
+							             <p:commandButton value="Cetak Tagihan" rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-pesanan"/>
+							             <p:commandButton value="Pembayaran" actionListener="#{salesOrderBistroInputBean.buttonPayment}"
+							                     update=":frm001:outputPanelDialogPayment :frm001:outputPanelTablePaymentType :frm001:tableDialogPayment 
+							                             :frm001:paymentAmount :frm001:totalBill :frm001:growl" 							                     
+							                     rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-green"/>
+							        </div>
+							        <div class="Container100" style="margin: 0 0 3px 0;">
+							             <p:commandButton value="Simpan Sementara" rendered="#{salesOrderBistroInputBean.enableButtonOther}" 
+							                    actionListener="#{salesOrderBistroInputBean.saveTemporary}" styleClass="Wid4section2 btn-pesanan"
+							                    update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:panelProduct :frm001:outputPanelTableOrder 
+							                            :frm001:panelSumTotalOrder :frm001:outputPanelButton"/>
+							             <p:commandButton value="Kirim Ke Dapur"  rendered="#{salesOrderBistroInputBean.enableButtonOther}"
+							                    actionListener="#{salesOrderBistroInputBean.saveSendKitchen}" styleClass="Wid4section2 btn-pesanan"
+							                    update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:panelProduct :frm001:outputPanelTableOrder 
+							                            :frm001:panelSumTotalOrder :frm001:outputPanelButton"/>
+							             <p:commandButton value="Bagi Tagihan"  rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-pesanan"
+							                    oncomplete="PF('dialogTagihan').show()" actionListener="#{salesOrderBistroInputBean.buttonDialogTagihan}" update=":frm001:tableDialogProductTagihan"/>
+							             <p:commandButton value="Promo/Diskon" rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-pesanan"
+							                    oncomplete="PF('dialogPromosiDiscount').show()" />
+							        </div>
+							        <div class="Container100">
+							             <p:commandButton value="Pelanggan" rendered="#{salesOrderBistroInputBean.enableButtonOther}" oncomplete="PF('dialogCustomer').show()"
+							                    styleClass="Wid4section2 btn-pesanan" actionListener="#{salesOrderBistroInputBean.buttonCancelDialogCustomer}" 
+							                    update=":frm001:outputPanelCustomer"/>
+							             <p:commandButton value="Deposit" rendered="#{salesOrderBistroInputBean.enableButtonOther}" styleClass="Wid4section2 btn-pesanan"/>							            
+							        </div>
+							     </p:outputPanel>     	
+						     </div>
+						</div>
+					</div>		
+		        </div>		
+			</div>
+        </div>
+    </div>    
+    
+    <p:dialog widgetVar="dialogPemesanan" id="dialogPemesanan" modal="true" position="center"
+				width="610" header="#{msg.textSearchs} Pemesanan">
+		    <p:outputPanel id="outputPanleDialog">
+		      <ui:repeat var="dataOrder" value="#{salesOrderBistroInputBean.orderTypeList}">
+		       <p:panel header="#{dataOrder.parameterDtlName}" rendered="#{dataOrder.parameterDtlCode eq 'SO_DINE_IN'}">
+		            <div class="Container100">
+						<div class="EposContainerIndent">							
+						     <p:panel style="height:30px;width:40px; background:#1ce85c;float:left;"  />  
+						     <h:outputText value="Kosong" style="float:left;margin-top:7px;" />
+						     <p:panel style="height:30px;width:40px; background:#ff8d4e;float:left;margin-left:10px;"/>
+						     <h:outputText value="Terisi" style="float:left;margin-top:7px;" />
+						     <p:panel style="height:30px;width:40px; background:#c21d4f;float:left;margin-left:10px;"/>
+						     <h:outputText value="Pesanan" style="float:left;margin-top:7px;" />						
+						</div>
+					</div>		
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container100">
+								<ui:repeat var="data" value="#{salesOrderBistroInputBean.equipmentVoList}" varStatus="dataStatus">
+								     <p:column>
+								        <p:commandButton value="#{data.equipmentName}" styleClass="btn6 btn-space btn-green" 
+								             update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:outputPanelButton :frm001:outputPanelTableOrder"
+								             actionListener="#{salesOrderBistroInputBean.buttonOrder(dataStatus.index, data, dataOrder)}"
+								             oncomplete="PF('dialogPemesanan').hide()" rendered="#{data.equipmentStatusCode eq 'EQUIPMENT_VACANT'}"/>	
+								         
+								         <p:commandButton value="#{data.equipmentName}" styleClass="btn6 btn-space btn-orange" 
+								             update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:outputPanelButton :frm001:outputPanelTableOrder"
+								             actionListener="#{salesOrderBistroInputBean.buttonOrder(dataStatus.index, data, dataOrder)}"
+								             oncomplete="PF('dialogPemesanan').hide()" rendered="#{data.equipmentStatusCode eq 'EQUIPMENT_OCCUPY'}"/>
+								          
+								          <p:commandButton value="#{data.equipmentName}" styleClass="btn6 btn-space btn-red" 
+								             update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:outputPanelButton :frm001:outputPanelTableOrder"
+								             actionListener="#{salesOrderBistroInputBean.buttonOrder(dataStatus.index, data, dataOrder)}"
+								             oncomplete="PF('dialogPemesanan').hide()" rendered="#{data.equipmentStatusCode eq 'EQUIPMENT_RESERVE'}"/>   	    
+								     </p:column>							         
+								     <h:outputText value="&lt;/tr&gt;&lt;tr&gt;" escape="false" rendered="#{(dataStatus.index + 1 ) mod 6 eq 0}"/>      
+								</ui:repeat>
+							</div>							
+						</div>
+					</div>
+				</p:panel>	
+				
+				<p:panel header="#{dataOrder.parameterDtlName}" rendered="#{dataOrder.parameterDtlCode eq 'SO_PICKUP'}">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container100" align="center">
+								<p:commandButton value="Bawa Pulang" styleClass="Wid100 btn-pesanan"  oncomplete="PF('dialogPemesanan').hide()"
+								         actionListener="#{salesOrderBistroInputBean.buttonOrder(null, null, dataOrder)}"
+								         update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:outputPanelButton"/>
+							</div>							
+						</div>
+					</div>
+				</p:panel>
+				<p:panel header="#{dataOrder.parameterDtlName}" rendered="#{dataOrder.parameterDtlCode eq 'SO_DELIVERY'}">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container100" align="center">
+								<p:commandButton value="Pesanan Dikirim" styleClass="Wid100 btn-pesanan"  oncomplete="PF('dialogPemesanan').hide()"
+										 actionListener="#{salesOrderBistroInputBean.buttonOrder(null, null, dataOrder)}"
+								         update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:outputPanelButton"/>
+							</div>							
+						</div>
+					</div>
+				</p:panel>	
+			</ui:repeat>						
+		</p:outputPanel>
+	</p:dialog>
+	<p:dialog widgetVar="dialogUbahBarang" id="dialogUbahBarang" modal="true" position="center"
+				width="610" header="Barang">
+		<p:outputPanel id="outputPanelUbahBarang">	
+		    <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Nama"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{salesOrderBistroInputBean.soDtlVoDialogProduct.productName}" styleClass="Wid80"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Jumlah"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{salesOrderBistroInputBean.soDtlVoDialogProduct.orderQty}" styleClass="Wid30"
+						     style="text-align:right"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Harga"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{salesOrderBistroInputBean.soDtlVoDialogProduct.unitPrice}" styleClass="Wid30" 
+						       style="text-align:right"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Diskon"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{salesOrderBistroInputBean.soDtlVoDialogProduct.discValue}" styleClass="Wid30"
+								style="text-align:right"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="Catatan"/>
+					</div>
+					<div class="Container70">
+						<p:inputTextarea value="#{salesOrderBistroInputBean.soDtlVoDialogProduct.notes}" styleClass="Wid80"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonCancel}" actionListener="#{salesOrderBistroInputBean.buttonCancelDialogProduct}"
+						oncomplete="PF('dialogUbahBarang')hide();" update=":frm001:outputPanelUbahBarang" styleClass="Fright"/>					
+					<p:commandButton value="#{msg.buttonSave}" update=":frm001:outputPanelTableOrder" styleClass="Fright"
+						actionListener="#{salesOrderBistroInputBean.buttonSaveDialogProduct}" oncomplete="PF('dialogUbahBarang').hide()" />	
+				</div>
+			</div>
+		</p:outputPanel>				 	
+    </p:dialog>
+	
+    <p:dialog widgetVar="dialogPembayaran" id="dialogPembayaran" modal="true" position="center"
+				width="680" header="Pembayaran" >
+	    <p:outputPanel id="outputPanelDialogPayment">
+			<div class="Container100">		
+	           <div class="Container100">	
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">
+						    <p:panel>
+						        <ui:repeat var="data" value="#{salesOrderBistroInputBean.paymentTypeVoList}">
+						            <p:column>
+									   <p:panel styleClass="Wid4section margin-right-bottom" style="float:left;">
+									      <div align="center"> 
+									         <p:commandLink style="text-decoration:none;" actionListener="#{salesOrderBistroInputBean.buttonDialogPayment(data)}"
+									                 update=":frm001:tableDialogPayment">										    
+										     	  <h:outputText value="#{data.paytypeName}"/>
+										     </p:commandLink> 
+										   </div> 
+									   </p:panel>
+								     </p:column>
+						        </ui:repeat>
+						    </p:panel>
+						 </div>   
+					 </div>
+				  </div>
+				  <p:outputPanel rendered="#{salesOrderBistroInputBean.salesOrderVoHeader.statusCode eq 'SO_BILL'}">
+					  <div class="Container100">
+						  <div class="EposContainerIndent">
+							 <div class="Container100">
+							    <p:panel>
+							        <ui:repeat var="data" value="#{salesOrderBistroInputBean.dataPaymentBillList}" varStatus="dataIndex">
+							            <p:column>
+							               <p:outputPanel rendered="#{data.statusInvoiceCode eq 'SOINVOICE_NEW'}">
+											   <p:panel styleClass="Wid4section margin-right-bottom" style="float:left;">
+											      <div align="center"> 
+												         <p:commandLink style="text-decoration:none;" actionListener="#{salesOrderBistroInputBean.buttonDialogPaymentBill(data)}"
+												                 update=":frm001:outputPanelDialogPayment :frm001:totalBill">
+												                 <h:outputText value="Tagihan #{dataIndex.index+1} = #{data.subTotalBill}"/>										    
+													     </p:commandLink> 												     
+												   </div> 
+											   </p:panel>
+											</p:outputPanel>   
+									     </p:column>
+							        </ui:repeat>
+							    </p:panel>
+							 </div>   
+						 </div>
+					  </div>
+				  </p:outputPanel>	  
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">
+						    <p:panel>
+						    	<div style="height:170px;overflow:auto;">
+						    	<p:outputPanel id="outputPanelTablePaymentType">
+							        <p:dataTable id="tableDialogPayment" var="data" value="#{salesOrderBistroInputBean.dataPaymentTypeVoList}">
+							            <p:column headerText="#{msg.buttonAction}">
+										   <p:commandLink actionListener="#{salesOrderBistroInputBean.buttonDelTablePayment(data)}" 
+										       value="Hapus" update=":frm001:tableDialogPayment" />
+									     </p:column>
+									     <p:column headerText="Jenis Pembayaran">
+										     <p:inputText value="#{data.paytypeName}"/>
+									     </p:column>
+									     <p:column headerText="Jumlah">
+										      <p:inputText value="#{data.totalPayment}" style="text-align:right"
+										            onkeypress="return checkNumeric(event,this,false)" >
+										              <p:ajax event="change" listener="#{salesOrderBistroInputBean.changeTotalPayment(data)}" 
+										                     update=":frm001:changeAmount :frm001:paymentAmount tableDialogPayment" oncomplete="PF('dialogPembayaran').show()"/>
+										      </p:inputText>        
+									     </p:column>
+							        </p:dataTable>
+						        </p:outputPanel>
+						        </div>
+						    </p:panel>
+						 </div>   
+					 </div>
+				  </div>
+				  
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">					 
+						      <p:inputText id="totalBill" value="#{salesOrderBistroInputBean.salesOrderVoHeader.sumTotalPayment}" styleClass="Fright readonly-bg" 
+						            style="text-align:right;margin-left:10px;" readonly="true" />
+						      <h:outputText value="Jumlah Tagihan" styleClass="Fright"/>
+						 </div>
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">					 
+						      <p:inputText id="paymentAmount" value="#{salesOrderBistroInputBean.salesOrderVoHeader.paymentAmount}" styleClass="Fright readonly-bg" 
+						             style="text-align:right;margin-left:10px;" onkeypress="return checkNumeric(event,this,false)" readonly="true"/>
+						      <h:outputText value="Pembayaran" styleClass="Fright"/>
+						 </div>
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container100">					 
+						      <p:inputText id="changeAmount" value="#{salesOrderBistroInputBean.salesOrderVoHeader.changeAmount}" styleClass="Fright readonly-bg" 
+						             style="text-align:right;margin-left:10px;" readonly="true"/>
+						      <h:outputText value="Kembalian" styleClass="Fright"/>
+						 </div>
+					  </div>
+				  </div>
+				  <div class="Container100">
+					<div class="EposContainerIndent">
+						<p:commandButton value="#{msg.buttonCancel}" oncomplete="PF('dialogPembayaran')hide();" update=":frm001:outputPanelDialogPayment" styleClass="Fright"/>					
+						<p:commandButton value="#{msg.buttonSave}" actionListener="#{salesOrderBistroInputBean.savePayment}"  styleClass="Fright"
+						      update=":frm001:outputPanelHeader :frm001:panelCategory :frm001:panelProduct :frm001:outputPanelTableOrder 
+								      :frm001:panelSumTotalOrder :frm001:outputPanelDialogPayment :frm001:paymentAmount :frm001:outputPanelButton :frm001:growl"/>	
+					</div>
+				</div>	  	 
+			  </div>
+			</div>
+		</p:outputPanel>				    		 	
+    </p:dialog>    
+    
+    <p:dialog widgetVar="dialogCustomer" id="dialogCustomer" modal="true" position="center"
+				width="610" header="Customer" styleClass="dialog-calender">
+	    <p:outputPanel id="outputPanelCustomer" >		
+			<div class="Container100">		
+	           <div class="Container100">	
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Nama" />
+						 </div>
+						 <div class="Container70">
+			    				<p:inputText value="#{salesOrderBistroInputBean.customerVO.title}" styleClass="Wid20" />
+			    				<p:inputText value="#{salesOrderBistroInputBean.customerVO.fullName}" styleClass="Wid60"/>
+						 </div>   
+					 </div>
+				  </div>			  
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Nomor HP" />
+						 </div>
+						 <div class="Container70">
+						      <p:inputText value="#{salesOrderBistroInputBean.customerVO.phoneNo}" styleClass="Wid90" />
+						 </div> 
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Alamat Email" />
+						 </div>
+						 <div class="Container70">
+						      <p:inputText value="#{salesOrderBistroInputBean.customerVO.emailAddress}" styleClass="Wid90" />
+						 </div> 
+					  </div>
+				  </div>		
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Tanggal Lahir" />
+						 </div>
+						 <div class="Container70">
+						      <p:calendar id="poDate" navigator="true" value="#{salesOrderBistroInputBean.customerVO.birthDate}"
+									showOn="button" pattern="#{salesOrderBistroInputBean.dateFormat}" locale="#{salesOrderBistroInputBean.dateLocale}" 
+									maxlength="11" />	
+						 </div> 
+					  </div>
+				  </div>	
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Alamat" />
+						 </div>
+						 <div class="Container70">
+						      <p:inputTextarea value="#{salesOrderBistroInputBean.customerVO.address}" styleClass="Wid90" />
+						 </div> 
+					  </div>
+				  </div>
+				  <div class="Container100">
+					  <div class="EposContainerIndent">
+						 <div class="Container30">					   
+						      <h:outputText value="Alamat" />
+						 </div>
+						 <div class="Container70">
+						      <p:selectOneMenu value="#{salesOrderBistroInputBean.customerVO.cityId}">
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{salesOrderBistroInputBean.citySelectItem}"/>								 		
+							 </p:selectOneMenu>		
+						 </div> 
+					  </div>
+				  </div>
+				  			     	 
+			  </div>
+			  <div class="Container100">
+					<div class="EposContainerIndent">
+						<p:commandButton value="#{msg.buttonCancel}" actionListener="#{salesOrderBistroInputBean.buttonCancelDialogCustomer}"
+							  oncomplete="PF('dialogCustomer')hide();" update=":frm001:outputPanelCustomer" styleClass="Fright"/>					
+						<p:commandButton value="#{msg.buttonSave}" oncomplete="PF('dialogCustomer').hide()" update=":frm001:outputPanelCustomer" 
+						      actionListener="#{salesOrderBistroInputBean.buttonSaveDialogCustomer}" styleClass="Fright"/>	
+					</div>
+			  </div>
+		   </div> 
+		 </p:outputPanel>   		 	
+    </p:dialog>   
+    
+    <p:dialog widgetVar="dialogPromosiDiscount" id="dialogPromosiDiscount" modal="true" position="center"
+				width="610" header="Customer" styleClass="dialog-calender">
+	    <p:outputPanel id="outputPanelPromosiDiscount" >		
+           <div class="Container100">	
+			  <div class="Container100">
+				  <div class="EposContainerIndent">
+					 <div class="Container100">
+					    <p:panel header="Promosi">
+					        <ui:repeat var="data" value="#{salesOrderBistroInputBean.discountVoList}">
+					            <p:column>
+								   <p:panel styleClass="Wid4section margin-right-bottom" style="float:left;" 
+								            rendered="#{data.discountCategoryCode eq 'CATEGORY_PROMOTION'}">
+								      <div align="center"> 
+								         <p:commandLink style="text-decoration:none;" actionListener="#{salesOrderBistroInputBean.buttonDialogDisc(data)}"
+								                 update=":frm001:outputPanelTableOrder :frm001:dataTableSalesOrder" oncomplete="PF('dialogPromosiDiscount').hide()">										    
+									     	  <h:outputText value="#{data.discountName}" />
+									     </p:commandLink> 
+									   </div> 
+								   </p:panel>
+							     </p:column>
+					        </ui:repeat>
+					    </p:panel>
+					</div>   
+			      </div>
+			   </div>   
+			    
+			    <div class="Container100">
+				  <div class="EposContainerIndent">
+					    <p:panel header="Diskon">
+					        <ui:repeat var="data" value="#{salesOrderBistroInputBean.discountVoList}">
+					            <p:column>
+								   <p:panel styleClass="Wid4section margin-right-bottom" style="float:left;" 
+								            rendered="#{data.discountCategoryCode eq 'CATEGORY_DISCOUNT'}">
+								      <div align="center"> 								         
+								         <p:commandLink style="text-decoration:none;" actionListener="#{salesOrderBistroInputBean.buttonDialogDisc(data)}"
+								                update=":frm001:outputPanelTableOrder" oncomplete="PF('dialogPromosiDiscount').hide()">										    
+									     	  <h:outputText value="#{data.discountName}"/>
+									     </p:commandLink> 
+									   </div> 
+								   </p:panel>
+							     </p:column>
+					        </ui:repeat>
+					    </p:panel>
+				    </div>   
+			     </div>
+		     </div>	
+		 </p:outputPanel>   		 	
+    </p:dialog>
+    
+    <p:dialog widgetVar="dialogTagihan" id="dialogTagihan" modal="true" position="center"
+				width="990" header="Tagihan" styleClass="">
+	    <p:outputPanel id="outputPanelTagihan" >		
+           <div class="Container50">	
+			  <div class="Container100">
+				  <div class="EposContainerIndent">
+					 <div class="Container100">
+					    <p:dataTable id="tableDialogProductTagihan" var="data" value="#{salesOrderBistroInputBean.salesOrderDtlVOTagihanList}" 
+					                 rowIndexVar="indexRow" editable="true" lazy="true" rowKey="#{data.productId}"
+					                 selection="#{salesOrderBistroInputBean.selectedSalesOrderDtlVO}" >
+					                 
+					          <p:ajax event="rowSelectCheckbox" update=":frm001:btnPindah"/>		    
+			     			  <p:ajax event="rowUnselectCheckbox" update=":frm001:btnPindah"/>  
+			     			  <p:ajax event="toggleSelect" update=":frm001:btnPindah"/>
+			     			  <p:ajax event="rowSelect" update=":frm001:btnPindah"/>       
+			     				
+			     			  <p:column selectionMode="multiple" style="width:27px;text-align:center"/>
+			     			 
+					          <p:column headerText="Product" styleClass="Wid33">
+				            	    <div class="Container100">
+					            	     <div class="Container100">
+											<h:outputText value="#{data.productName}"/>
+										</div>	
+				    		        </div>                     
+				               </p:column>
+				               <p:column headerText="Jumlah" styleClass="Wid10">
+				            	    <div class="Container100">
+					            	     <div class="Container100">
+											<h:outputText value="#{data.orderQty}"/>
+										</div>	
+				    		        </div>                     
+				               </p:column>
+				               <p:column headerText="Harga" styleClass="Wid15">
+				            	    <div class="Container100">
+					            	     <div class="Container100">
+											<h:outputText value="#{data.unitPrice}" style="text-align:right"/>
+										</div>	
+				    		        </div>                     
+				               </p:column>					            
+				               <p:column headerText="Diskon" styleClass="Wid10">
+				            	    <div class="Container100">
+					            	     <div class="Container100">
+											<h:outputText value="#{data.discPercent}" style="text-align:right"/>
+										</div>	
+				    		        </div>                     
+				               </p:column>	
+				               <p:column headerText="Total" styleClass="Wid20">
+				            	    <div class="Container100">
+					            	     <div class="Container100">
+											<h:outputText value="#{data.totalPrice}" style="text-align:right"/>
+										</div>	
+				    		        </div>                     
+				               </p:column>						    
+					    </p:dataTable>
+					</div>
+					<div class="Container100">
+				       <div class="EposContainerIndent">
+					      <div class="Container100">
+					          <p:commandButton id="btnPindah" value="Pindah" actionListener="#{salesOrderBistroInputBean.buttonPindahTagihan}" 
+					                update=":frm001:tableDialogTagihan :frm001:tableDialogProductTagihan :frm001:growl" styleClass="Fright" 
+					                disabled="#{fn:length(salesOrderBistroInputBean.selectedSalesOrderDtlVO) == 0}"/>
+					      </div>   
+			           </div>
+			        </div>   
+			      </div>
+			   </div>
+			</div>
+			<div class="Container50">
+			    <div class="Container100">
+				  <div class="EposContainerIndent">
+					 <div class="Container100">
+					     <p:commandButton value="Tambah Tagihan" actionListener="#{salesOrderBistroInputBean.buttonAddTagihan}" 
+					             update=":frm001:tableDialogTagihan"/>
+					     <p:commandButton value="Hapus Tagihan" actionListener="#{salesOrderBistroInputBean.buttonDelTagihan}"
+					             update=":frm001:tableDialogTagihan :frm001:tableDialogProductTagihan"/>
+					</div>   
+			      </div>
+			    </div>
+			    <div class="Container100">
+				  <div class="EposContainerIndent">
+					 <div class="Container100">
+					     <p:dataTable id="tableDialogTagihan" value="#{salesOrderBistroInputBean.dataTableDialogTagihan}" rowIndexVar="indexTagihan"
+					               var ="tagihanData">
+					          <p:column >
+					             <p:selectBooleanCheckbox value="#{tagihanData.checkTagihan}">
+					                 <p:ajax></p:ajax>
+					             </p:selectBooleanCheckbox>
+					          				               
+					              <p:dataTable id="tableDialogTagihan#{indexTagihan.index}" var="data" rowIndexVar="indexRow"
+                                         value="#{tagihanData.tagihanList}" editable="true" lazy="true">
+                                       <p:column headerText="">
+                                           <p:selectBooleanCheckbox value="#{data.checkTagihanDtl}"/>
+                                       </p:column> 
+					                   <p:column headerText="Product">
+						            	    <h:outputText value="#{data.productName}" />        
+						               </p:column>
+						               <p:column headerText="Jumlah" >
+						            	    <h:outputText value="#{data.orderQty}"/>                
+						               </p:column>
+						               <p:column headerText="Harga" >
+						            	    <h:outputText value="#{data.unitPrice}"/>               
+						               </p:column>					            
+						               <p:column headerText="Diskon">
+						            	    <h:outputText value="#{data.discPercent}"/>                 
+						               </p:column>	
+						               <p:column headerText="Total">
+						            	    <h:outputText value="#{data.totalPrice}"/>                  
+						               </p:column>							              		     
+					             </p:dataTable>
+					             <p:commandButton value="Hapus Barang" actionListener="#{salesOrderBistroInputBean.buttonHapusItemTagihan}" 
+					                   update=":frm001:tableDialogTagihan :frm001:tableDialogProductTagihan"/>
+					                   
+					             <h:outputText value="Sub Total"/> <p:inputText value="#{tagihanData.subTotal}" 
+								                     style="text-align: right;" styleClass="Wid30 readonly-bg" readonly="true"/>
+								                     
+								 <h:outputText value="Diskon"/><p:inputText value="#{tagihanData.subDiskon}" 
+								                     style="text-align: right;" styleClass="Wid30 readonly-bg" readonly="true"/>                    
+								                     
+								  <h:outputText value="Total"/><p:inputText value="#{tagihanData.sumTotal}" 
+								                     style="text-align: right;" styleClass="Wid30 readonly-bg" readonly="true"/>                   
+								                     
+					             
+					             
+					         </p:column>
+					     </p:dataTable>
+					</div>   
+			      </div>
+			   </div>
+			   <div class="Container100">
+				  <div class="EposContainerIndent">
+					 <div class="Container100">
+					     <p:commandButton value="Cancel" actionListener="#{salesOrderBistroInputBean.buttonCancelDialogTagihan}" 
+					             update=":frm001:tableDialogTagihan :frm001:tableDialogProductTagihan" styleClass="Fright" oncomplete="PF('dialogTagihan').hide()"/>
+					     <p:commandButton value="Simpan" actionListener="#{salesOrderBistroInputBean.buttonSaveDialogTagihan}" 
+					             update=":frm001:tableDialogTagihan :frm001:tableDialogProductTagihan :frm001:growl" styleClass="Fright" />
+					</div>   
+			      </div>
+			    </div>
+			</div>      
+		 </p:outputPanel>   		 	
+    </p:dialog>  
+    
+	
+</ui:composition>

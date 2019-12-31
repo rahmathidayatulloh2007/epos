@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<ui:insert name="metadata" />
+<meta name="keywords"
+	content="btpn, recruitment, applicant, epsy, employee, interview, schedule" />
+<meta name="description"
+	content="Situs resmi untuk Back Office E-recruitment." />
+<f:view contentType="text/html">
+	<h:head>
+		<title><ui:insert name="title">Psychotest Online</ui:insert></title>
+		<link rel="shortcut icon"
+			href="#{request.contextPath}/icons/smallButterfly.ico"
+			type="image/x-icon" />
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="css"
+			name="syntaxhighlighter/syntaxhighlighter.css" />
+		<script language="JavaScript">
+			//<![CDATA[
+			$(window).load(function() {
+				var c = $('.ui-tabs-nav li').length;
+				$('.ui-tabs-nav li').css('z-index', function(i) {
+					return c - i;
+				});
+			});//]]> 
+
+			window.history.forward(1);
+
+			function gotoUrl(url) {
+				var params = 'width=' + screen.width;
+				params += ',height=' + screen.height;
+				params += ',top=0,left=0'
+				params += ',fullscreen=yes,scrollbars=yes';
+				params += ',resizeable=yes,toolbar=no';
+				params += ',titlebar=no,status=no,max=yes';
+				params += ',toolbar=no,menubar=no,titlebar=yes';
+
+				newwin = window.open(url, 'ERecruitment', params);
+				if (window.focus) {
+					newwin.focus()
+				}
+				return false;
+			}
+
+			function isIE() {
+				var myNav = navigator.userAgent.toLowerCase();
+				return (myNav.indexOf('msie') != -1) ? parseInt(myNav
+						.split('msie')[1]) : false;
+			}
+
+			if (isIE() == 7) {
+				$('html').addClass('ie' + isIE());
+			}
+		</script>
+
+		<ui:insert name="head" />
+	</h:head>
+
+	<h:body>
+	    <ui:insert name="ajaxLoading">
+	       <!-- <p:ajaxStatus> 
+		        <f:facet name="start">
+		          <p:graphicImage value="/resources/icons/ajaxloadingbar.gif" />
+				</f:facet>
+				<f:facet name="complete">
+				   
+				</f:facet>
+			</p:ajaxStatus> -->
+			<p:ajaxStatus onstart="PF('statusDialog').show();"
+				onsuccess="PF('statusDialog').hide();" oncomplete="PF('statusDialog').hide();"
+				onerror="PF('statusDialog').hide();" />
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+				draggable="false" closable="true">
+				 <p:graphicImage value="/resources/icons/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:insert>
+		<table width="100%" cellpadding="0" cellspacing="0" border="0"
+			id="main">
+			<tr>
+				<td height="137" valign="top" class="bg-header">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td height="103"><table width="100%" border="0"
+									cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="23">&nbsp;</td>
+										<td width="273"><p:graphicImage
+												url="/resources/images/logo-btpnbank.jpg" width="138"
+												height="81" alt="logo" /></td>
+										<td width="379">&nbsp;</td>
+										<td width="365" align="right"><p:graphicImage
+												url="/resources/images/psikotest-online.png" width="331"
+												height="46" alt="logo" /></td>
+										<td width="23">&nbsp;</td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td height="34"><table width="100%" border="0"
+									cellspacing="0" cellpadding="0">
+									<h:form id="form">
+										<ui:insert name="menu">
+											<tr>
+												<td width="10" height="34" class="bg-menu">&nbsp;</td>
+												<td class="bg-menu">
+													<table width="100%" border="0" cellspacing="0"
+														cellpadding="0">
+														<tr>
+															<td height="34">
+																<div id="nav">
+																	<!-- <p:menubar styleClass="" id="menuForm"
+																		model="#{loginBean.person.mymenu}" /> -->
+																</div>
+															</td>
+														</tr>
+													</table>
+
+												</td>
+												<td width="10" class="bg-menu">&nbsp;</td>
+											</tr>
+										</ui:insert>
+									</h:form>
+								</table></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td bgcolor="#EFEFDF">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="23">&nbsp;</td>
+							<td valign="top">
+								<!-- isi --> <br />
+								<div id="heading_repeat">
+									<ui:insert name="heading">Psychotest Online</ui:insert>
+								</div> <br /> <br />
+
+
+								<table width="100%">
+
+									<tr>
+										<td bgcolor="#EFEFDF"><p:messages id="messages"
+												globalOnly="true" /> <ui:insert name="content">...</ui:insert>
+										</td>
+									</tr>
+									<tr>
+
+										<td height="10"></td>
+									</tr>
+								</table> <br /> <br /> <!-- isi akhir-->
+							</td>
+							<td width="23">&nbsp;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><div id="footer">Copyright © 2014 BTPN, All Right
+						Reserved</div></td>
+			</tr>
+		</table>
+
+	</h:body>
+</f:view>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.uam.user.model">
+    <class name="User" table="POS_USER">
+       <id name="userId" column="USER_ID" type="long">
+			<generator class="native">
+				<param name="sequence">USER_SEQ</param>
+			</generator>
+		</id>
+
+        <property name="companyId" column="COMPANY_ID" type="long" />
+        <many-to-one name="company" column="COMPANY_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join" />
+		
+		<property name="userCode" column="USER_CODE" type="string" />
+		<property name="userPasswd" column="USER_PASSWD" type="string" />
+
+        <property name="employeeId" column="EMPLOYEE_ID" type="long" />
+        <many-to-one name="employee" column="EMPLOYEE_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.employee.model.Employee" fetch="join">
+		</many-to-one> 
+		
+		<property name="roleId" column="ROLE_ID" type="long" />
+        <many-to-one name="role" column="ROLE_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.role.model.Role" fetch="join">
+		</many-to-one> 
+
+		<property name="prevLogin" column="PREVLOGIN_ON" type="timestamp" />
+        <property name="prevChngPasswd" column="PREVCHNGPASSWD_ON" type="timestamp" />     
+        
+        <property name="firstLoginFlag" column="FIRSTLOGIN_FLAG" type="string" />
+        <property name="loginFlag" column="LOGIN_FLAG" type="string" />        
+        
+        <property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+    </class>
+</hibernate-mapping>

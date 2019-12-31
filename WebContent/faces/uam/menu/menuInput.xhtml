@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">
+			
+			<h:outputText value="#{msg.formMenuAddTitle}" rendered="#{menuInputBean.MODE_TYPE == 'ADD'}" 
+				style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formMenuEditTitle}" rendered="#{menuInputBean.MODE_TYPE == 'EDIT'}" 
+				style="font-weight:bold;"/>		 
+			<p:commandButton value="#{msg.buttonBack}" process="@this" actionListener="#{menuBean.modeSearch}" 
+				update=":frm001" styleClass="Fright"/>
+			<p:commandButton value="#{msg.buttonSave}" actionListener="#{menuBean.modeSave}" 
+				update=":frm001" styleClass="Fright"/>
+			<p:messages id="messagesMenu" showDetail="true" showSummary="false" globalOnly="true"/>	
+		</div>
+    </div>
+
+	<div class="Container100">
+		
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.parentMenuCode}"/>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="parentMenuCode" value="#{menuInputBean.menuVO.parentCode}" readonly="true" 
+						        styleClass="Wid90 readonly-bg"/>
+					</div>
+				</div>
+		    </div>		 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.parentMenuName}"/>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="parentMenuName" value="#{menuInputBean.menuVO.parentName}" readonly="true" 
+						       styleClass="Wid90 readonly-bg"/>
+					</div>
+				</div>
+		    </div>		 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.menuCode}"/><span style="color:red"> *</span>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="menuCodeEdit" value="#{menuInputBean.menuVO.menuCode}" styleClass="Wid90 readonly-bg"
+						      readonly="true" rendered="#{menuInputBean.MODE_TYPE eq 'EDIT'}"/>
+						      						 
+						 <p:inputText id="menuCode" value="#{menuInputBean.menuVO.menuCode}" styleClass="Wid90"
+						       
+						      rendered="#{menuInputBean.MODE_TYPE eq 'ADD'}"/>
+						 <!-- <p:message for="menuCode" rendered="#{menuInputBean.MODE_TYPE eq 'ADD'}"/> -->
+					</div>
+				</div>
+		    </div>		 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.menuName}"/><span style="color:red"> *</span>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="menuName" value="#{menuInputBean.menuVO.menuName}" styleClass="Wid90"
+						       />
+						 
+					</div>
+				</div>
+		    </div>		 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.menuType}"/><span style="color:red"> *</span>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:selectOneMenu id="menuType" value="#{menuInputBean.menuVO.menuType}">
+						   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+						   <f:selectItems value="#{menuInputBean.menuTypeList}" />
+					     </p:selectOneMenu>					    
+						 
+					</div>
+				</div>
+		    </div>		 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+					     <h:outputText value="#{msg.menuLevel}"/>
+					</div>
+				    <div class="Container70 Responsive">
+						 <p:inputText id="menuLevel" value="#{menuInputBean.menuVO.menuLevel}" readonly="true" styleClass="Wid10"/>
+						<!-- <p:selectOneMenu id="menuLevel" value="#{menuInputBean.menuVO.menuLevel}" style="width:60px;">
+						   <f:selectItems value="#{menuInputBean.menuLevelList}" />
+					    </p:selectOneMenu> -->
+					</div>
+				</div>
+		    </div>	
+		</div>   	 
+		
+		<!-- Grid Sebelah Kanan --> 
+		<div class="Container50 Responsive">
+			 <div class="Container100">
+				  <div class="EposContainerIndent">
+					   <div class="Container30 Responsive">
+					        <h:outputText value="#{msg.description}"/>
+					   </div>
+				       <div class="Container70 Responsive">
+						     <p:inputTextarea id="description" value="#{menuInputBean.menuVO.description}" styleClass="Wid90"/>
+					   </div>
+				  </div>
+		     </div>		 
+			 <div class="Container100">
+				<div class="EposContainerIndent">
+					 <div class="Container30 Responsive">
+					        <h:outputText value="#{msg.action}"/>
+					 </div>
+				     <div class="Container70 Responsive">
+						  <p:inputTextarea id="action" value="#{menuInputBean.menuVO.action}" styleClass="Wid90"/>
+					 </div>
+				  </div>
+		     </div>		 
+			 <div class="Container100">
+				<div class="EposContainerIndent">
+					 <div class="Container30 Responsive">
+					      <h:outputText value="#{msg.active}"/>
+					 </div>
+				     <div class="Container70 Responsive">
+						  <!--   <p:selectBooleanCheckbox value="#{menuInputBean.menuVO.activeFlag}" /> -->
+						    <p:selectOneMenu id="dialogActiveFlag" value="#{menuInputBean.menuVO.activeFlag}">		
+						<f:selectItems value="#{menuInputBean.activeSelectItem}"/>
+					</p:selectOneMenu>		
+				</div>
+				  </div>
+		     </div>		
+	    </div>
+	</div>
+</ui:composition>

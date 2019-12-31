@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">	
+		
+			<h:outputText value="#{msg.formItemConvertAddTitle}" rendered="#{itemConvertInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<!-- <h:outputText value="#{msg.formItemConvertEditTitle}" rendered="#{itemConvertInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/> -->
+			<h:outputText value="#{msg.formItemConvertViewTitle}" rendered="#{itemConvertInputBean.MODE_TYPE == 'VIEW'}" style="font-weight:bold;"/>
+						    
+			 <p:commandButton value="#{msg.buttonBack}" actionListener="#{itemConvertBean.modeSearch}" 
+			        update=":frm001" styleClass="Fright" process="@this"/>
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{itemConvertBean.modeSave}" 
+			        update=":frm001" styleClass="Fright"/> 
+			 <p:messages id="messagesItemConvert" showDetail="true" showSummary="false" globalOnly="true"/>         
+		</div>
+    </div>
+     
+    <div class="Container100">     
+	    <div class="Container50 Responsive">
+	       <p:outputPanel id="outputPanelCompany" rendered="#{itemConvertInputBean.userSession.companyId == null}">	
+				<div class="Container100">
+					  <div class="EposContainerIndent">
+						   <div class="Container30 Responsive">
+					            <h:outputText value="#{msg.formItemConvertCompany}"/><span class="redText"> *</span>
+					       </div>
+						   <div class="Container70 Responsive">
+							 	 <p:selectOneMenu id="companyId" value="#{itemConvertInputBean.itemConvertVO.companyId}" rendered="#{itemConvertInputBean.MODE_TYPE eq 'ADD'}">							
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{itemConvertInputBean.companySelectItem}"/>	
+									<p:ajax event="change" listener="#{itemConvertInputBean.companyOnChange}" process="@this"
+									        update=":frm001"/>
+								 </p:selectOneMenu>
+								 <p:inputText value="#{itemConvertInputBean.itemConvertVO.companyName}" rendered="#{itemConvertInputBean.MODE_TYPE eq 'VIEW'}" 
+								              readonly="true" styleClass="Wid90 readonly-bg"/>
+								 <p:message for="companyId"/>
+				  		   </div>
+					   </div>
+				</div>
+		   </p:outputPanel>
+		   <!-- 
+	       <p:outputPanel id="outputPanelOutlet" rendered="#{itemConvertInputBean.userSession.outletId == null}">
+				<div class="Container100">
+					  <div class="EposContainerIndent">
+						   <div class="Container30 Responsive">
+					            <h:outputText value="#{msg.formItemConvertOutlet}"/>
+					       </div>
+						   <div class="Container70 Responsive">
+							 	 <p:selectOneMenu id="outletId" value="#{itemConvertInputBean.itemConvertVO.outletId}" rendered="#{itemConvertInputBean.MODE_TYPE eq 'ADD'}">							
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{itemConvertInputBean.outletSelectItem}"/>				
+								 </p:selectOneMenu>
+								 <p:inputText value="#{itemConvertInputBean.itemConvertVO.outletName}" rendered="#{itemConvertInputBean.MODE_TYPE eq 'EDIT'}" 
+								              readonly="true" styleClass="Wid90 readonly-bg"/>			
+				  		   </div>
+					   </div>
+				</div>
+			</p:outputPanel>
+			-->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formItemConvertConvertNo}"/>
+			    	</div>
+				    <div class="Container70 Responsive">
+					     <p:inputText id="convertNo" value="#{itemConvertInputBean.itemConvertVO.convertNo}" maxlength="16" autocomplete="off" 
+					                  readonly="true" styleClass="Wid90 readonly-bg" />							
+					</div>
+				</div>
+		    </div>		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formItemConvertConvertDate}"/><span class="redText"> *</span>
+			        </div>
+				    <div class="Container70 Responsive">
+					     <p:inputText id="convertDate" value="#{itemConvertSearchBean.sdf.format(itemConvertInputBean.itemConvertVO.convertDate)}" maxlength="16" autocomplete="off" 
+					                  readonly="true" styleClass="Wid30 readonly-bg" />				    
+				    	 <!-- 
+					     <p:calendar id="convertDate" navigator="true" value="#{itemConvertInputBean.itemConvertVO.convertDate}"
+									showOn="button" pattern="#{itemConvertInputBean.dateFormat}" locale="#{itemConvertInputBean.dateLocale}" maxlength="11" 
+									required="true" requiredMessage="#{msg.formItemConvertDate} #{msg.errorMustBeFilled}" />	
+						 <p:message for="convertDate"/>
+						 -->
+					</div>
+				</div>
+		    </div>	
+		    <div class="Container100">
+				<div class="EposContainerIndent">
+				   	<div class="Container30 Responsive">
+			            <h:outputText value="#{msg.formItemConvertItemComposite}"/><span class="redText"> *</span>
+			       	</div>
+				   	<div class="Container70 Responsive">
+				   		<!-- 
+				        <p:autoComplete id="itemComposite" dropdown="true" completeMethod="#{itemConvertInputBean.itemCompositeOnComplete}" 
+				              value="#{itemConvertInputBean.itemConvertVO.itemId}" converter="#{itemConvertItemConverter}"
+				              var="selectItem" itemLabel="#{selectItem.label}" itemValue="#{selectItem}"
+				              required="true" requiredMessage="#{msg.formItemConvertItemComposite} #{msg.errorMustBeFilled}" 
+				              readonly="#{itemConvertInputBean.MODE_TYPE eq 'VIEW'}">
+				              <p:ajax event="itemSelect" listener="#{itemConvertInputBean.itemCompositeOnSelected}" process="@this" update="dataTableDtl"/>
+				        </p:autoComplete>
+				        -->
+						<p:selectOneMenu id="itemComposite" value="#{itemConvertInputBean.itemConvertVO.itemId}" 
+								rendered="#{itemConvertInputBean.MODE_TYPE eq 'ADD'}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{itemConvertInputBean.itemCompositeSelectItem}"/>	
+							<p:ajax event="change" listener="#{itemConvertInputBean.itemCompositeOnChange}" process="@this"
+							        update="dataTableDtl"/>
+						</p:selectOneMenu>
+						<p:inputText value="#{itemConvertInputBean.itemConvertVO.itemName}" rendered="#{itemConvertInputBean.MODE_TYPE eq 'VIEW'}" 
+								readonly="true" styleClass="Wid90 readonly-bg"/>						
+						<p:message for="itemComposite"/>
+		  		   	</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formItemConvertItemQty}"/><span class="redText"> *</span>
+			    	</div>
+				    <div class="Container70 Responsive">
+					     <p:inputText id="itemQty" value="#{itemConvertInputBean.itemConvertVO.itemQty}" maxlength="16" autocomplete="off"
+					      	style="text-align:right" onkeypress="return checkNumeric(event, this, true)" styleClass="Wid60" >
+							<p:ajax event="change" listener="#{itemConvertInputBean.itemQtyOnChange}" process="@this"
+							        update="dataTableDtl"/>					      	
+					     </p:inputText>
+					     <p:message for="itemQty"/>
+					</div>
+				</div>
+		    </div>			
+		</div>
+		<div class="Container50 Responsive">	
+			<div class="Container100">
+				  <div class="EposContainerIndent">
+					   <div class="Container30 Responsive">
+				            <h:outputText value="#{msg.formItemConvertConvertDesc}"/>
+				       </div>
+					   <div class="Container70 Responsive">
+						 	 <p:inputTextarea id="convertDesc"
+						 	 	readonly="#{itemConvertInputBean.MODE_TYPE eq 'VIEW'}" 
+						 	 	value="#{itemConvertInputBean.itemConvertVO.convertDesc}" styleClass="Wid90"/>			
+			  		   </div>
+				   </div>
+			</div>				 
+		</div>
+	</div>
+	<br></br>
+	
+    <div class="Container100">
+		<div class="ContainerIndent">
+		  <p:messages for="dataTableDtl" id="messageTableDtl" showDetail="true" showSummary="false" globalOnly="true"/>		
+		  <p:outputPanel id="outputPanelTableDtl">
+	         <p:dataTable id="dataTableDtl" var="data" value="#{itemConvertInputBean.itemConvertVO.listItemConvertDtlVO}"
+	              rowIndexVar="indexRow" editable="true" lazy="true">	              
+	            <p:column headerText="#{msg.formItemConvertItemCode}" styleClass="Wid13">
+	                 <p:inputText id="itemCode" value="#{data.itemCode}" readonly="true" styleClass="Wid90 readonly-bg" />	                 
+	            </p:column>
+	            <p:column headerText="#{msg.formItemConvertItemName}" styleClass="Wid13">
+	                 <p:inputText id="itemName" value="#{data.itemName}" readonly="true" styleClass="Wid90 readonly-bg" />	                 
+	            </p:column>
+	            <p:column headerText="#{msg.formItemConvertUm}" styleClass="Wid13">
+	                 <p:inputText id="umName" value="#{data.umName}" readonly="true" styleClass="Wid90 readonly-bg" />	                 
+	            </p:column>	            	            
+	            <p:column headerText="#{msg.formItemConvertStockQty}" styleClass="Wid8">
+	                 <p:inputText value="#{data.stockQty}" readonly="true" styleClass="Wid90" style="text-align:right">
+	                 </p:inputText>
+	            </p:column>
+	            <p:column headerText="#{msg.formItemConvertItemQty}" styleClass="Wid8">
+	                 <p:inputText value="#{data.itemQty}" readonly="true" styleClass="Wid90" style="text-align:right">
+	                 </p:inputText>
+	            </p:column>
+	            <p:column headerText="#{msg.formItemConvertRemainQty}" styleClass="Wid8">
+	                 <p:inputText value="#{data.remainQty}" readonly="true" styleClass="Wid90" style="text-align:right">
+	                 </p:inputText>
+	            </p:column>
+	         </p:dataTable>
+	       </p:outputPanel>	         
+	    </div>
+	</div>
+</ui:composition>

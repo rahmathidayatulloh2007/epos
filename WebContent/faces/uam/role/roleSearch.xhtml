@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formRoleTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>		
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					 <p:inputText id="searchAll" readonly="#{roleSearchBean.disableSearchAll}"
+								value="#{roleSearchBean.searchAll}" placeholder="#{msg.textSearch} #{msg.formRoleTitle}" styleClass="WidPos" autocomplete="off"/>
+				</div>
+				<div class="Container30">
+				     <p:commandButton actionListener="#{roleSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>		
+					 <p:commandButton actionListener="#{roleSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableRole"/>
+					 <p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/>			
+				</div>
+				<div class="Container40;" style="white-space: nowrap;">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{roleBean.modeDelete}" styleClass="Fright"
+						update="frm001:outputPanelSearch :frm001:messages"
+						disabled="#{fn:length(roleSearchBean.selectedRoles) == 0}">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+					<p:commandButton id="menuAccess" value="#{msg.buttonMenuAccess}" update=":frm001" actionListener="#{roleBean.modeMenuAccess}"
+						            disabled="#{fn:length(roleSearchBean.selectedRoles) == 0 or fn:length(roleSearchBean.selectedRoles)>1}"  styleClass="Fright"/>	            
+					 <p:commandButton id="editBtn" value="#{msg.buttonEdit}" actionListener="#{roleBean.modeEdit}" update=":frm001"  styleClass="Fright"
+						            disabled="#{fn:length(roleSearchBean.selectedRoles) == 0 or fn:length(roleSearchBean.selectedRoles)>1}"/>
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{roleBean.modeAdd}" update=":frm001"  styleClass="Fright"/>
+			    </div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableRole" value="#{roleSearchBean.pagingRole}" 
+				      selection="#{roleSearchBean.selectedRoles}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.roleId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{roleSearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn :frm001:menuAccess"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn :frm001:menuAccess"/>  
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn :frm001:menuAccess"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn :frm001:menuAccess"/>      
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+				
+				    <p:column headerText="#{msg.formRoleCompany}" rendered="#{roleSearchBean.userSession.companyId == null}">
+					   <h:outputText value="#{data.companyName}" />
+					</p:column>
+					
+					<p:column headerText="#{msg.formRoleCode}">
+						<h:outputText value="#{data.roleCode}" />
+					</p:column>			
+					<p:column headerText="#{msg.formRoleName}">
+						<h:outputText value="#{data.roleName}" />
+					</p:column>
+					<p:column headerText="#{msg.formRoleDesc}">
+						<h:outputText value="#{data.roleDesc}" />
+					</p:column>
+					<p:column headerText="#{msg.formRoleMenuResume}">
+						<h:outputText value="#{data.menuResume}" />
+					</p:column>
+				</p:dataTable>
+			</div>
+ 	</div>
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+					width="500" header="#{msg.textSearchs} #{msg.formRoleTitle}" styleClass="dialogClose">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	   <p:outputPanel id="outputPanleDialog">
+	     <p:outputPanel rendered="#{roleSearchBean.userSession.companyId == null}"> 
+		     <div class="Container100">
+				  <div class="EposContainerIndent">
+					   <div class="Container30">
+		                    <h:outputText value="#{msg.formRoleCompany}"/>
+		               </div>
+					   <div class="Container70">
+			                <p:selectOneMenu value="#{roleSearchBean.roleSearchVO.companyId}">
+								 <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+								 <f:selectItems value="#{roleSearchBean.companySelectItem}"/>
+							</p:selectOneMenu>	
+		          	   </div>
+				   </div>
+			  </div>
+		 </p:outputPanel>	  
+		 <div class="Container100">
+			  <div class="EposContainerIndent">
+				   <div class="Container30">
+	               		<h:outputText value="#{msg.formRoleCode}"/>
+	               </div>
+				   <div class="Container70">
+	                    <p:inputText value="#{roleSearchBean.roleSearchVO.roleCode}" autocomplete="off" styleClass="Wid90"/>
+	               </div>
+			  </div>
+		 </div>
+		 <div class="Container100">
+			  <div class="EposContainerIndent">
+				   <div class="Container30">
+	                    <h:outputText value="#{msg.formRoleName}"/>
+	           	   </div>
+				   <div class="Container70">
+	               		<p:inputText value="#{roleSearchBean.roleSearchVO.roleName}" autocomplete="off" styleClass="Wid90"/>
+	           	   </div>
+			  </div>
+		 </div>
+		 <div class="Container100">
+			  <div class="EposContainerIndent">
+				   <div class="Container30">
+	               		<h:outputText value="#{msg.formRoleDesc}"/>
+	           	   </div>
+				   <div class="Container70">
+	              		<p:inputTextarea value="#{roleSearchBean.roleSearchVO.roleDesc}" styleClass="Wid90"/>
+	               </div>
+			  </div>
+		 </div>
+		 <div class="Container100">
+				<div class="EposContainerIndent">
+	               <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableRole :frm001:searchAll"
+	                    actionListener="#{roleSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	               <p:commandButton value="#{msg.buttonClear}" actionListener="#{roleSearchBean.clearDialog}"
+	                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableRole :frm001:searchAll :frm001:dialogSearch"/>
+	           </div>
+	     </div>      
+	   </p:outputPanel>  
+	</p:dialog>
+	
+</ui:composition>

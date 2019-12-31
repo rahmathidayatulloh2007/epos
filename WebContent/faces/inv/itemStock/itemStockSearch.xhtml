@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<p:message for="searchAll"></p:message>
+
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+		<h:outputText value="#{msg.formItemStockTitle}" style="font-weight:bold;" />
+		</div>
+	</div>
+
+	<div class="Container100">     
+		<div class="Container50 Responsive">
+		<p:outputPanel rendered="#{itemStockSearchBean.sessionCompanyId == null}">
+		<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+				             <h:outputText value="#{msg.formItemStockCompany}"/>
+				    	</div>
+					    <div class="Container70 Responsive">
+					   <p:remoteCommand name="onChangeCompany" actionListener="#{itemStockSearchBean.onChangeCompany()}" update=":frm001"></p:remoteCommand>
+								<p:selectOneMenu id="companyId" value="#{itemStockSearchBean.companyId}" onchange="onChangeCompany();" >							
+										<f:selectItem itemValue="0" itemLabel="#{msg.textChoose}"></f:selectItem>
+										<f:selectItems value="#{itemStockSearchBean.companySelectItem}"/>				
+								</p:selectOneMenu>	
+							 	<p:message for="companyId"></p:message>		
+						</div>
+					</div>
+		</div>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{itemStockSearchBean.sessionOutletId == null}">
+		<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+				             <h:outputText value="#{msg.formItemStockOutlet}"/>
+				    	</div>
+					    <div class="Container70 Responsive">
+					   <p:selectOneMenu id="outletId" value="#{itemStockSearchBean.outletId}">							
+								<f:selectItem itemValue="0" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{itemStockSearchBean.outletSelectItem}"/>				
+					   </p:selectOneMenu>		
+						</div>
+					</div>
+		</div>
+		</p:outputPanel>
+	</div>
+	</div>
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					 <p:inputText id="searchAll" readonly="#{itemStockSearchBean.disableSearchAll}"
+								value="#{itemStockSearchBean.searchAll}" autocomplete="off" styleClass="WidPos" placeholder="#{msg.textSearch} #{msg.formItemStockTitle}"/>
+				</div>
+				<div class="Container30">			
+					 <p:commandButton icon="ui-icon-search" actionListener="#{itemStockSearchBean.search}" update=":frm001:dataTableItemStock"/>
+				</div>
+			    <div class="Container30">					 
+			    	<p:commandButton id="exportBtn" value="#{msg.buttonExportXls}" actionListener="#{itemStockSearchBean.exportToXls}" styleClass="Fright" ajax="false"/>         
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableItemStock" value="#{itemStockSearchBean.pagingItemStock}" 
+				      var="data" lazy="true" 
+				      paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{itemStockSearchBean.paging}" paginator="true" rowIndexVar="index">
+				
+				    <p:column headerText="#{msg.formItemStockCompany}">
+						<h:outputText value="#{data.company.companyName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockOutlet}">
+						<h:outputText value="#{data.outlet.outletName}" />
+					</p:column>			
+					<p:column headerText="#{msg.formItemStockItemCode}">
+						<h:outputText value="#{data.item.itemCode}" />
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockItemName}">
+						<h:outputText value="#{data.item.itemName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockCategory}">
+						<h:outputText value="#{data.item.category.categoryName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockQty}">
+						<h:outputText value="#{data.stockQtyString}" style="float:right"/>
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockOutgoingQty}">
+						<h:outputText value="#{data.outgoingQtyString}" style="float:right"/>
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockIncomingQty}">
+						<h:outputText value="#{data.incomingQtyString}" style="float:right"/>
+					</p:column>	
+					<p:column headerText="#{msg.formItemStockUm}">
+						<h:outputText value="#{data.item.um.umName}" />
+					</p:column>	
+									
+				</p:dataTable>
+		</div>
+	</div>		
+	
+	
+	
+</ui:composition>

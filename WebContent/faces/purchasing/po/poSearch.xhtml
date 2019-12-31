@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formPoTitle}" style="font-weight:bold;" />
+		</div>
+		<div class="ContainerIndent">
+			<p:messages id="messages" showDetail="true" showSummary="false"
+				globalOnly="true" />
+		</div>
+	</div>
+
+	<!-- <p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" /> -->
+
+
+	<div class="Container100">
+		
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll"
+						readonly="#{poSearchBean.disableSearchAll}"
+						value="#{poSearchBean.searchAll}" styleClass="WidPos"
+						autocomplete="off"
+						placeholder="#{msg.textSearch} #{msg.formPoTitle}" />
+				</div>
+				<div class="Container30">
+					<p:commandButton icon="ui-icon-refresh"
+						actionListener="#{poSearchBean.clear}" update=":frm001"></p:commandButton>
+					<p:commandButton icon="ui-icon-search"
+						actionListener="#{poSearchBean.search}"
+						update=":frm001:dataTableCompany"></p:commandButton>
+					<p:commandButton oncomplete="PF('dialogSearch').show();"
+						update=":frm001:dialogSearch" icon="ui-icon-circle-arrow-s"></p:commandButton>
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{poBean.modeDelete}"
+						update="frm001:outputPanelSearch"
+						disabled="#{fn:length(poSearchBean.selectedPo) == 0}"
+						styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}"
+						actionListener="#{poBean.modeEdit}" update=":frm001"
+						disabled="#{fn:length(poSearchBean.selectedPo) == 0 or fn:length(poSearchBean.selectedPo)>1}"
+						styleClass="Fright" />
+					<p:commandButton value="#{msg.buttonAdd}"
+						actionListener="#{poBean.modeAdd}" update=":frm001"
+						styleClass="Fright" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:dataTable id="dataTableCompany" value="#{poSearchBean.pagingPo}"
+				selection="#{poSearchBean.selectedPo}" var="data" lazy="true"
+				editable="true" rowKey="#{data.poId}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				rows="#{poSearchBean.paging}" paginator="true" rowIndexVar="index">
+
+				<p:ajax event="rowSelectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="rowUnselectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="toggleSelect"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn" />
+
+				<p:column selectionMode="multiple"
+					style="width:27px;text-align:center" />
+
+				<p:column headerText="#{msg.formPoCompany}"
+					rendered="#{poSearchBean.userSession.companyId == null}">
+					<h:outputText value="#{data.companyName}" />
+				</p:column>
+
+				<p:column headerText="#{msg.formPoOutlet}"
+					rendered="#{poSearchBean.userSession.companyId == null}">
+					<h:outputText value="#{data.outletName}" />
+				</p:column>
+				<p:column headerText="#{msg.formPoOutlet}"
+					rendered="#{poSearchBean.userSession.companyId ne null and poSearchBean.userSession.outletId == null}">
+					<h:outputText value="#{data.outletName}" />
+				</p:column>
+				<p:column headerText="#{msg.formPoNo}">
+					<h:outputText value="#{data.poNo}" />
+				</p:column>
+				<p:column headerText="#{msg.formPoDate}">
+					<h:outputText value="#{poSearchBean.sdf.format(data.poDate)}" />
+				</p:column>
+				<p:column headerText="#{msg.formSupplierName}">
+					<h:outputText value="#{data.supplierName}" />
+				</p:column>
+<!-- 				<p:column headerText="#{msg.formPoItem}">
+					<h:outputText value="#{data.itemResume}" />
+				</p:column> -->
+				<p:column headerText="#{msg.formPoStatus}">
+					<h:outputText value="#{data.statusName}" />
+				</p:column>
+			</p:dataTable>
+		</div>
+	</div>
+
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true"
+		position="center" styleClass="dialog-calender dialogClose" width="660"
+		header="#{msg.textSearchs} #{msg.formPoTitle}">
+		<p:ajax event="close" oncomplete="$('.dialogClose').hide()" />
+		<p:outputPanel id="outputPanleDialog">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPoNo}" />
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{poSearchBean.poVOSearchDialog.poNo}"
+							styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyReqisterOn}" />
+					</div>
+					<div class="Container70">
+						<p:calendar navigator="true"
+							value="#{poSearchBean.poVOSearchDialog.startDate}"
+							showOn="button" pattern="#{poSearchBean.dateFormat}"
+							locale="#{poInputBean.dateLocale}" maxlength="11" />
+						<h:outputText value="s/d" />
+						<p:calendar navigator="true"
+							value="#{poSearchBean.poVOSearchDialog.endDate}" showOn="button"
+							pattern="#{poSearchBean.dateFormat}"
+							locale="#{poInputBean.dateLocale}" maxlength="11" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPoSupplier}" />
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{poSearchBean.poVOSearchDialog.supplierName}"
+							styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formPoItem}" />
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{poSearchBean.poVOSearchDialog.itemResume}"
+							styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyCity}" />
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{poSearchBean.poVOSearchDialog.statusName}"
+							styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}"
+						update=":frm001:dataTableCompany :frm001:searchAll"
+						actionListener="#{poSearchBean.searchDialog}"
+						oncomplete="PF('dialogSearch').hide()" />
+					<p:commandButton value="#{msg.buttonClear}"
+						actionListener="#{poSearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();"
+						update=":frm001:dataTableCompany :frm001:searchAll :frm001:dialogSearch" />
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

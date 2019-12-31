@@ -1,0 +1,399 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCompanyTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	<p:growl id="growlMessage" showDetail="true" showSummary="false" globalOnly="true" />
+	<p:messages id="messages" showDetail="true" showSummary="false" />	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{companySearchBean.disableSearchAll}" value="#{companySearchBean.searchAll}" placeholder="#{msg.textSearch} #{msg.formCompanyTitle}" 
+					    styleClass="WidPos" autocomplete="off"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton actionListener="#{companySearchBean.clear}" icon="ui-icon-refresh" update=":frm001"></p:commandButton>
+					<p:commandButton actionListener="#{companySearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableCompany"></p:commandButton>
+					<p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch" ></p:commandButton>
+				</div>
+				<div class="Container30">
+				     <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{companyBean.modeDelete}" 
+				            update="frm001:outputPanelSearch :frm001:messages" disabled="#{fn:length(companySearchBean.selectedCompany) == 0}" styleClass="Fright"/>
+				     <p:commandButton id="editBtn" value="#{msg.buttonEdit}"  actionListener="#{companyBean.modeEdit}" update=":frm001"
+				            disabled="#{fn:length(companySearchBean.selectedCompany) == 0 or fn:length(companySearchBean.selectedCompany)>1}" styleClass="Fright"/>
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{companyBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 	
+	<table width="100%">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><p:inputText id="searchAll" size="50" readonly="#{companySearchBean.disableSearchAll}"
+								value="#{companySearchBean.searchAll}" /></td>
+						<td><p:commandButton actionListener="#{companySearchBean.clear}"
+								value="X" update=":frm001"></p:commandButton></td>		
+						<td><p:commandButton actionListener="#{companySearchBean.search}"
+								value="#{msg.buttonSearch}" update=":frm001:dataTableCompany"></p:commandButton></td>
+						<td><p:commandButton oncomplete="PF('dialogSearch').show();"
+						        update=":frm001:dialogSearch" value="Lanjutan"/></td>			
+					</tr>
+				</table>
+			</td>
+			<td></td>
+			<td>
+				<table width="100%">
+					<tr align="right">
+						<td>
+						     <p:commandButton value="#{msg.buttonAdd}" 
+						            actionListener="#{companyBean.modeAdd}" update=":frm001"/>
+						     <p:commandButton id="editBtn" value="#{msg.buttonEdit}" 
+						            actionListener="#{companyBean.modeEdit}" update=":frm001"
+						            disabled="#{fn:length(companySearchBean.selectedCompany) == 0 or fn:length(companySearchBean.selectedCompany)>1}"/>
+						     <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{companyBean.modeDelete}" 
+						            update="frm001:outputPanelSearch" 
+						            disabled="#{fn:length(companySearchBean.selectedCompany) == 0}"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+ 	-->
+ 	
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+			<p:dataTable id="dataTableCompany" value="#{companySearchBean.pagingCompany}"
+						selection="#{companySearchBean.selectedCompany}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.companyId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{companySearchBean.paging}" paginator="true" rowIndexVar="index">
+			      
+			    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>		    
+     			<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+     			<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+     			<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>       
+     				
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+									
+				<p:column headerText="#{msg.formCompanyName}" >
+					<h:outputText value="#{data.companyName}" />
+				</p:column>			
+				<p:column headerText="#{msg.formCompanyType}" >
+					<h:outputText value="#{data.companyTypeName}" />
+				</p:column>
+				<p:column headerText="#{msg.formCompanyAddress}" >
+					<h:outputText value="#{data.address}" />
+				</p:column>			
+				<p:column headerText="#{msg.formCompanyCity}" >
+					<h:outputText value="#{data.cityName}" />
+				</p:column>	
+				<p:column headerText="#{msg.formCompanyProvince}" >
+					<h:outputText value="#{data.provinceName}" />
+				</p:column>	
+				<p:column headerText="#{msg.formCompanyPicName}" >
+					<h:outputText value="#{data.picName}" />
+				</p:column>	
+				<p:column headerText="#{msg.formCompanyPicPhoneno}" >
+					<h:outputText value="#{data.picPhoneno}" />
+				</p:column>	
+				<p:column headerText="#{msg.formCompanyReqisterOn}">
+					<h:outputText value="#{companySearchBean.sdf.format(data.registerOn)}" />
+				</p:column>	
+				<p:column headerText="#{msg.formCompanyQuantityOutlet}" style="text-align:right">
+					<h:outputText value="#{data.outletQty}" />
+				</p:column>	
+			</p:dataTable>
+		</div>
+ 	</div>
+ 	
+ 	<!-- 
+	<table width="100%">
+		<tr >
+			<td>
+				<p:dataTable id="dataTableCompany" value="#{companySearchBean.pagingCompany}" 
+				      selection="#{companySearchBean.selectedCompany}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.companyId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{companySearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+										
+					<p:column headerText="#{msg.formCompanyName}" >
+						<h:outputText value="#{data.companyName}" />
+					</p:column>			
+					<p:column headerText="#{msg.formCompanyType}" >
+						<h:outputText value="#{data.companyTypeName}" />
+					</p:column>
+					<p:column headerText="#{msg.formCompanyAddress}" >
+						<h:outputText value="#{data.address}" />
+					</p:column>			
+					<p:column headerText="#{msg.formCompanyCity}" >
+						<h:outputText value="#{data.cityName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formCompanyProvince}" >
+						<h:outputText value="#{data.provinceName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formCompanyPicName}" >
+						<h:outputText value="#{data.picName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formCompanyPicPhoneno}" >
+						<h:outputText value="#{data.picPhoneno}" />
+					</p:column>	
+					<p:column headerText="#{msg.formCompanyReqisterOn}" sortBy="#{data.registerOn}">
+						<h:outputText value="#{companySearchBean.sdf.format(data.registerOn)}" />
+					</p:column>	
+					<p:column headerText="#{msg.formCompanyQuantityOutlet}" sortBy="#{data.outletQty}">
+						<h:outputText value="#{data.outletQty}" />
+					</p:column>	
+				</p:dataTable>
+			</td>
+		</tr>	
+	</table>
+	 -->
+	 
+	<p:dialog	widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender"
+				width="560" header="#{msg.textSearchs} #{msg.formCompanyTitle}">
+		<p:outputPanel id="outputPanleDialog">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyName}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{companySearchBean.companyVOSearchDialog.companyName}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyType}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{companySearchBean.companyVOSearchDialog.companyTypeCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{companySearchBean.companyTypeSelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyAddress}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{companySearchBean.companyVOSearchDialog.address}" styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyProvince}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{companySearchBean.companyVOSearchDialog.provinceId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{companySearchBean.provinceSelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyCity}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{companySearchBean.companyVOSearchDialog.cityId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{companySearchBean.citySelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyPicName}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{companySearchBean.companyVOSearchDialog.picName}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyPicPhoneno}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{companySearchBean.companyVOSearchDialog.picPhoneno}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyReqisterOn}"/>
+					</div>
+					<div class="Container70">
+						<p:calendar navigator="true" value="#{companySearchBean.companyVOSearchDialog.startDate}" size="13"
+									showOn="button" pattern="#{companyInputBean.dateFormat}" 
+									locale="#{companyInputBean.dateLocale}" maxlength="11" />		
+						<h:outputText value="s/d"/>	
+						<p:calendar navigator="true" value="#{companySearchBean.companyVOSearchDialog.endDate}" 
+									showOn="button" pattern="#{companyInputBean.dateFormat}" 
+									locale="#{companyInputBean.dateLocale}" maxlength="11" size="13" />	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formCompanyQuantityOutlet}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{companySearchBean.companyVOSearchDialog.outletQty}" styleClass="number-input"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableCompany :frm001:searchAll"
+						actionListener="#{companySearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+					<p:commandButton value="#{msg.buttonClear}" actionListener="#{companySearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableCompany :frm001:searchAll :frm001:dialogSearch"/>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!-- 
+	   <p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender"
+					width="560" height="395" header="#{msg.textSearchs} #{msg.formCompanyTitle}">
+	    <p:outputPanel id="outputPanleDialog"> 
+	     <table width="100%">	         
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyName}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{companySearchBean.companyVOSearchDialog.companyName}"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyType}"/>
+	           </td>
+	           <td>
+	               <p:selectOneMenu value="#{companySearchBean.companyVOSearchDialog.companyTypeCode}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{companySearchBean.companyTypeSelectItem}"/>
+					</p:selectOneMenu>	
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyAddress}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{companySearchBean.companyVOSearchDialog.address}"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyProvince}"/>
+	           </td>
+	           <td>
+	               <p:selectOneMenu value="#{companySearchBean.companyVOSearchDialog.provinceId}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{companySearchBean.provinceSelectItem}"/>
+				   </p:selectOneMenu>	
+	           </td>
+	         </tr>	        
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyCity}"/>
+	           </td>
+	           <td>
+	               <p:selectOneMenu value="#{companySearchBean.companyVOSearchDialog.cityId}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{companySearchBean.citySelectItem}"/>
+				   </p:selectOneMenu>	
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyPicName}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{companySearchBean.companyVOSearchDialog.picName}"
+	                    styleClass="cal-input"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyPicPhoneno}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{companySearchBean.companyVOSearchDialog.picPhoneno}" 
+	                    styleClass="cal-input"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyReqisterOn}"/>
+	           </td>
+	           <td>
+	               <p:calendar navigator="true" value="#{companySearchBean.companyVOSearchDialog.startDate}" size="13"
+	                    showOn="button" pattern="#{companyInputBean.dateFormat}" 
+	               		locale="#{companyInputBean.dateLocale}" maxlength="11" />		
+	               	<h:outputText value="s/d"/>	
+	               	<p:calendar navigator="true" value="#{companySearchBean.companyVOSearchDialog.endDate}" 
+	                    showOn="button" pattern="#{companyInputBean.dateFormat}" 
+	                    locale="#{companyInputBean.dateLocale}" maxlength="11" size="13" />	
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formCompanyQuantityOutlet}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{companySearchBean.companyVOSearchDialog.outletQty}" 
+	                    styleClass="number-input"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableCompany :frm001:searchAll"
+	                    actionListener="#{companySearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	               <p:commandButton value="#{msg.buttonClear}" actionListener="#{companySearchBean.clearDialog}"
+	                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableCompany :frm001:searchAll :frm001:dialogSearch"/>
+	           </td>
+	         </tr>
+	     </table>
+	   </p:outputPanel>  
+	</p:dialog>
+	 -->
+</ui:composition>

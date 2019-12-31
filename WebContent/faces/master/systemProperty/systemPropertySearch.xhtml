@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSystemPropertyTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					   <p:inputText id="searchAll" readonly="#{systemPropertySearchBean.disableSearchAll}"
+								value="#{systemPropertySearchBean.searchAll}" styleClass="WidPos" autocomplete="off" placeholder="#{msg.textSearch} #{msg.formSystemPropertyTitle}"/>
+				</div>
+				<div class="Container30">
+				       <p:commandButton actionListener="#{systemPropertySearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>		
+					   <p:commandButton actionListener="#{systemPropertySearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableCompany"/>
+					   <p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/>		
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{systemPropertyBean.modeDelete}"
+						update="frm001:outputPanelSearch :frm001:messages"
+						styleClass="Fright"
+						disabled="#{fn:length(systemPropertySearchBean.selectedCompanys) == 0}">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}" styleClass="Fright"
+						     actionListener="#{systemPropertyBean.modeEdit}" update=":frm001"
+						     disabled="#{fn:length(systemPropertySearchBean.selectedCompanys) == 0 or fn:length(systemPropertySearchBean.selectedCompanys)>1}"/>
+					  <p:commandButton value="#{msg.buttonAdd}" styleClass="Fright"
+						     actionListener="#{systemPropertyBean.modeAdd}" update=":frm001"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableCompany" value="#{systemPropertySearchBean.pagingSystemProperty}" 
+				      selection="#{systemPropertySearchBean.selectedCompanys}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.companyId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{systemPropertySearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>      
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>
+      				      				    				    
+				    <p:column headerText="#{msg.formSystemPropertyCompanyId}" rendered="#{systemPropertySearchBean.userSession.companyId == null}">
+						<h:outputText value="#{data.companyId}" />
+					</p:column>
+				    <p:column headerText="#{msg.formSystemPropertyCompanyCode}" rendered="#{systemPropertySearchBean.userSession.companyId == null}">
+						<h:outputText value="#{data.companyCode}" />
+					</p:column>					
+				    <p:column headerText="#{msg.formSystemPropertyCompanyName}" rendered="#{systemPropertySearchBean.userSession.companyId == null}">
+						<h:outputText value="#{data.companyName}" />
+					</p:column>
+					<!-- 
+					<p:column headerText="#{msg.formSystemPropertyName}">
+						<h:outputText value="#{data.systemPropertyName}" />
+					</p:column>			
+					<p:column headerText="#{msg.formSystemPropertyValue}">
+						<h:outputText value="#{data.systemPropertyValue}" />
+					</p:column>
+					<p:column headerText="#{msg.formSystemPropertyDesc}">
+						<h:outputText value="#{data.systemPropertyDesc}" />
+					</p:column>
+					-->		
+				</p:dataTable>
+			</div>
+ 	</div>
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender dialogClose"
+					width="500" header="#{msg.textSearchs} #{msg.formSystemPropertyTitle}">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	    <p:outputPanel id="outputPanleDialog"> 
+		  <p:outputPanel rendered="#{systemPropertySearchBean.userSession.companyId == null}">   
+		     <div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+		                     <h:outputText value="#{msg.formSystemPropertyCompany}"/>
+		                </div>
+					    <div class="Container70">
+		              		 <p:selectOneMenu value="#{systemPropertySearchBean.searchSystemPropertyVO.companyId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+								<f:selectItems value="#{systemPropertySearchBean.companySelectItem}"/>
+							 </p:selectOneMenu>	
+		           		</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<!--		
+	        <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		 <h:outputText value="#{msg.formSystemPropertyName}"/>
+	           		</div>
+				    <div class="Container70">
+	               		 <p:inputText value="#{systemPropertySearchBean.searchSystemPropertyVO.systemPropertyName}" styleClass="Wid90"/>
+	            	</div>
+	             </div>
+	         </div>            
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		 <h:outputText value="#{msg.formSystemPropertyValue}"/>
+	           		</div>
+				    <div class="Container70">
+	               		 <p:inputText value="#{systemPropertySearchBean.searchSystemPropertyVO.systemPropertyValue}" styleClass="Wid90"/>
+	                </div>
+	             </div>
+	          </div>          
+	          <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		 <h:outputText value="#{msg.formSystemPropertyDesc}"/>
+	                </div>
+				    <div class="Container70">
+	              		 <p:inputTextarea value="#{systemPropertySearchBean.searchSystemPropertyVO.systemPropertyDesc}" styleClass="Wid90"/>
+	           		</div>
+	             </div>
+	          </div>
+	          -->          
+	          <div class="Container100">
+				<div class="EposContainerIndent">
+	               <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableCompany :frm001:searchAll"
+	                    actionListener="#{systemPropertySearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	               <p:commandButton value="#{msg.buttonClear}" actionListener="#{systemPropertySearchBean.clearDialog}"
+	                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableCompany :frm001:searchAll :frm001:dialogSearch"/>
+	            </div>
+	        </div>	     
+	   </p:outputPanel>  
+	</p:dialog>	
+</ui:composition>

@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets" >
+	
+	  
+  	
+	<!-- <h:inputHidden id="category_parent_id" value="#{categoryBean.category_parent_id}"></h:inputHidden>
+	<h:inputHidden id="category_parent_level" value="#{categoryBean.category_parent_level}"></h:inputHidden>
+	<h:inputHidden id="category_parent_name" value="#{categoryBean.categoryTitle}"></h:inputHidden> -->
+	
+	<!-- <h:inputHidden id="prev_parent_id" value="#{categoryBean.prev_parent_id}"></h:inputHidden>
+	<h:inputHidden id="prev_parent_level" value="#{categoryBean.prev_parent_level}"></h:inputHidden>
+	<h:inputHidden id="prev_menu_title" value="#{categoryBean.prev_category_title}"></h:inputHidden> -->
+  	
+  	 <div class="Container100">
+		<div class="ContainerIndent">
+		
+			<h:outputText value="#{msg.formCategoryAddTitle}" rendered="#{categoryInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formCategoryEditTitle}" rendered="#{categoryInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>		 
+				
+			 <p:commandButton value="#{msg.buttonBack}" actionListener="#{categoryBean.modeSearch}" immediate="true" process="@this"
+				update="frm001"  styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}" actionListener="#{categoryBean.modeSave}" 
+				update="frm001" styleClass="Fright" />
+				<p:messages id="messagesCategory" showDetail="true" showSummary="false" globalOnly="true"/>
+		</div>
+    </div>
+  	
+	<div class="Container100 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+				    <div class="Container20 Responsive">
+				        <h:outputText value="#{msg.formCompany}" /><span style="color: red"> *</span>
+				    </div>							    
+					<div class="Container70 Responsive">
+					   						
+						<p:selectOneMenu id="companyId" value="#{categoryInputBean.categoryVO.company.companyId}" 
+							disabled="#{categoryInputBean.getCompanyIdFromUser()!=null}" 
+							>
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{categorySearchBean.companySelectItem}"/>
+						</p:selectOneMenu>
+						
+					</div>
+					<div class="Container30 Responsive"></div>	
+				</div>
+			</div>	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container20 Responsive">
+						<h:outputText value="#{msg.formParentCategory}"></h:outputText>
+					</div>								
+					<div class="Container70 Responsive">
+						<p:inputText id="parent_category_code" value="#{categoryInputBean.categoryVO.parentCode}" 
+						          maxlength="128" disabled="true" styleClass="Wid20"/>
+						<p:inputText id="parent_category_name" value="#{categoryInputBean.categoryVO.parentName}" 
+						          maxlength="128" disabled="true" styleClass="Wid20"/>
+					</div>
+					<div class="Container30 Responsive"></div>
+				</div>
+			</div>	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container20 Responsive">
+						<h:outputText value="#{msg.formCategoryCode}"></h:outputText><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="category_code"  maxlength="128" 
+							 styleClass="Wid60"
+							 value="#{categoryInputBean.categoryVO.categoryCode}"/>
+							
+					</div>
+				</div>
+			</div>	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container20 Responsive">
+						<h:outputText value="#{msg.formCategoryName}"></h:outputText><span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="category_name"  maxlength="128" 
+							 styleClass="Wid60"
+							 value="#{categoryInputBean.categoryVO.categoryName}"/>
+							
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container20 Responsive">
+						<h:outputText value="#{msg.formDescription}"></h:outputText>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="category_description" value="#{categoryInputBean.categoryVO.categoryDesc}" cols="47" styleClass="Wid60">
+							<f:validateLength maximum="128" />
+							<!-- <p:resizable for="category_description" ghost="true" animate="true" effect="swing" effectDuration="normal" minHeight="60" minWidth="200" /> -->
+						</p:inputTextarea>
+					</div>
+					<div class="Container30 Responsive">
+						<p:message for="category_description"></p:message>
+					</div>	
+				</div>
+			</div>	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container20 Responsive">
+						<h:outputText value="#{msg.formCategoryLevel}"></h:outputText>
+					</div>
+					<div class="Container70 Responsive">
+					    <p:inputText id="category_level" value="#{categoryInputBean.categoryVO.categoryLevel}" maxlength="5" 
+					          readonly="true" disabled="true" styleClass="Wid10" />
+					</div>
+					<div class="Container30 Responsive">
+						<p:message for="category_level"></p:message>
+					</div>
+				</div>
+			</div>	
+	</div>
+
+</ui:composition>

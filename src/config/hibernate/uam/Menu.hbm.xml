@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.uam.menu.model">
+	<class name="Menu" table="POS_MENU">
+		<id name="menuId" column="MENU_ID" type="long">
+			<generator class="native">
+				<param name="sequence">MENU_SEQ</param>
+			</generator>
+		</id>
+
+		<property name="menuCode" column="MENU_CODE" type="string" />
+		<property name="menuName" column="MENU_NAME" type="string" />
+		
+		<property name="menuTypeCode" column="MENU_TYPE" type="string" />	    
+        <many-to-one name="menuType" column="MENU_TYPE" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join"/>
+			
+	    <property name="action" column="ACTION" type="string" />
+		<property name="description" column="DESCRIPTION" type="string" />
+		<property name="menuOrder" column="MENU_ORDER" type="integer" />
+		<property name="menuLevel" column="MENU_LEVEL" type="integer" />
+
+		<many-to-one name="parent" column="PARENT_ID"
+			class="com.wo.epos.module.uam.menu.model.Menu" fetch="select"
+			not-found="ignore" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+
+		<bag name="childMenuList" inverse="true" cascade="save-update, delete-orphan"
+			order-by="MENU_ID ASC, MENU_LEVEL asc, menu_order asc">
+			<key column="parent_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.epos.module.uam.menu.model.Menu" />
+			<filter name="myFilter" condition="1=1"></filter>
+		</bag>
+
+	</class>
+	<filter-def name="myFilter">
+	</filter-def>
+</hibernate-mapping>

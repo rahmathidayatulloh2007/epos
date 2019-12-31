@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formItemConvertTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{itemConvertSearchBean.disableSearchAll}" value="#{itemConvertSearchBean.searchAll}" 
+					    styleClass="WidPos" autocomplete="off" placeholder="#{msg.textSearch} #{msg.formItemConvertTitle}"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton icon="ui-icon-refresh" actionListener="#{itemConvertSearchBean.clear}" update=":frm001"></p:commandButton>
+					<p:commandButton icon="ui-icon-search"  actionListener="#{itemConvertSearchBean.search}" 
+					                 update=":frm001:dataTableSearch"></p:commandButton>
+					<p:commandButton oncomplete="PF('dialogSearch').show();" update=":frm001:dialogSearch" 
+					                 icon="ui-icon-circle-arrow-s"></p:commandButton>
+				</div>
+				<div class="Container30">
+					 <!--
+				     <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{itemConvertBean.modeDelete}" 
+				            update="frm001:outputPanelSearch" disabled="#{fn:length(itemConvertSearchBean.selectedItemConvert) == 0}" styleClass="Fright"/>
+				     <p:commandButton id="editBtn" value="#{msg.buttonEdit}"  actionListener="#{itemConvertBean.modeEdit}" update=":frm001"
+				            disabled="#{fn:length(itemConvertSearchBean.selectedItemConvert) == 0 or fn:length(itemConvertSearchBean.selectedItemConvert)>1}" styleClass="Fright"/>
+				     -->
+				     <p:commandButton id="viewBtn" value="#{msg.buttonView}"  actionListener="#{itemConvertBean.modeView}" update=":frm001"
+				            disabled="#{fn:length(itemConvertSearchBean.selectedItemConvert) == 0 or fn:length(itemConvertSearchBean.selectedItemConvert)>1}" styleClass="Fright"/>				     
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{itemConvertBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+			<p:dataTable id="dataTableSearch" value="#{itemConvertSearchBean.pagingItemConvert}"
+						selection="#{itemConvertSearchBean.selectedItemConvert}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.convertId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{itemConvertSearchBean.paging}" paginator="true" rowIndexVar="index">
+			    <!--
+			    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>		    
+     			<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+     			<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+     			<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>       
+     		    -->
+     		    
+			    <p:ajax event="rowSelectCheckbox" update=":frm001:viewBtn"/>		    
+     			<p:ajax event="rowUnselectCheckbox" update=":frm001:viewBtn"/>  
+     			<p:ajax event="toggleSelect" update=":frm001:viewBtn"/>
+     			<p:ajax event="rowSelect" update=":frm001:viewBtn"/>       
+     		    
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+									
+				<p:column headerText="#{msg.formItemConvertCompany}" rendered="#{itemConvertSearchBean.userSession.companyId == null}">
+					<h:outputText value="#{data.companyName}" />
+				</p:column>
+				<!-- 					
+				<p:column headerText="#{msg.formItemConvertOutlet}" rendered="#{itemConvertSearchBean.userSession.companyId == null}">
+					<h:outputText value="#{data.outletName}" />
+				</p:column>			
+				<p:column headerText="#{msg.formItemConvertOutlet}" rendered="#{itemConvertSearchBean.userSession.companyId ne null and itemConvertSearchBean.userSession.outletId == null}">
+					<h:outputText value="#{data.outletName}" />
+				</p:column>
+				-->	
+				<p:column headerText="#{msg.formItemConvertConvertNo}" >
+					<h:outputText value="#{data.convertNo}" />
+				</p:column>
+				<p:column headerText="#{msg.formItemConvertConvertDate}" >
+					<h:outputText value="#{itemConvertSearchBean.sdf.format(data.convertDate)}" />
+				</p:column>
+				<p:column headerText="#{msg.formItemConvertItemName}" >
+					<h:outputText value="#{data.itemName}" />
+				</p:column>
+				<p:column headerText="#{msg.formItemConvertItemQty}" >
+					<h:outputText value="#{data.itemQty}" />
+				</p:column>						
+			</p:dataTable>
+		</div>
+ 	</div>
+ 	 
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender dialogClose"
+			width="660" header="#{msg.textSearchs} #{msg.formItemConvertTitle}">
+			<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputPanel id="outputPanleDialog">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formItemConvertConvertNo}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{itemConvertSearchBean.itemConvertVOSearchDialog.convertNo}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formItemConvertConvertDate}"/>
+					</div>
+					<div class="Container70">
+						<p:calendar navigator="true" value="#{itemConvertSearchBean.itemConvertVOSearchDialog.startDate}"
+									showOn="button" pattern="#{itemConvertSearchBean.dateFormat}" 
+									locale="#{itemConvertInputBean.dateLocale}" maxlength="11"/>		
+						<h:outputText value="s/d"/>	
+						<p:calendar navigator="true" value="#{itemConvertSearchBean.itemConvertVOSearchDialog.endDate}" 
+									showOn="button" pattern="#{itemConvertSearchBean.dateFormat}" 
+									locale="#{itemConvertInputBean.dateLocale}" maxlength="11"/>	
+					</div>
+				</div>
+			</div>						
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formItemConvertItem}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{itemConvertSearchBean.itemConvertVOSearchDialog.itemName}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableSearch :frm001:searchAll"
+						actionListener="#{itemConvertSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+					<p:commandButton value="#{msg.buttonClear}" actionListener="#{itemConvertSearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableSearch :frm001:searchAll :frm001:dialogSearch"/>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

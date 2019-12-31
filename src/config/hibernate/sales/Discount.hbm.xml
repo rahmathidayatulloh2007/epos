@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.sales.discount.model">
+	<class name="Discount" table="POS_DISCOUNT">
+		<id name="discountId" column="DISCOUNT_ID" type="long">
+			<generator class="native">
+				<param name="sequence">DISCOUNT_SEQ</param>
+			</generator>
+		</id>
+		
+
+		<bag name="listDiscountDtl" inverse="true" cascade="save-update, delete-orphan"
+			order-by="DISCOUNT_DTL_ID asc">
+			<key column="DISCOUNT_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.sales.discount.model.DiscountDtl" />
+		</bag>
+		
+		<many-to-one name="company" column="COMPANY_ID"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join">
+		</many-to-one>
+		
+		<many-to-one name="discountProvider" column="DISCOUNT_PROVIDER"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+		<many-to-one name="discountCategory" column="DISCOUNT_CATEGORY"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+
+		<property name="discountCode" column="DISCOUNT_CODE" type="string" />
+		<property name="discountName" column="DISCOUNT_NAME" type="string" />
+		<property name="discountValue" column="DISCOUNT_VALUE" type="double" />
+		<property name="categoryResume" column="CATEGORY_RESUME" type="string" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

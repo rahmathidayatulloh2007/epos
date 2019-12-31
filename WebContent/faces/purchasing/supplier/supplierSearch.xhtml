@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSupplierTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{supplierSearchBean.disableSearchAll}"
+								value="#{supplierSearchBean.searchAll}" styleClass="Wid100" placeholder="#{msg.textSearch} #{msg.formSupplierTitle}"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton icon="ui-icon-refresh" actionListener="#{supplierSearchBean.clear}"
+								update=":frm001"></p:commandButton>
+					<p:commandButton icon="ui-icon-search" actionListener="#{supplierSearchBean.search}"
+								update=":frm001:dataTableSupplier"></p:commandButton>
+					<p:commandButton icon="ui-icon-circle-arrow-s" oncomplete="PF('dialogSearch').show();"
+						        update=":frm001:dialogSearch"/>
+				</div>
+				<div class="Container30" align="right">
+					<p:commandButton value="#{msg.buttonAdd}" 
+						            actionListener="#{supplierBean.modeAdd}" update=":frm001"/>
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}" 
+						            actionListener="#{supplierBean.modeEdit}" update=":frm001"
+						            disabled="#{fn:length(supplierSearchBean.selectedSupplier) == 0 or fn:length(supplierSearchBean.selectedSupplier)>1}"/>
+					
+ 					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{supplierBean.modeDelete}" 
+						            update="frm001:outputPanelSearch" 
+						            disabled="#{fn:length(supplierSearchBean.selectedSupplier) == 0}">	
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>	            
+						            
+						                       
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 
+	<table width="100%">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><p:inputText id="searchAll" readonly="#{supplierSearchBean.disableSearchAll}"
+								value="#{supplierSearchBean.searchAll}" /></td>
+						<td><p:commandButton icon="ui-icon-refresh" actionListener="#{supplierSearchBean.clear}"
+								update=":frm001"></p:commandButton></td>		
+						<td><p:commandButton icon="ui-icon-search" actionListener="#{supplierSearchBean.search}"
+								update=":frm001:dataTableSupplier"></p:commandButton></td>
+						<td><p:commandButton icon="ui-icon-circle-arrow-s" oncomplete="PF('dialogSearch').show();"
+						        update=":frm001:dialogSearch"/></td>			
+					</tr>
+				</table>
+			</td>
+			<td></td>
+			<td>
+				<table width="100%">
+					<tr align="right">
+						<td>
+						     <p:commandButton value="#{msg.buttonAdd}" 
+						            actionListener="#{supplierBean.modeAdd}" update=":frm001"/>
+						     <p:commandButton id="editBtn" value="#{msg.buttonEdit}" 
+						            actionListener="#{supplierBean.modeEdit}" update=":frm001"
+						            disabled="#{fn:length(supplierSearchBean.selectedSupplier) == 0 or fn:length(supplierSearchBean.selectedSupplier)>1}"/>
+						     <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{supplierBean.modeDelete}" 
+						            update="frm001:outputPanelSearch" 
+						            disabled="#{fn:length(supplierSearchBean.selectedSupplier) == 0}"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	 -->
+	 
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+				<p:dataTable id="dataTableSupplier" value="#{supplierSearchBean.pagingSupplier}" 
+				      selection="#{supplierSearchBean.selectedSupplier}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.supplierId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{supplierSearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+					<p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/> 
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>        
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+										
+					<p:column headerText="#{msg.formSupplierCompany}" rendered="#{supplierSearchBean.adminMode == true}">
+						<h:outputText value="#{data.companyName}" />
+					</p:column>			
+					<p:column headerText="#{msg.formSupplierCode}">
+						<h:outputText value="#{data.supplierCode}" />
+					</p:column>
+					<p:column headerText="#{msg.formSupplierName}">
+						<h:outputText value="#{data.supplierName}" />
+					</p:column>
+					<p:column headerText="#{msg.formSupplierAddress}">
+						<h:outputText value="#{data.address}" />
+					</p:column>						
+					<p:column headerText="#{msg.formSupplierCity}">
+						<h:outputText value="#{data.cityName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formSupplierProvince}">
+						<h:outputText value="#{data.provinceName}" />
+					</p:column>			
+					<p:column headerText="#{msg.formSupplierPicName}">
+						<h:outputText value="#{data.picName}" />
+					</p:column>
+					<p:column headerText="#{msg.formSupplierPhoneNo}">
+						<h:outputText value="#{data.phoneNo}" />
+					</p:column>
+				</p:dataTable>
+			</div>
+ 	</div>
+ 	
+	 
+	 <p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+					width="500" height="365" header="#{msg.textSearchs} #{msg.formSupplierTitle}" styleClass="dialogClose">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	    <p:outputPanel id="supplierPanelDialog"> 
+	     	<div class="Container100">
+			   <div class="EposContainerIndent">
+					<div class="Container30">
+	               <h:outputText value="#{msg.formSupplierCompany}"/>
+	           </div>
+			   <div class="Container70">
+	 
+	               <p:selectOneMenu value="#{supplierSearchBean.supplierVOSearchDialog.companyId}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{supplierSearchBean.companySelectItem}"/>
+					</p:selectOneMenu>
+	            </div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+			   		<div class="Container30">
+	               		<h:outputText value="#{msg.formSupplierCode}"/>
+			  		</div>
+	           		<div class="Container70">
+	               		<p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.supplierCode}"/>
+	          		</div>
+	          	</div>
+	         </div>
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">	        
+	               		<h:outputText value="#{msg.formSupplierName}"/>
+	               	</div>
+	           		<div class="Container70">
+	              		<p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.supplierName}"/>
+	              	</div>
+	             </div>
+	         </div>
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		<h:outputText value="#{msg.formSupplierAddress}"/>
+	           		</div>
+	          		<div class="Container70">
+	               		<p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.address}"/>
+	          		</div>
+	          	</div>
+	          </div>
+	       
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		<h:outputText value="#{msg.formSupplierCity}"/>
+	           		</div>
+	           		<div class="Container70">
+	               		<p:selectOneMenu value="#{supplierSearchBean.supplierVOSearchDialog.cityId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{supplierSearchBean.citySelectItem}"/>
+				   		</p:selectOneMenu>	
+	           		</div>
+	        	 </div> 
+	         </div>
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		<h:outputText value="#{msg.formSupplierProvince}"/>
+	           		</div>
+	           		<div class="Container70">
+	          	   		<p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.provinceName}"/>
+	           		</div>
+	         	</div>
+	         </div>
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		<h:outputText value="#{msg.formSupplierPicName}"/>
+	           		</div>
+	           		<div class="Container70">
+	          	   		<p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.picName}"/>
+	           		</div>
+	         	</div>
+	         </div>
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+	               		<h:outputText value="#{msg.formSupplierPhoneNo}"/>
+	           		</div>
+	           		<div class="Container70">
+	          	   		<p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.phoneNo}"/>
+	           		</div>
+	         	</div>
+	         </div>
+	         <div class="Container100">
+				<div class="EposContainerIndent">
+	               <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableSupplier :frm001:searchAll"
+	                    actionListener="#{supplierSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	               <p:commandButton value="#{msg.buttonClear}" actionListener="#{supplierSearchBean.clearDialog}"
+	                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableSupplier :frm001:searchAll :frm001:dialogSearch"/>
+	           </div>
+	         </div>
+	   </p:outputPanel>  
+	</p:dialog>
+	 
+	 <!-- 
+	   <p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+					width="500" height="365" header="#{msg.textSearchs} #{msg.formSupplierTitle}">
+	    <p:outputPanel id="supplierPanelDialog"> 
+	     <table width="100%">	         
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierCompany}"/>
+	           </td>
+	           <td>
+	 
+	               <p:selectOneMenu value="#{supplierSearchBean.supplierVOSearchDialog.companyId}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{supplierSearchBean.companySelectItem}"/>
+					</p:selectOneMenu>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierCode}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.supplierCode}"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierName}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.supplierName}"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierAddress}"/>
+	           </td>
+	           <td>
+	               <p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.address}"/>
+	           </td>
+	         </tr>   
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierCity}"/>
+	           </td>
+	           <td>
+	               <p:selectOneMenu value="#{supplierSearchBean.supplierVOSearchDialog.cityId}">
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+						<f:selectItems value="#{supplierSearchBean.citySelectItem}"/>
+				   </p:selectOneMenu>	
+	           </td>
+	         </tr> 
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierProvince}"/>
+	           </td>
+	           <td>
+	          	   <p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.provinceName}"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierPicName}"/>
+	           </td>
+	           <td>
+	          	   <p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.picName}"/>
+	           </td>
+	         </tr>
+	         <tr>
+	           <td>
+	               <h:outputText value="#{msg.formSupplierPhoneNo}"/>
+	           </td>
+	           <td>
+	          	   <p:inputText value="#{supplierSearchBean.supplierVOSearchDialog.phoneNo}"/>
+	           </td>
+	         </tr>         
+	         <tr>
+	           <td>
+	               <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableSupplier :frm001:searchAll"
+	                    actionListener="#{supplierSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+	               <p:commandButton value="#{msg.buttonClear}" actionListener="#{supplierSearchBean.clearDialog}"
+	                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableSupplier :frm001:searchAll :frm001:dialogSearch"/>
+	           </td>
+	         </tr>
+	     </table>
+	   </p:outputPanel>  
+	</p:dialog>
+	 -->
+</ui:composition>

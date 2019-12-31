@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+<style>
+.readonly-bg div select {
+	opacity: 0.75;
+	background-color: #f4f4f4;
+}
+</style>
+    
+    <div class="Container100">
+		<div class="ContainerIndent">
+			
+			<h:outputText value="#{msg.formDOAddTitle}" rendered="#{DOInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formDOEditTitle}" rendered="#{DOInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>	
+			    
+			 <p:commandButton value="#{msg.buttonBack}" actionListener="#{DOBean.modeSearch}" 
+			        update=":frm001" styleClass="Fright" immediate="true" />
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{DOBean.modeSave}" 
+			        update=":frm001" styleClass="Fright"/>
+			  <p:messages id="messagesDo" showDetail="true" showSummary="false" globalOnly="true"/>	          
+		</div>
+    </div>
+     
+    <div class="Container100">     
+		<div class="Container50 Responsive">	
+		     <p:outputPanel rendered="#{DOInputBean.companyId == null}">
+		     <div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+				             <h:outputText value="#{msg.formTransferCompany}"/><span style="color: red"> *</span>
+				    	</div>
+					    <div class="Container70 Responsive">
+					    	<!-- <p:remoteCommand name="onChangeCompany" actionListener="#{DOInputBean.onChangeCompany()}" update=":frm001"></p:remoteCommand> -->
+						   	<p:selectOneMenu id="companyId" value="#{DOInputBean.DOVO.companyId}" 
+						   		disabled="#{DOInputBean.MODE_TYPE eq 'EDIT'}">							
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{DOInputBean.companySelectItem}"/>
+									<p:ajax event="change"
+										listener="#{DOInputBean.changeCompanyToOutlet}"
+										update=":frm001:outletId :frm001:transferTo"></p:ajax>				
+							</p:selectOneMenu>	
+									
+						</div>
+					</div>
+			    </div>	  
+			    </p:outputPanel>	
+			    <p:outputPanel rendered="#{DOInputBean.outletId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+				             <h:outputText value="#{msg.formDOOutlet}"/>
+				    	</div>
+					    <div class="Container70 Responsive">
+					    	<!-- <p:remoteCommand name="onChangeOutlet" actionListener="#{DOInputBean.onChangeOutlet()}" 
+					    		update=":frm001:transferFrom :frm001:transferTo"></p:remoteCommand> -->
+						   	<p:selectOneMenu id="outletId" value="#{DOInputBean.DOVO.outlet.outletId}" 
+						   		disabled="#{DOInputBean.MODE_TYPE eq 'EDIT'}">							
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+									<f:selectItems value="#{DOInputBean.outletSelectItem}"/>
+									<p:ajax event="change"
+										listener="#{DOInputBean.onChangeOutlet}"
+										update=":frm001:transferFrom :frm001:transferTo"></p:ajax>				
+							</p:selectOneMenu>		
+								
+						</div>
+					</div>
+			    </div>	    
+		    	</p:outputPanel>	 
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formDODoNo}"/>
+			    	</div>
+				    <div class="Container70 Responsive">
+					     <p:inputText id="DODoNo" 
+							 value="#{DOInputBean.DOVO.doNo}" maxlength="16"  styleClass="Wid90 readonly-bg" readonly="true"/>		
+											
+					</div>
+				</div>
+		    </div>		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formDODoDate}"/><span style="color: red"> *</span>
+			        </div>
+				    <div class="Container70 Responsive">
+					     <p:calendar id="DODoDate"  value="#{DOInputBean.DOVO.doDate}" 
+					     	styleClass="Wid90" pattern="dd-MMM-yyyy" locale="en" />						
+						
+					</div>
+				</div>
+		    </div>		
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	<h:outputText value="#{msg.formDODoType}"/><span style="color: red"> *</span>
+			        </div>
+				    <div class="Container70 Responsive">
+				    	<!-- <p:remoteCommand name="onChangeDoType" actionListener="#{DOInputBean.onChangeDoType()}" update=":frm001:outputPanel"></p:remoteCommand> -->
+						<p:selectOneMenu id="doType" value="#{DOInputBean.DOVO.doType}" >
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{DOInputBean.deliveryTypeSelectItem}"/>
+								<p:ajax event="change"
+									listener="#{DOInputBean.onChangeDoType}"
+									update=":frm001:outputPanel"></p:ajax>
+						</p:selectOneMenu>	
+											
+				    </div>
+			    </div>
+			</div>
+			<p:outputPanel id="outputPanel">   
+			    <p:outputPanel rendered="#{!DOInputBean.flag}">
+				    <div class="Container100">
+							<div class="EposContainerIndent">
+								<div class="Container30 Responsive">
+						             <h:outputText value="#{msg.formDOTransferFrom}"/>
+						    	</div>
+							    <div class="Container70 Responsive">
+							     <p:selectOneMenu id="transferFrom" value="#{DOInputBean.DOVO.transferFrom.outletId}" disabled="#{DOInputBean.DOVO.outlet != null}" styleClass="#{DOInputBean.DOVO.outlet != null ?'readonly-bg':''}">
+								 		<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+										<f:selectItems value="#{DOInputBean.transferFromSelectItem}"/>
+								 </p:selectOneMenu>			
+															
+								</div>
+							</div>
+					</div>
+					
+					<div class="Container100">
+							<div class="EposContainerIndent">
+								<div class="Container30 Responsive">
+						             <h:outputText value="#{msg.formDOTransferTo}"/>
+						    	</div>
+							    <div class="Container70 Responsive">
+							     <p:selectOneMenu id="transferTo" value="#{DOInputBean.DOVO.transferTo.outletId}" >
+								 		<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+										<f:selectItems value="#{DOInputBean.transferToSelectItem}"/>
+								 </p:selectOneMenu>		
+								 						
+								</div>
+							</div>
+					</div>
+				</p:outputPanel>	
+				<p:outputPanel rendered="#{DOInputBean.flag}">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container30 Responsive">
+					        	<h:outputText value="#{msg.formDOSoNo}"/>
+					        </div>
+						    <div class="Container70 Responsive">
+								 <p:selectOneMenu id="soNo" value="#{DOInputBean.DOVO.soId}" >
+								 		<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+										<f:selectItems value="#{DOInputBean.soIdSelectItem}"/>
+								 </p:selectOneMenu>		
+								 					
+						    </div>
+					    </div>
+					</div>    
+				</p:outputPanel>
+			</p:outputPanel>		
+		</div>
+		
+		<div class="Container50 Responsive">	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+			        	 <h:outputText value="#{msg.formDONotes}"/>
+			        </div>
+				    <div class="Container70 Responsive">
+					     <p:inputTextarea id="DONotes" maxlength="64" value="#{DOInputBean.DOVO.notes}" styleClass="Wid90"/>	
+					     						
+					</div>
+				</div>
+		    </div>
+		</div>
+	</div>
+	
+	<p:spacer><br></br></p:spacer>
+	<div class="Container100" style="font-weight: bold; border-bottom:solid 1px #d1d3d4;">
+	<div class="ContainerIndent">
+    	<h:outputText value="#{msg.formItemTitle}"></h:outputText>
+    	</div>
+    </div>
+
+	<div class="Container100">
+<!-- 		<div class="ContainerIndent">
+			<p:commandButton id="addActionButton" value="#{msg.buttonAdd}"
+				update=":frm001:listDoDtl" action="#{DOInputBean.addRow2}"
+				rendered="#{!DOInputBean.flag}">
+			</p:commandButton>
+		</div> -->
+
+		<div class="ContainerIndent">
+			<p:commandButton id="addActionButton" value="#{msg.buttonAdd}"
+				update=":frm001:listDoDtl" action="#{DOInputBean.addRow2}">
+			</p:commandButton>
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+		<!-- <p:message for="listDoDtl"/> -->
+			
+		<p:dataTable id="listDoDtl" var="vo" value="#{DOInputBean.DOVO.listDODtl}" lazy="true" rowIndexVar="row" resizableColumns="true" resizeMode="expand">
+			<p:column headerText="Action" style="text-align:center; width:50px;">
+		         <p:commandButton  update=":frm001:listDoDtl" immediate="true" icon="ui-icon-trash" >
+									<p:collector value="#{vo}" removeFrom="#{DOInputBean.DOVO.listDODtl}" />
+				 </p:commandButton>
+		    </p:column>
+		    <p:column headerText="#{msg.formDOCd}" style="width:100px;">
+		        <p:inputText value="#{vo.item.itemCode}" id="itemCode" maxlength="10" size="10" readonly="true"/>
+		    </p:column>
+		 
+		    <p:column headerText="#{msg.formDOName}" style="width:290px;">
+		        <p:inputText value="#{vo.item.itemName}" id="itemName" maxlength="30" size="30"/>
+		        <p:remoteCommand name="updateQueryItem#{row}" actionListener="#{DOInputBean.updateSelectorItem()}"></p:remoteCommand>
+		        <p:commandLink
+					     onstart="updateQueryItem#{row}();"
+						 oncomplete="doResetQueryselectorItem();searchselectorItemAndShow();"
+						 process="listDoDtl" actionListener="#{DOInputBean.index}">
+						 <f:param name="selectedIndex" value="#{row}"></f:param>
+						 <p:graphicImage value="/resources/images/search.gif"></p:graphicImage>
+				</p:commandLink>
+		    </p:column>
+		 
+		    <p:column headerText="#{msg.formDOUm}" style="width:70px;" >
+		        <p:inputText value="#{vo.item.um.umName}" id="um" maxlength="5" size="5" readonly="true" />
+		    </p:column>
+		 
+		    <p:column headerText="#{msg.formDOQty}" style="width:100px;">
+		         <p:spinner id="transferQty"  value="#{vo.deliveryQty}" size="10" min="0"/> 
+		    </p:column>
+		        
+		</p:dataTable>
+		</div>
+	</div>
+			
+		<!-- </div> -->    
+</ui:composition>

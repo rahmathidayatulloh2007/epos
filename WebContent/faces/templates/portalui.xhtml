@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" class="no-js">
+<ui:insert name="metadata" />
+<meta name="keywords"
+	content="btpn, recruitment, applicant, epsy, employee, interview, schedule" />
+<meta name="description"
+	content="Situs resmi untuk Back Office E-recruitment." />
+<f:view contentType="text/html">
+	<h:head>
+		<title><ui:insert name="title">:: E-Recruitment ::</ui:insert></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="css"
+			name="syntaxhighlighter/syntaxhighlighter.css" />
+
+		<script language="JavaScript">
+			function isIE() {
+				var myNav = navigator.userAgent.toLowerCase();
+				return (myNav.indexOf('msie') != -1) ? parseInt(myNav
+						.split('msie')[1]) : false;
+			}
+
+			if (isIE() == 7) {
+				$('html').addClass('ie' + isIE());
+			}
+		</script>
+		<style type="text/css">
+body {
+	/* background-image: url(#{request.contextPath}/resources/images/bground.jpg); */
+	background: #776a56;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+}
+
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #74748d;
+}
+
+.ui-corner-all {
+	border-radius: 4px 4px 4px 4px !important;
+}
+
+.ui-state-default {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px
+		rgba(0, 0, 0, 0.05) !important;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+.ui-state-hover {
+	color: #fff;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25) !important;
+	background-color: #b25a0f !important;
+	*background-color: #b25a0f !important;
+	background-image: -moz-linear-gradient(top, #fb841e, #da8a17) !important;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d46f19),
+		to(#d46f19) ) !important;
+	background-image: -webkit-linear-gradient(top, #fb841e, #d46f19)
+		!important;
+	background-image: -o-linear-gradient(top, #fb841e, #d46f19) !important;
+	background-image: linear-gradient(to bottom, #b25a0f, #d46f19)
+		!important;
+	background-repeat: repeat-x !important;
+	border-color: #d46f19 #d46f19 #a65512 !important;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)
+		!important;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb841e',
+		endColorstr='#d46f19', GradientType=0 ) !important;
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false )
+		!important;
+}
+</style>
+		<ui:insert name="head"></ui:insert>
+	</h:head>
+
+	<h:body styleClass="login">
+		<noscript>EREC requires Javascript to run. Please check
+			your browser for Javascript compatibility.</noscript>
+		<div class="wrapper skepia">
+			<div class="login-container">
+				<ui:insert name="content"></ui:insert>
+			</div>
+		</div>
+	</h:body>
+</f:view>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<!-- <p:message for="provinceCode"/>
+		<p:message for="provinceName"/> -->
+			<h:outputText value="#{msg.formProvinceAddTitle}"
+				rendered="#{provinceInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formProvinceEditTitle}"
+				rendered="#{provinceInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}"
+				actionListener="#{provinceBean.modeSearch}" update=":frm001"
+				immediate="true" styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{provinceBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="ContainerIndent">
+					<p:messages id="messagesInput" showDetail="true"
+						showSummary="false" globalOnly="true" />
+				</div>
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProvinceCode}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="provinceCode"
+							value="#{provinceInputBean.provinceVO.provinceCode}"
+							styleClass="Wid90"
+							rendered="#{provinceInputBean.MODE_TYPE == 'ADD'}" />
+
+						<p:inputText value="#{provinceInputBean.provinceVO.provinceCode}"
+							styleClass="Wid90 readonly-bg"
+							rendered="#{provinceInputBean.MODE_TYPE == 'EDIT'}" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProvinceName}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="provinceName"
+							value="#{provinceInputBean.provinceVO.provinceName}"
+							styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formProvinceActive}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{provinceInputBean.provinceVO.activeFlag}">
+							<f:selectItems value="#{provinceInputBean.activeSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+</ui:composition>

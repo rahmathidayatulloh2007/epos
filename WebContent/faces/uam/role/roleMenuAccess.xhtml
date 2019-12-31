@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">			    
+			    <p:commandButton value="#{msg.buttonBack}" immediate="true" actionListener="#{roleBean.modeSearch}" 
+			          update=":frm001" styleClass="Fright"/>
+			    <p:commandButton value="#{msg.buttonSave}" actionListener="#{roleBean.modeSaveMenuAccess}" 
+			          update=":frm001" styleClass="Fright"/>      
+		</div>
+	</div>	
+     
+	<div class="Container100">		
+		<div class="Container50 Responsive">
+		     <p:outputPanel rendered="#{roleMenuAccessBean.userSession.companyId == null}"> 
+			     <div class="Container100">
+					 <div class="EposContainerIndent">
+							<div class="Container30 Responsive">
+				                 <h:outputText value="#{msg.formRoleCompany}"/>
+						    </div>
+						    <div class="Container70 Responsive">
+								 <p:inputText readonly="true" value="#{roleMenuAccessBean.roleVO.companyName}" styleClass="Wid90 readonly-bg"/>
+							</div>
+						</div>
+				  </div>
+			  </p:outputPanel>
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			                 <h:outputText value="#{msg.formRoleCode}"/>
+			    		</div>
+					    <div class="Container70 Responsive">
+				    		 <p:inputText readonly="true" styleClass="Wid90 readonly-bg" value="#{roleMenuAccessBean.roleVO.roleCode}"/>
+						</div>
+					</div>
+			  </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formRoleName}"/>
+			    		</div>
+					    <div class="Container70 Responsive">
+				    		 <p:inputText readonly="true" styleClass="Wid90 readonly-bg" value="#{roleMenuAccessBean.roleVO.roleName}"/>			
+						</div>
+					</div>
+			  </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formRoleActive}"/>
+			    		</div>
+					    <div class="Container70 Responsive">
+				   			 <p:inputText readonly="true" styleClass="Wid90 readonly-bg" value="#{roleMenuAccessBean.roleVO.activeFlag}"/>
+						</div>
+					</div>
+			  </div>			 
+	    </div>
+	    <div class="Container50 Responsive">
+	        <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formRoleDesc}"/>
+			    		</div>
+					    <div class="Container70 Responsive">
+						   	 <p:inputTextarea cols="40" rows="3" readonly="true" styleClass="Wid90 readonly-bg"
+						   	      value="#{roleMenuAccessBean.roleVO.roleDesc}"/>			
+						</div>
+					</div>
+			  </div>	
+	      
+	    </div>
+	    
+	    
+	</div>		  
+	
+	<br></br>
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+			 <p:treeTable id="dataTableMenuAccess" value="#{roleMenuAccessBean.root}"  var="data" 
+			    selectionMode="checkbox"  selection="#{roleMenuAccessBean.selectedMenus}">		
+			    <p:ajax event="select"
+					listener="#{roleMenuAccessBean.onNodeSelect}" />
+				<p:ajax event="unselect"
+					listener="#{roleMenuAccessBean.onNodeUnselect}" />								
+			    <p:column>
+					<f:facet name="header"><h:outputText value="#{msg.formRoleMenu}"/></f:facet>
+					<h:outputText value="#{data.menuName}" />
+				</p:column>
+										   	
+			 </p:treeTable>
+	    </div> 
+	 </div>			
+	</ui:composition>

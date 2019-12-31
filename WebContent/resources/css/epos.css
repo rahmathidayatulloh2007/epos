@@ -1,0 +1,56 @@
+.EposContainerIndent {
+    margin: 8px 10px 0 8px !important;
+}
+
+.ui-dialog .ui-dialog-content {
+    color: #9fadb5;
+    font-size: 16px;
+    padding: 10px !important;
+}
+
+.redText {
+	color: red !important;
+}
+
+.readonlyText {
+	background-color: #F7F7F7 !important;
+}
+
+.readonly-bg {
+    opacity: 0.75;
+    background-color: #f4f4f4;
+}
+
+/* overwrite theme */
+.ui-datatable table tbody tr td {
+    color: #3D3D3D;
+}
+
+.ui-datatable .ui-datatable-tablewrapper table thead tr th, 
+.ui-datatable .ui-datatable-tablewrapper table tfoot tr td, 
+.ui-datatable table thead tr th {
+    color: #3D3D3D;
+}
+
+.ui-datatable .ui-paginator .ui-paginator-current {
+    color: #3D3D3D;
+}
+
+.ui-datatable .ui-paginator .ui-paginator-first, 
+.ui-datatable .ui-paginator .ui-paginator-prev, 
+.ui-datatable .ui-paginator .ui-paginator-pages .ui-paginator-page, 
+.ui-datatable .ui-paginator .ui-paginator-next, 
+.ui-datatable .ui-paginator .ui-paginator-last, 
+.ui-datatable .ui-paginator .ui-paginator-rpp-options{
+	color: #3D3D3D;
+}
+
+#layout-portlets-cover{
+	color: #3D3D3D;
+}
+.ui-button{
+    margin-right:2px;
+}
+
+
+/* overwrite theme */

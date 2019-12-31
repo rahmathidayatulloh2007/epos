@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.vehicle.model">
+	<class name="Vehicle" table="POS_VEHICLE">
+		<id name="vehicleId" column="VEHICLE_ID" type="long">
+			<generator class="native">
+				<param name="sequence">VEHICLE_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="outlet" column="OUTLET_ID"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join">
+		</many-to-one>
+		
+
+		<property name="policeNo" column="POLICE_NO" type="string" />
+		<property name="vehicleType" column="VEHICLE_TYPE" type="string" />
+		<many-to-one name="paramVehicleType" column="VEHICLE_TYPE" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		<property name="vehicleDesc" column="VEHICLE_DESC" type="string" />
+		<property name="occupyFlag" column="OCCUPY_FLAG" type="string" />
+		
+		
+		
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

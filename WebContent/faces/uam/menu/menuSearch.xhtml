@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formMenuTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<p:growl id="growlMessage" showDetail="true" showSummary="false" globalOnly="true" />
+	<p:messages id="messages" showDetail="true" showSummary="false" />	
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			 <div class="Container100">
+				  <div class="Container40">
+					   <p:inputText id="search" value="#{menuSearchBean.searchAll}" styleClass="WidPos" placeholder="#{msg.textSearch} #{msg.formMenuTitle}"/>
+				  </div>
+				  <div class="Container30">	
+					   <p:commandButton actionListener="#{menuSearchBean.search}" 
+						    	value="Search" update=":frm001"/>
+				  </div>
+				  <div class="Container30">
+					   <p:commandButton value="Add" icon="ui-icon-plus" actionListener="#{menuBean.modeAddNew}"
+					            update=":frm001" styleClass="Fright"/>
+				  </div>
+			 </div>
+		</div>
+	</div>		 
+			
+    <div class="Container100">
+ 		 <div class="ContainerIndent">
+	          <p:treeTable id="frmMenuTreeTable" value="#{menuSearchBean.root}" var="menu" emptyMessage="#{msg.common_textNodata}">
+					<p:column style="width:200px;" >
+						<f:facet name="header"><h:outputText value="#{msg.menuCode}"></h:outputText></f:facet>
+						<h:outputText value="#{menu.menuCode}"/>
+						<!-- <p:commandLink value="#{menu.menuCode}" actionListener="#{menuSearchBean.searchMenu}" ajax="false">
+							<f:param name="menuParam" value="#{menu.menuName};#{menu.menuId};#{menu.menuLevel};#{menu.menuCode}"></f:param>
+						</p:commandLink> -->
+					</p:column>				
+					<p:column style="width:250px;">
+						<f:facet name="header"><h:outputText value="#{msg.menuName}"></h:outputText></f:facet>
+						<h:outputText value="#{menu.menuName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header"><h:outputText value="#{msg.menuType}"></h:outputText></f:facet>
+						<!-- <h:outputText value="#{menu.menuType == 1?'Folder':'Menu'}" /> -->
+						<h:outputText value="#{menu.menuType.parameterDtlName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header"><h:outputText value="#{msg.action}"></h:outputText></f:facet>
+						<h:outputText value="#{menu.action}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header"><h:outputText value="#{msg.description}"></h:outputText></f:facet>
+						<h:outputText value="#{menu.description}" />
+					</p:column>
+					<p:column style="width:50px;">
+						<f:facet name="header"><h:outputText value="Status"></h:outputText></f:facet>
+						<h:outputText value="Enabled" rendered="#{menu.activeFlag == 'Y'}" />
+						<h:outputText value="Disabled" rendered="#{menu.activeFlag == 'N'}" />
+						<h:outputText value="Hidden" rendered="#{menu.activeFlag == 'H'}" />
+					</p:column>
+					<p:column style="width:150px;">
+						<f:facet name="header"><h:outputText value="#{msg.common_textAction}"></h:outputText></f:facet>
+						<table border="0" cellspacing="3" cellpadding="0" style="width: 130px;"> 
+							<tr > 
+								<td align="center" style="border: 0px !important;">
+								<p:commandButton value="Add" rendered="#{menu.menuTypeCode == 'MENUTYPE_FOLDER'}" icon="ui-icon-plus"
+							            actionListener="#{menuBean.modeAddFromParent(menu)}" update=":frm001"/>
+							    <p:commandButton value="Edit" icon="ui-icon-pencil"
+							            actionListener="#{menuBean.modeEdit(menu)}" update=":frm001"/>
+							    <p:commandButton value="Delete" rendered="#{menu.menuTypeCode == 'MENUTYPE_MENU' or menu.detailSize == 0}" icon="ui-icon-trash"
+							            actionListener="#{menuBean.modeDelete(menu)}" update=":frm001 :frm001:messages">
+							             <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+							    </p:commandButton>
+						
+					  		</td>
+							</tr>
+						</table>
+					</p:column>
+			</p:treeTable> 			
+	  
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+     	</div>
+    </div>
+</ui:composition>

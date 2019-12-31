@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCustomerCode}" style="font-weight:bold;" />
+		</div>
+	</div>
+	<p:growl id="growlMessage" showDetail="false" showSummary="true"
+		globalOnly="true" />
+	<p:messages id="messages" showDetail="true" showSummary="false" />
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll"
+						readonly="#{customerSearchBeanSales.disableSearchAll}"
+						autocomplete="off" value="#{customerSearchBeanSales.searchAll}"
+						styleClass="WidPos" placeholder="#{msg.textSearch} #{msg.formCustomerTitle}" />
+				</div>
+				<div class="Container30">
+					<p:commandButton icon="ui-icon-refresh"
+						actionListener="#{customerSearchBeanSales.clear}" update=":frm001" />
+					<p:commandButton icon="ui-icon-search"
+						actionListener="#{customerSearchBeanSales.search}"
+						update=":frm001:dataCustomer" />
+					<p:commandButton oncomplete="PF('dialogSearch').show();"
+						icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch" />
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{customerBeanSales.modeDelete}"
+						disabled="#{fn:length(customerSearchBeanSales.selectedCustomer) == 0}"
+						update="frm001:outputPanelSearch :frm001:messages "
+						styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+						
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}"
+						styleClass="Fright" update=":frm001"
+						actionListener="#{customerBeanSales.modeEdit}"
+						disabled="#{fn:length(customerSearchBeanSales.selectedCustomer) == 0}" />
+					<p:commandButton value="#{msg.buttonAdd}" styleClass="Fright"
+						actionListener="#{customerBeanSales.modeAdd}" update=":frm001" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:dataTable id="dataCustomer"
+				value="#{customerSearchBeanSales.pagingCustomer}" var="data"
+				selection="#{customerSearchBeanSales.selectedCustomer}"
+				rowKey="#{data.customerId}" lazy="true" editable="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				rows="#{customerSearchBeanSales.paging}" paginator="true"
+				rowIndexVar="index">
+
+				<p:ajax event="rowSelectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="rowUnselectCheckbox"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="toggleSelect"
+					update=":frm001:deleteBtn :frm001:editBtn" />
+				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn" />
+
+				<p:column selectionMode="multiple"
+					style="width:27px;text-align:center" />
+
+				<p:column headerText="#{msg.formCustomerCode}">
+					<h:outputText value="#{data.customerCode}" style="center" />
+				</p:column>
+
+				<p:column headerText="#{msg.formCustomerName}">
+					<h:outputText value="#{data.customerName}" style="center" />
+				</p:column>
+
+				<p:column headerText="#{msg.formCustomerDistrict}">
+					<h:outputText value="#{data.districtName}" style="center" />
+				</p:column>
+
+				<p:column headerText="#{msg.formCustomerSalesman}">
+					<h:outputText value="#{data.salesman}" style="center" />
+				</p:column>
+
+				<p:column headerText="#{msg.formSystemPropertyTypeOfBusiness}">
+					<h:outputText value="#{data.businessTypeName}" style="center" />
+				</p:column>
+
+				<p:column headerText="#{msg.formCustomerGroupOutlet}">
+					<h:outputText value="#{data.groupOutletName}" style="center" />
+				</p:column> 
+			</p:dataTable>
+		</div>
+	</div>
+
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true"
+		position="center" width="600"
+		header="#{msg.textSearchs} #{msg.formProvinceTitle}" styleClass="dialogClose">
+		<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputPanel id="outputPanleDialog">
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container25 Responsive">
+				<h:outputText value="#{msg.formCustomerCode}" />
+			</div>
+			<div class="Container75 Responsive">
+			<h:outputText value="#{msg.formCustomerName}" />
+			</div>
+		</div>
+	</div>
+
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+					<div class="Container25 Responsive">
+						<p:inputText
+							value="#{customerSearchBeanSales.customerVOSearchDialog.customerCode}"
+							autocomplete="off" styleClass="Wid90" />
+					</div>
+					<div class="Container75 Responsive">
+						<p:inputText
+							value="#{customerSearchBeanSales.customerVOSearchDialog.customerName}"
+							autocomplete="off" styleClass="Wid90" size="54" />
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+					<h:outputText value="#{msg.formCustomerDistrict}" />
+
+				</div>
+			</div>
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+					<p:selectOneMenu id="kota" style="width:510px"
+						value="#{customerSearchBeanSales.customerVOSearchDialog.districtId}">
+						<f:selectItem itemLabel="Pilih" />
+						<f:selectItems
+							value="#{customerSearchBeanSales.districtsSelectItem}" />
+					</p:selectOneMenu>
+
+				</div>
+			</div>
+
+
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+					<h:outputText value="#{msg.formCustomerSalesman}" />
+
+				</div>
+			</div>
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+				<p:inputText
+					value="#{customerSearchBeanSales.customerVOSearchDialog.salesman}"
+					autocomplete="off" styleClass="Wid90"  size="98"/>
+
+				</div>
+			</div>
+
+
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formSystemPropertyTypeOfBusiness}" />
+			</div>
+			<div class="Container50 Responsive">
+			<h:outputText value="#{msg.formCustomerGroupOutlet}" />
+			</div>
+		</div>
+	</div>
+
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+					<div class="Container50 Responsive">
+						<p:selectOneMenu id="tipeUsahaSearch" style="width:238px"
+							value="#{customerSearchBeanSales.customerVOSearchDialog.businessTypeId}">
+							<f:selectItem itemLabel="Pilih" />
+							<f:selectItems
+								value="#{customerSearchBeanSales.businessTypeSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="Container50 Responsive">
+						<p:selectOneMenu id="groupOutletSearch" style="width:238px"
+							value="#{customerSearchBeanSales.customerVOSearchDialog.groupOutletId}">
+							<f:selectItem itemLabel="Pilih" />
+							<f:selectItems
+								value="#{customerSearchBeanSales.groupOutletSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+			<hr />
+			<div align="right">
+				<p:commandButton value="#{msg.buttonSearch}"
+					update=":frm001:dataCustomer :frm001:searchAll"
+					actionListener="#{customerSearchBeanSales.searchDialog}"
+					oncomplete="PF('dialogSearch').hide()" />
+				<p:commandButton value="#{msg.buttonClear}"
+					actionListener="#{customerSearchBeanSales.clear}"
+					oncomplete="PF('dialogSearch').show();"
+					update=":frm001:dataCustomer :frm001:searchAll :frm001:dialogSearch" />
+			</div>
+
+		</p:outputPanel>
+	</p:dialog>
+
+
+
+</ui:composition>

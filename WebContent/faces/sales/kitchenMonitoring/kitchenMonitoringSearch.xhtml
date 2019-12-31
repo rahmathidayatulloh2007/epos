@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container30">
+					 <p:calendar navigator="true" value="#{kitchenMonitoringSearchBean.salesOrderDate}" showOn="button"
+								 pattern="#{kitchenMonitoringSearchBean.dateFormat}" locale="#{kitchenMonitoringSearchBean.dateLocale}" maxlength="11" />
+					<p:commandButton actionListener="#{kitchenMonitoringSearchBean.buttonSearch}" icon="ui-icon-search" update=":frm001:dataTableKitchenMonitoring"/>
+				</div>	
+				<div class="Container70">       
+				     <p:commandButton id="finishBtn" value="#{msg.buttonFinish}" actionListener="#{kitchenMonitoringSearchBean.butonFinish}" 
+				            update=":frm001:dataTableKitchenMonitoring" disabled="#{fn:length(kitchenMonitoringSearchBean.selectedSalesOrderDtlVos) == 0}" styleClass="Fright"/>
+				</div>			
+			</div>
+		</div>
+	</div> 	
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+			<p:dataTable id="dataTableKitchenMonitoring" value="#{kitchenMonitoringSearchBean.pagingSalesOrderDtl}"
+						selection="#{kitchenMonitoringSearchBean.selectedSalesOrderDtlVos}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.soDtlId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{kitchenMonitoringSearchBean.paging}" paginator="true" rowIndexVar="index">
+			      
+			    <p:ajax event="rowSelectCheckbox" update=":frm001:finishBtn"/>		    
+     			<p:ajax event="rowUnselectCheckbox" update=":frm001:finishBtn"/>  
+     			<p:ajax event="toggleSelect" update=":frm001:finishBtn"/>
+     			<p:ajax event="rowSelect" update=":frm001:finishBtn"/>       
+     				
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    			
+				<p:column >
+					<f:facet name="header">  
+					   <h:outputText value="SalesOrder"/>
+					</f:facet>
+					<h:outputText value="#{data.salesOrderNo}"/>
+				</p:column>	
+				<p:column >
+					<f:facet name="header">  
+					   <h:outputText value="Tanggal"/>
+					</f:facet>
+					<h:outputText value="#{data.salesOrderDate}"/>
+				</p:column>	
+				<p:column >
+					<f:facet name="header">  
+					   <h:outputText value="Meja"/>
+					</f:facet>
+					<h:outputText value="#{data.equipmentName}"/>
+				</p:column>	
+				<p:column >
+					<f:facet name="header">  
+					   <h:outputText value="Barang"/>
+					</f:facet>
+					<h:outputText value="#{data.productName}"/>
+				</p:column>	
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="Jumlah"/>
+					</f:facet>
+					<h:outputText value="#{data.orderQty} #{data.orderUmName}" />
+				</p:column>	
+				<p:column >
+					<f:facet name="header">  
+					   <h:outputText value="Keterangan"/>
+					</f:facet>
+					<h:outputText value="#{data.notes}"/>
+				</p:column>							
+			</p:dataTable>
+		</div>
+ 	</div>
+</ui:composition>

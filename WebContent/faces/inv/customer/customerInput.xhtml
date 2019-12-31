@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+   <div class="Container100">
+		<div class="ContainerIndent">	
+			 <p:commandButton value="Kembali"  actionListener="#{customerBean.modeSearch}" 
+			          update=":frm001" styleClass="Fright"/>		
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{customerBean.modeSave}"
+			          update=":frm001" styleClass="Fright"/>			 
+		</div>
+   </div>  
+	
+   <div class="Container100">    
+         <!-- Grid Kiri --> 
+		 <div class="Container50 Responsive">	
+		 	<p:outputPanel rendered="#{customerInputBean.companyId == null}">
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerCompany}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+				        <p:remoteCommand name="onChangeCompany" actionListener="#{customerInputBean.onChangeCompany()}" update=":frm001"></p:remoteCommand>
+							 <p:selectOneMenu id="companyName"  onchange="onChangeCompany();"
+								   value="#{customerInputBean.customerVO.company.companyId}" >
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{customerInputBean.companySelectItem}"/>
+							 </p:selectOneMenu>
+							 <p:message for="companyName" />				
+						</div>
+				   </div>
+		      </div>	
+		      <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerOutlet}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:selectOneMenu id="outletName" 
+								   value="#{customerInputBean.customerVO.registerOutlet.outletId}" >
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{customerInputBean.outletSelectItem}"/>
+							 </p:selectOneMenu>
+							 <p:message for="outletName" />				
+						</div>
+				   </div>
+		      </div>		
+		      </p:outputPanel>	 
+			  <!-- <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerCode}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						    <p:inputText id="customerCode" value="#{customerInputBean.customerVO.customerCode}" disabled="true" styleClass="Wid90"/>
+							<p:message for="customerCode"  />		
+							
+						</div>
+				   </div>
+		      </div> -->			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerName}"/><span style="color: red"> *</span>
+			    		</div>
+			    		<div class="Container70 Responsive">
+			    			<h:panelGrid columns="2">
+			    				<p:inputText id="title" value="#{customerInputBean.customerVO.title}" />
+			    				<p:inputText id="customerName" value="#{customerInputBean.customerVO.fullName}" size="40"/>
+			    				<p:message for="title" />	
+			    				<p:message for="customerName" />	
+			    			</h:panelGrid>
+							 
+							 			  												
+						</div>
+				       
+				   </div>
+		      </div>	
+		      
+		      <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerPhoneNo}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:inputText id="phoneNo" value="#{customerInputBean.customerVO.phoneNo}" styleClass="Wid90"/>
+							 <p:message for="phoneNo" />					  												
+						</div>
+				   </div>
+		      </div>			 
+		     <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerEmailAdd}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:inputText id="emailAdd" value="#{customerInputBean.customerVO.emailAddress}" styleClass="Wid90"/>
+							 <p:message for="emailAdd" />					  												
+						</div>
+				   </div>
+		      </div>	
+		      <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerBirthDate}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:calendar id="birthDate" value="#{customerInputBean.customerVO.birthDate}" styleClass="Wid90" pattern="dd-MMM-yyyy" locale="en"/>
+							 <p:message for="birthDate" />					  												
+						</div>
+				   </div>
+		      </div>	
+		      <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerAddress}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:inputTextarea id="address" styleClass="Wid90" value="#{customerInputBean.customerVO.address}" />
+							 <p:message for="address" />		
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formCustomerCity}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">			
+						     <p:selectOneMenu id="cityId" 
+								   value="#{customerInputBean.customerVO.city.cityId}">
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{customerInputBean.citySelectItem}"/>								 		
+							 </p:selectOneMenu>			
+							<p:message for="cityId" />			
+						</div>
+				   </div>
+		      </div>	
+		      <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+					         <h:outputText value="#{msg.formCustomerActive}"/>
+					    </div>
+				        <div class="Container70 Responsive">						
+						   <p:selectOneMenu id="dialogActiveFlag" value="#{customerInputBean.customerVO.activeFlag}" >
+								<f:selectItems value="#{customerInputBean.activeSelectItem}"/>
+							</p:selectOneMenu>
+							<p:message for="dialogActiveFlag" />
+						</div>
+				   </div>
+		      </div>	
+		  </div>		
+	</div>
+	
+</ui:composition>

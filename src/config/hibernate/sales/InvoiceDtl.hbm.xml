@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.sales.invoice.model">
+	<class name="InvoiceDtl" table="POS_SO_INV_DTL">
+		<id name="soInvDtlId" column="SO_INV_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">SO_INV_DTL_SEQ</param>
+			</generator>
+		</id>
+				
+        <many-to-one name="invoice" column="SO_INV_ID"
+			class="com.wo.epos.module.sales.invoice.model.Invoice" fetch="join">
+		</many-to-one>
+		
+		<property name="salesOrderDtlId" column="SO_DTL_ID" type="long" />		
+        <many-to-one name="salesOrderDtl" column="SO_DTL_ID" insert="false" update="false"
+			class="com.wo.epos.module.sales.salesOrder.model.SalesOrderDtl" fetch="join">
+		</many-to-one>		
+		
+		<property name="lineNo" column="LINE_NO" type="integer" />
+				
+		<property name="invoiceQty" column="INVOICE_QTY" type="double" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+					
+	</class>
+</hibernate-mapping>

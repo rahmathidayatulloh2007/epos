@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formRegisterTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{registerSearchBean.disableSearchAll}" value="#{registerSearchBean.searchAll}" 
+					    styleClass="WidPos" autocomplete="off" placeholder="#{msg.textSearch} #{msg.formRegisterTitle}"/>
+				</div>
+				<div class="Container20">
+					<p:commandButton actionListener="#{registerSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"></p:commandButton>
+					<p:commandButton actionListener="#{registerSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableRegister"></p:commandButton>
+					<p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch" ></p:commandButton>
+				</div>
+				<div class="Container40">
+				     <p:commandButton value="#{msg.buttonExportXls}" ajax="false" immediate="true" styleClass="Fright">
+					        <p:dataExporter type="xls" target="dataTableRegister" fileName="#{msg.formRegisterTitle}" 
+					                  postProcessor="#{registerSearchBean.postProcessXls}"/>
+					 </p:commandButton>
+					<p:commandButton id="closeSesiBtn" value="#{msg.buttonCloseSesi}"
+						actionListener="#{registerBean.modeDelete}"
+						update="frm001:outputPanelSearch" styleClass="Fright"
+						disabled="#{fn:length(registerSearchBean.selectedRegisters) == 0 or fn:length(registerSearchBean.selectedRegisters)>1}" />
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{registerBean.modeDelete}"
+						update="frm001:outputPanelSearch"
+						disabled="#{fn:length(registerSearchBean.selectedRegisters) == 0}"
+						styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+					<p:commandButton id="editBtn" value="#{msg.buttonView}"  actionListener="#{registerBean.modeEdit}" update=":frm001"
+				            disabled="#{fn:length(registerSearchBean.selectedRegisters) == 0 or fn:length(registerSearchBean.selectedRegisters)>1}" styleClass="Fright"/>
+				     <p:commandButton value="#{msg.buttonSesi}" actionListener="#{registerBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+ 		    <p:messages id="messagesTableRegister" showDetail="true" showSummary="false" globalOnly="true"/>		
+			<p:dataTable id="dataTableRegister" value="#{registerSearchBean.pagingRegister}"
+						selection="#{registerSearchBean.selectedRegisters}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.regId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{registerSearchBean.paging}" paginator="true" rowIndexVar="index">
+			      
+			    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn :frm001:closeSesiBtn"/>		    
+     			<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn :frm001:closeSesiBtn"/>  
+     			<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn :frm001:closeSesiBtn"/>
+     			<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn :frm001:closeSesiBtn"/>       
+     				
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>
+     			<p:outputPanel id="outputPaneltableOutlet" rendered="#{registerSearchBean.userSession.outletId == null}">
+					<p:column>
+						<f:facet name="header">  
+						   <h:outputText value="#{msg.formRegisterOutlet}"/>
+						</f:facet>
+						<h:outputText value="#{data.outletName}"/>
+					</p:column>
+				</p:outputPanel>	
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterStart}"/>
+					</f:facet>
+					<h:outputText value="#{data.startTime}"/>
+				</p:column>							
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterEnd}"/>
+					</f:facet>
+					<h:outputText value="#{data.endTime}"/>
+				</p:column>					
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterCashier}"/>
+					</f:facet>
+					<h:outputText value="#{data.cashierName}"/>
+				</p:column>							
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterCash}"/>
+					</f:facet>
+					<h:outputText value="#{data.totalPaymentCash}" style="text-align:right"/>
+				</p:column>				
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterDebit}"/>
+					</f:facet>
+					<h:outputText value="#{data.totalPaymentDebit}" style="text-align:right"/>
+				</p:column>				
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterCredit}"/>
+					</f:facet>
+					<h:outputText value="#{data.totalPaymentCredit}" style="text-align:right"/>
+				</p:column>				
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterTotal}"/>
+					</f:facet>
+					<h:outputText value="#{data.totalPayment}" style="text-align:right"/>
+				</p:column>				
+				<p:column>
+					<f:facet name="header">  
+					   <h:outputText value="#{msg.formRegisterStatus}"/>
+					</f:facet>
+					<h:outputText value="#{data.statusName}"/>
+				</p:column>
+			</p:dataTable>
+		</div>
+ 	</div>
+	<p:dialog	widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender dialogClose"
+				width="560" header="#{msg.textSearchs} #{msg.formRegisterTitle}">
+				<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+			 
+		<p:outputPanel id="outputPanleDialog">
+			<p:outputPanel id="outputPanelDialogCompany" rendered="#{registerSearchBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRegisterCompany}"/><span class="redText"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:autoComplete dropdown="true" completeMethod="#{registerSearchBean.completeCompany}" 
+							                value="#{registerSearchBean.completeCompany}">
+					              <p:ajax event="itemSelect" listener="#{registerSearchBean.handleSelectCompany}" 
+					                      update=":frm001:outputPanleDialog" oncomplete="PF('dialogSearch').show()"/>
+					        </p:autoComplete>		
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelDialogOutlet" rendered="#{registerSearchBean.userSession.outletId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRegisterOutlet}"/><span class="redText"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:autoComplete dropdown="true" completeMethod="#{registerInputBean.completeOutlet}" 
+							                value="#{registerInputBean.completeOutlet}">
+					              <p:ajax event="itemSelect" listener="#{registerInputBean.handleSelectOutlet}"/>
+					        </p:autoComplete>		
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formRegisterStartTime}"/>
+					</div>
+					<div class="Container70">
+						<p:calendar navigator="true" value="#{registerSearchBean.registerVOSearchDialog.startDate}" size="13"
+									showOn="button" pattern="#{registerSearchBean.dateFormat}" 
+									locale="#{registerSearchBean.dateLocale}" maxlength="11" />		
+						<h:outputText value="s/d"/>	
+						<p:calendar navigator="true" value="#{registerSearchBean.registerVOSearchDialog.endDate}" 
+									showOn="button" pattern="#{registerSearchBean.dateFormat}" 
+									locale="#{registerSearchBean.dateLocale}" maxlength="11" size="13" />	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRegisterCashier}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:autoComplete  dropdown="true" completeMethod="#{registerSearchBean.completeCashier}" 
+						           value="#{registerSearchBean.completeCashier}">
+						     <p:ajax event="itemSelect" listener="#{registerSearchBean.handleSelectCashier}"/>      
+				        </p:autoComplete>		
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRegisterStatus}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu value="#{registerSearchBean.registerVOSearchDialog.statusCode}">
+						    <f:selectItem itemLabel="#{msg.textChoose}" itemValue=""/>
+							<f:selectItems value="#{registerSearchBean.statusSelectItemList}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableRegister :frm001:searchAll"
+						actionListener="#{registerSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+					<p:commandButton value="#{msg.buttonClear}" actionListener="#{registerSearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableRegister :frm001:searchAll :frm001:dialogSearch"/>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

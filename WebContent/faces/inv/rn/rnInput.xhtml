@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<style>
+.readonly-bg input {
+	opacity: 0.75;
+	background-color: #f4f4f4;
+}
+
+.Wid70 input {
+	width: 70%;
+}
+
+.Wid90 input {
+	width: 90%;
+}
+</style>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+
+			<h:outputText value="#{msg.formRnAddTitle}"
+				rendered="#{rnInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formRnEditTitle}"
+				rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+
+			<p:commandButton value="#{msg.buttonBack}" immediate="true"
+				actionListener="#{rnBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{rnBean.modeSave}" update=":frm001"
+				styleClass="Fright" rendered="#{rnInputBean.MODE_TYPE eq 'ADD'}"/>
+			<p:messages id="messagesRn" showDetail="true" showSummary="false"
+				globalOnly="true" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<p:outputPanel
+				rendered="#{rnInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnCompany}" />
+							<span style="color: red"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="companyId"
+								value="#{rnInputBean.rnVO.companyId}"
+								rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{rnInputBean.companySelectItem}" />
+								<p:ajax event="change" listener="#{rnInputBean.changeCompany}"
+									update=":frm001:outletId" />
+							</p:selectOneMenu>
+
+							<p:inputText value="#{rnInputBean.rnVO.companyName}"
+								readonly="true" styleClass="Wid90 readonly-bg"
+								rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{rnInputBean.userSession.outletId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnOutlet}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="outletId"
+								value="#{rnInputBean.rnVO.outletId}"
+								rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{rnInputBean.outletSelectItem}" />
+								<p:ajax event="change" listener="#{rnInputBean.changeRnType}"
+									process="@this outletId" update="completeOutletOrigin" />
+
+							</p:selectOneMenu>
+							<p:inputText value="#{rnInputBean.rnVO.outletName}"
+								readonly="true" styleClass="Wid90 readonly-bg"
+								rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" />
+
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRnNumber}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="rnNo" value="#{rnInputBean.rnVO.rnNo}"
+							autocomplete="off" readonly="true" styleClass="Wid90 readonly-bg" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRnDate}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:calendar id="rnDate" navigator="true"
+							value="#{rnInputBean.rnVO.rnDate}" showOn="button"
+							pattern="#{rnInputBean.dateFormat}"
+							locale="#{rnInputBean.dateLocale}" maxlength="11" 
+							styleClass="#{!(rnInputBean.MODE_TYPE eq 'ADD') ?'readonly-bg':''}"
+							disabled="#{!(rnInputBean.MODE_TYPE eq 'ADD')}"
+							/>
+
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formRnType}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="rnType"
+							value="#{rnInputBean.rnVO.rnTypeCode}"
+							rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+							<f:selectItems value="#{rnInputBean.rnTypeSelectItem}" />
+							<p:ajax event="change" listener="#{rnInputBean.changeRnType}"
+								process="@this companyId outletId rnDate"
+								update=":frm001 :frm001:outputPanelPo :frm001:outputPanelTransfer" />
+						</p:selectOneMenu>
+						<p:inputText value="#{rnInputBean.rnVO.rnTypeName}"
+							rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" readonly="true"
+							styleClass="Wid90 readonly-bg" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Right -->
+		<div class="Container50 Responsive">
+			<p:outputPanel id="outputPanelPo"
+				rendered="#{rnInputBean.purchaseOrderBoolean == true}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnSupplier}" />
+						</div>
+						<div class="Container70 Responsive">
+							<!-- <p:autoComplete id="rnSupplier" dropdown="true" completeMethod="#{rnInputBean.completeSupplier}" 
+						              value="#{rnInputBean.completeSupplier}" rendered="#{rnInputBean.MODE_TYPE == 'ADD'}" > 
+						              <p:ajax event="itemSelect" listener="#{rnInputBean.handleSelectSupplier}" 
+						                      update=":frm001:rnPoNumber :frm001:outputPanelPo :frm001:outputPanelTransfer :frm001:outputPanelTablePo"/>
+						        </p:autoComplete> -->
+							<p:remoteCommand name="jsToogleSelected"
+								actionListener="#{rnInputBean.handleSelectSupplier()}"
+								process="@this"
+								update=":frm001:rnPoNumber :frm001:outputPanelTransfer :frm001:outputPanelTablePo" />
+							<p:selectOneMenu id="rnSupplier"
+								value="#{rnInputBean.rnVO.supplierId}"
+								rendered="#{rnInputBean.MODE_TYPE == 'ADD'}"
+								onchange="jsToogleSelected( [{name:'supplier', value:this.value}] );"
+								panelStyle="width:180px" effect="fade" style="width:260px"
+								filter="true" filterMatchMode="startsWith">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{rnInputBean.supplierDtlList}" />
+							</p:selectOneMenu>
+							<p:inputText value="#{rnInputBean.rnVO.supplierCode}"
+								rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" readonly="true"
+								styleClass="Wid90 readonly-bg" />
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnPoNumber}" />
+						</div>
+						<div class="Container70 Responsive">
+							<!-- <p:autoComplete id="rnPoNumber" dropdown="true" completeMethod="#{rnInputBean.completePoNumber}" 
+						              value="#{rnInputBean.completePoNumber}" rendered="#{rnInputBean.MODE_TYPE == 'ADD'}" >
+						              <p:ajax event="itemSelect" listener="#{rnInputBean.handleSelectPoNumber}" 
+						                        update=":frm001:outputPanelPo :frm001:outputPanelTransfer :frm001:outputPanelTablePo" /> 
+						        </p:autoComplete> -->
+							<p:remoteCommand name="jsToogleSelectedPoNumber"
+								actionListener="#{rnInputBean.handleSelectPoNumber()}"
+								process="@this"
+								update=":frm001:outputPanelTransfer :frm001:outputPanelTablePo" />
+							<p:selectOneMenu id="rnPoNumber" value="#{rnInputBean.rnVO.poId}"
+								rendered="#{rnInputBean.MODE_TYPE == 'ADD'}"
+								onchange="jsToogleSelectedPoNumber( [{name:'poNumber', value:this.value}] );"
+								panelStyle="width:180px" effect="fade" style="width:200px"
+								filter="true" filterMatchMode="startsWith">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{rnInputBean.poNumberList}" />
+							</p:selectOneMenu>
+							<p:inputText value="#{rnInputBean.rnVO.poNumber}"
+								rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" readonly="true"
+								styleClass="Wid90 readonly-bg" />
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnSenderDoc}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:inputText id="supplierDocNo"
+								value="#{rnInputBean.rnVO.supplierDocNo}" autocomplete="off"
+								styleClass="Wid90 #{!(rnInputBean.MODE_TYPE eq 'ADD') ?'readonly-bg':''}"
+							readonly="#{!(rnInputBean.MODE_TYPE eq 'ADD')}"/>
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnDocDate}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:calendar id="supplierDocDate" navigator="true"
+								value="#{rnInputBean.rnVO.supplierDocDate}"
+								showOn="button" pattern="#{rnInputBean.dateFormat}"
+								locale="#{rnInputBean.dateLocale}" maxlength="11" 
+								styleClass="Wid90 #{!(rnInputBean.MODE_TYPE eq 'ADD') ?'readonly-bg':''}"
+							disabled="#{!(rnInputBean.MODE_TYPE eq 'ADD')}"/>
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnNote}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:inputTextarea id="note" value="#{rnInputBean.rnVO.notes}"
+								styleClass="Wid90 #{!(rnInputBean.MODE_TYPE eq 'ADD') ?'readonly-bg':''}"
+							readonly="#{!(rnInputBean.MODE_TYPE eq 'ADD')}"/>
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelTransfer"
+				rendered="#{rnInputBean.DOBoolean == true}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnOutletOrigin}" />
+						</div>
+						<div class="Container70 Responsive">
+
+							<!-- <p:autoComplete id="completeOutletOrigin" dropdown="true" completeMethod="#{rnInputBean.completeOutletOrigin}" 
+						              value="#{rnInputBean.completeOutletOrigin}" rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+						           <p:ajax event="itemSelect" listener="#{rnInputBean.handleSelectOutletOrigin}" 
+						                      update=":frm001:completeSenderNumber :frm001:outputPanelPo :frm001:outputPanelTransfer :frm001:outputPanelTableTranfer"/> 
+						       </p:autoComplete>
+						       <p:inputText value="#{rnInputBean.completeOutletOrigin}" rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" 
+						              readonly="true" styleClass="Wid90 readonly-bg"/> -->
+
+							<p:selectOneMenu id="completeOutletOrigin"
+								value="#{rnInputBean.rnVO.outletOriginId}"
+								rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{rnInputBean.outletOriginSelectItem}" />
+								<p:ajax event="change"
+									listener="#{rnInputBean.handleSelectOutletOrigin}"
+									update=":frm001:completeSenderNumber :frm001:outputPanelPo :frm001:outputPanelTransfer :frm001:outputPanelTableTranfer" />
+							</p:selectOneMenu>
+
+
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formRnSenderNumber}" />
+						</div>
+						<div class="Container70 Responsive">
+
+							<!-- <p:autoComplete id="completeSenderNumber" dropdown="true" completeMethod="#{rnInputBean.completeSenderNumber}" 
+						              value="#{rnInputBean.completeSenderNumber}" rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+						            <p:ajax event="itemSelect" listener="#{rnInputBean.handleSelectSenderNumber}" 
+						                        update=":frm001:outputPanelPo :frm001:outputPanelTransfer :frm001:outputPanelTableTranfer" />    
+						       </p:autoComplete>
+						        <p:inputText value="#{rnInputBean.completeSenderNumber}" rendered="#{rnInputBean.MODE_TYPE == 'EDIT'}" 
+						              readonly="true" styleClass="Wid90 readonly-bg"/> -->
+
+							<p:selectOneMenu id="completeSenderNumber"
+								value="#{rnInputBean.rnVO.doNo}"
+								rendered="#{rnInputBean.MODE_TYPE == 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+								<f:selectItems value="#{rnInputBean.senderNumberSelectItem}" />
+								<p:ajax event="change"
+									listener="#{rnInputBean.handleSelectSenderNumber}"
+									update=":frm001:outputPanelPo :frm001:outputPanelTransfer :frm001:outputPanelTableTranfer" />
+							</p:selectOneMenu>
+
+
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+		</div>
+	</div>
+
+	<p:outputPanel id="outputPanelTablePo"
+		rendered="#{rnInputBean.purchaseOrderBoolean == true}">
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<p:dataTable id="dataTablePo" var="data"
+					value="#{rnInputBean.rnDtlVoPoList}" rowIndexVar="indexRow"
+					editable="true" lazy="true">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column rowspan="2" headerText="#{msg.formRnItemCode}" />
+							<p:column rowspan="2" headerText="#{msg.formRnItemName}" />
+							<p:column rowspan="2" headerText="#{msg.formRnUm}" />
+							<p:column colspan="3" headerText="#{msg.formRnSum}" />
+						</p:row>
+						<p:row>
+							<p:column headerText="#{msg.formRnOrder}" />
+							<p:column headerText="#{msg.formRnBeAccepted}" />
+							<p:column headerText="#{msg.formRnRaccepted}" />
+						</p:row>
+					</p:columnGroup>
+					<p:column>
+						<p:inputText value="#{data.poDtlVO.itemCode}" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{data.poDtlVO.itemName}" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{data.poDtlVO.umName}" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column>
+						<p:inputText value="#{data.poDtlVO.orderQty}" readonly="true"
+							styleClass="readonly-bg" style="text-align:right" >
+							<f:convertNumber pattern="###,###,###,###,###.##" />
+							</p:inputText>
+							
+					</p:column>
+					<p:column>
+						<p:inputText value="#{data.poDtlVO.receiveQty}" readonly="true"
+							styleClass="readonly-bg" style="text-align:right" >
+							<f:convertNumber pattern="###,###,###,###,###.##" />
+							</p:inputText>
+						
+					</p:column>
+					<p:column>
+						<!-- <p:inputText id="receiveQty" value="#{data.receiveQty}"  
+							style="text-align:right"
+							readonly="#{!(rnInputBean.MODE_TYPE == 'ADD')}" styleClass="#{ !(rnInputBean.MODE_TYPE == 'ADD') ?'readonly-bg':''}"
+							onkeypress="return checkNumeric(event,this,true)" /> -->
+						<!-- readonly="#{data.receiveQty == data.poDtlVO.orderQty}" styleClass="#{data.receiveQty == data.poDtlVO.orderQty ?'readonly-bg':''}" -->
+
+						<pe:inputNumber id="receiveQty" value="#{data.receiveQty}"
+							decimalSeparator="," thousandSeparator="." emptyValue="0"
+							decimalPlaces="0" readonly="#{!(rnInputBean.MODE_TYPE == 'ADD')}"
+							styleClass="#{ !(rnInputBean.MODE_TYPE == 'ADD') ?'readonly-bg':''}" />
+
+
+					</p:column>
+				</p:dataTable>
+			</div>
+		</div>
+	</p:outputPanel>
+	<p:outputPanel id="outputPanelTableTranfer"
+		rendered="#{rnInputBean.DOBoolean == true}">
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<p:dataTable id="dataTableTranfer" var="data"
+					value="#{rnInputBean.rnDtlVoPoList}" rowIndexVar="indexRow"
+					editable="true" lazy="true">
+					<p:column headerText="#{msg.formRnItemCode}">
+						<p:inputText value="#{data.DODtlVO.itemCode}" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column headerText="#{msg.formRnItemName}">
+						<p:inputText value="#{data.DODtlVO.itemName}" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column headerText="#{msg.formRnUm}">
+						<p:inputText value="#{data.DODtlVO.umName}" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column headerText="#{msg.formRnSum} #{msg.formRnDelivered}">
+						<p:inputText value="#{data.DODtlVO.deliveryQty}"
+							style="text-align:right"
+							onkeypress="return checkNumeric(event,this,true)" readonly="true"
+							styleClass="readonly-bg" />
+					</p:column>
+					<p:column headerText="#{msg.formRnSum} #{msg.formRnRaccepted}">
+						<p:inputText value="#{data.receiveQty}" style="text-align:right"
+							onkeypress="return checkNumeric(event,this,true)" />
+					</p:column>
+				</p:dataTable>
+			</div>
+		</div>
+	</p:outputPanel>
+
+</ui:composition>

@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formPaymentTitle}"
+				rendered="#{paymentInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<p:outputPanel id="outputPanelCompany"
+				rendered="#{paymentInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formPoCompany}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="companyId"
+								value="#{paymentInputBean.paymentVO.companyId}" required="true"
+								requiredMessage="#{msg.formCompanyTitle} #{msg.errorMustBeFilled}"
+								rendered="#{paymentInputBean.MODE_TYPE eq 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{paymentInputBean.companySelectItem}" />
+								<p:ajax event="change"
+									listener="#{paymentInputBean.changeCompany}"
+									update=":frm001:outletId :frm001:companyId" />
+							</p:selectOneMenu>
+							<p:message for="companyId" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelOutlet"
+				rendered="#{paymentInputBean.userSession.outletId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formPoOutlet}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="outletId"
+								value="#{paymentInputBean.paymentVO.outletId}" required="true"
+								requiredMessage="#{msg.formOutletTitle} #{msg.errorMustBeFilled}"
+								rendered="#{paymentInputBean.MODE_TYPE eq 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+								<f:selectItems value="#{paymentInputBean.outletSelectItem}" />
+								<p:ajax event="change"
+									listener="#{paymentInputBean.changeOutlet}"
+									update=":frm001:outletId" />
+							</p:selectOneMenu>
+							<p:message for="customerId" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCustomerTitle}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="customerId"
+							value="#{paymentInputBean.paymentVO.customerId}" required="true"
+							requiredMessage="#{msg.formCustomerTitle} #{msg.errorMustBeFilled}"
+							panelStyle="width:280px" effect="fade" style="width:260px"
+							filter="true" filterMatchMode="startsWith">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+							<f:selectItems value="#{paymentInputBean.customerSelectItem}" />
+							<p:ajax event="change"
+								listener="#{paymentInputBean.changeCustomer}"
+								update=":frm001:soIdMenu :frm001:customerId" />
+						</p:selectOneMenu>
+						<p:message for="customerId" />
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="ContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formSoNo}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+
+						<p:selectOneMenu id="soIdMenu" styleClass="idMenu"
+							value="#{paymentInputBean.paymentVO.soId}" required="true"
+							requiredMessage="#{msg.formSoNo} #{msg.errorMustBeFilled}"
+							panelStyle="width:280px" effect="fade" style="width:260px">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+							<f:selectItems value="#{paymentInputBean.salesOrderSelectItem}" />
+							<p:ajax event="change" listener="#{paymentInputBean.changeSo}"
+								update=":frm001:outputPanelTableSo :frm001:soDtlList  :frm001:soIdMenu " />
+						</p:selectOneMenu>
+						<p:message for="soIdMenu" />
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br></br>
+
+	<!-- soDtlLIst Table -->
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:messages id="messageDiscPercent" showDetail="true"
+				showSummary="false" globalOnly="true" />
+			<p:outputPanel id="outputPanelTableSo">
+				<p:dataTable id="soDtlList" var="data"
+					value="#{paymentInputBean.soDtlVOList}" rowIndexVar="indexRow"
+					editable="true" lazy="true">
+
+					<p:column headerText="#{msg.formSoNo}" styleClass="Wid13">
+						<p:inputText id="soNo" value="#{data.salesOrderNo}"
+							readonly="true" styleClass="Wid90 " />
+					</p:column>
+					<p:column headerText="#{msg.formSoDtlProduct}" styleClass="Wid23">
+						<p:inputText id="productName" value="#{data.productName}"
+							readonly="true" styleClass="Wid90 ">
+							<f:convertNumber pattern="###,###,###,###.###" />
+						</p:inputText>
+					</p:column>
+
+					<p:column headerText="#{msg.formSoDtlQty}" styleClass="Wid7">
+						<p:inputText id="umName" value="#{data.orderQty}" readonly="true"
+							styleClass="Wid90 " />
+					</p:column>
+
+					<p:column headerText="#{msg.formSoDtlPrice}" styleClass="Wid8">
+						<p:inputText value="#{data.unitPrice}" style="text-align:right"
+							readonly="true" styleClass="Wid90 "
+							onkeypress="return checkNumeric(event,this,false)">
+							<f:convertNumber pattern="###,###,###,###.###" />
+						</p:inputText>
+					</p:column>
+
+					<p:column headerText="#{msg.formSoDtlTotal} #{msg.formSoDtlPrice}"
+						styleClass="Wid15">
+						<div class="Container100">
+							<div class="Container100">
+								<p:inputText value="#{data.totalPrice}" style="text-align:right"
+									readonly="true" styleClass="Wid80 "
+									onkeypress="return checkNumeric(event,this,false)">
+									<f:convertNumber pattern="###,###,###,###.###" />
+								</p:inputText>
+							</div>
+						</div>
+					</p:column>
+
+					<p:column headerText="#{msg.formSoDtlDiscount} %"
+						styleClass="Wid20">
+						<p:inputText value="#{data.discount1}" style="text-align:right"
+							readonly="true" styleClass="Wid13 "
+							onkeypress="return checkNumeric(event,this,false)" />
+
+						<p:inputText value="#{data.discount2}"
+							style="text-align:right; margin:0px 12px" readonly="true"
+							styleClass="Wid13 "
+							onkeypress="return checkNumeric(event,this,false)">
+						</p:inputText>
+						<p:inputText value="#{data.discount3}" style="text-align:right"
+							readonly="true" styleClass="Wid13 "
+							onkeypress="return checkNumeric(event,this,false)">
+						</p:inputText>
+					</p:column>
+
+					<p:column
+						headerText="#{msg.formSoDtlTotal} (#{msg.formSoDtlDiscount})"
+						styleClass="Wid24">
+						<p:inputText value="#{data.totalPriceDiscount}"
+							style="text-align:right" readonly="true" styleClass="Wid90 "
+							onkeypress="return checkNumeric(event,this,false)">
+							<f:convertNumber pattern="###,###,###,###.###" />
+						</p:inputText>
+					</p:column>
+				</p:dataTable>
+
+
+				<!-- Payment Total -->
+				<!-- <p:panel id="panelSumTotalPayment">
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container50">&nbsp;</div>
+							<div class="Container30" style="text-align: center;">
+								<h:outputText value="Sub Total" />
+							</div>
+							<div class="Container20">
+								<p:inputText id="subtotal"
+									value="#{paymentInputBean.paymentVO.subTotal}"
+									style="text-align: right;" styleClass="Wid80 " readonly="true" />
+							</div>
+							<div class="Container100">
+								<div class="Container50">&nbsp;</div>
+								<div class="Container30" style="text-align: center;">
+									<h:outputText
+										value="#{salesOrderDistributorInputBean.salesOrderVoHeader.titelDiscount}" />
+								</div>
+								<div class="Container20">
+									<p:inputText id="subDiskonDistributor"
+										value="#{paymentInputBean.soDtlVO.discValue}"
+										style="text-align: right;" styleClass="Wid80 " readonly="true" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</p:panel> -->
+				<p:panel>
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container50">&nbsp;</div>
+							<div class="Container30" style="text-align: center;">
+								<h:outputText value="#{msg.formSoDtlTotal}" />
+							</div>
+							<div class="Container20">
+								<p:inputText id="sumTotalDistributor"
+									value="#{paymentInputBean.paymentVO.sumTotal}"
+									style="text-align: right;" styleClass="Wid80 " readonly="true">
+									<f:convertNumber pattern="###,###,###,###.###" />
+								</p:inputText>
+
+							</div>
+						</div>
+					</div>
+				</p:panel>
+			</p:outputPanel>
+		</div>
+	</div>
+
+	<!-- Payment Type [Start]-->
+	<p:outputPanel id="outputPanelPaymentType">
+		<!-- rendered="#{paymentInputBean.paymentVO.subTotal != null}" -->
+		<div class="Container100">
+			<div class="EposContainerIndent">
+				<p:messages id="messagesTable" showDetail="true" showSummary="false"
+					globalOnly="true" />
+				<div class="Container100">
+					<p:panel>
+						<div>
+							<!-- style="height: 170px; overflow: auto;" -->
+							<p:outputPanel id="outputPanelTablePaymentType">
+								<p:dataTable var="data"
+									value="#{paymentInputBean.paymentTypeVOs}"
+									rowIndexVar="statDetailIndex" id="paymentTypeTable"
+									editable="true" lazy="true">
+
+									<p:column headerText="#{msg.formPaymentTypeTitle}"
+										styleClass="Wid20">
+										<!-- <p:remoteCommand name="onChangePayment" actionListener="#{paymentInputBean.changePaymentMethod}" immediate="true">
+									</p:remoteCommand> -->
+										<!-- onchange="onChangePayment([{name:'index',value:'0'}])" -->
+										<p:selectOneMenu id="parameterPaymentMethodDtl"
+											value="#{data.paymentMethodCode}" panelStyle="width:180px"
+											effect="fade" style="width:160px" filter="true"
+											filterMatchMode="startsWith">
+											<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+											<f:selectItems
+												value="#{paymentInputBean.paymentMethodSelectItem}" />
+											<p:ajax event="change"
+												listener="#{paymentInputBean.changePaymentMethod(statDetailIndex)}"
+												update=":frm001:paymentTypeTable" process="@this">
+											</p:ajax>
+											<p:message for="parameterPaymentMethodDtl" />
+										</p:selectOneMenu>
+
+										<p:selectOneMenu id="paymentTypeId" value="#{data.paytypeId}"
+											rendered="#{data.paymentMethodCode != null}"
+											disabled="#{data.paymentMethodCode == 'PAYMENT_CASH'}"
+											panelStyle="width:180px" effect="fade" style="width:160px"
+											filter="true" filterMatchMode="startsWith">
+											<!-- <f:selectItem itemValue="" itemLabel="#{msg.textChoose}" /> -->
+											<f:selectItems value="#{data.paymentTypeSelectItem}" />
+
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column headerText="">
+										<div class="Container50">
+											<div class="Container100">
+												<p:inputText id="giroNo" value="#{data.giroNo}"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_CEK'}"
+													styleClass="Wid40" style="text-align:right; margin-bottom: 10px"
+													placeholder="No Giro" />
+
+												<p:calendar id="paymentDate" navigator="true" size="13"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_CEK'}"
+													value="#{data.payDate}" showOn="button"
+													locale="#{paymentInputBean.dateLocale}" maxlength="11"
+													pattern="#{paymentInputBean.dateFormat}"
+													style="margin:0px 10px; margin-bottom: 10px">
+												</p:calendar>
+
+												<p:message for="paymentDate" />
+
+												<p:inputText id="paymentNoRek" value="#{data.noRek}"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_TRANSFER'}"
+													styleClass="Wid40" style="text-align:right;; margin-bottom: 10px"
+													placeholder="No Rek" />
+
+												<p:inputText id="payUnderName" value="#{data.payUnderName}"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_TRANSFER'}"
+													styleClass="Wid35" placeholder="A/N Transfer"
+													style="margin:0px 10px; margin-bottom: 10px" />
+
+
+											</div>
+
+											<div class="Container100">
+												<p:inputText id="payValue" type="number"
+													value="#{data.payValue}" styleClass="Wid40"
+													style="text-align:right" placeholder="Nominal">
+													<p:ajax event="change"
+														listener="#{paymentInputBean.changeSubPayment}"
+														update=":frm001:paymentAmount :frm001:changeAmount" />
+
+												</p:inputText>
+
+												<p:inputText id="payName" value="#{data.payName}"
+													styleClass="Wid35" style="text-align:left; margin:0px 10px"
+													placeholder="A/N" />
+											</div>
+											<div class="Container50"></div>
+										</div>
+										<div class="Container50">
+											<div class="Container100" style="margin-bottom: 10px">
+												<p:calendar id="transferDate" navigator="true" size="13"
+													placeholder="Tgl Pembayaran" value="#{data.transferDate}"
+													showOn="button" locale="#{paymentInputBean.dateLocale}"
+													maxlength="11" pattern="#{paymentInputBean.dateFormat}">
+												</p:calendar>
+											</div>
+											<div class="Container100">
+
+												<p:fileUpload id="upload" widgetVar="wvFileUpload"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_TRANSFER'}"
+													value="#{data.uploadedFile}" mode="simple"
+													allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+													class="ui-selectonemenu-label ui-inputfield ui-corner-all Wid50" />
+
+												<p:commandButton value="Submit Foto" ajax="false"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_TRANSFER'}"
+													process="@this" actionListener="#{data.handleUploadedFile}"
+													update=":frm001:upload" styleClass="Wid35"
+													style="margin-left:10px">
+												</p:commandButton>
+											</div>
+											<div class="Container100">
+												<h:outputText id="invFileName" value="#{data.invFileName}"
+													rendered="#{data.paymentMethodCode eq 'PAYMENT_TRANSFER'}"
+													style="text-align: left; margin-left:10%"
+													styleClass="Fleft" />
+
+												<p:message id="uploadMessage" for="upload" />
+											</div>
+										</div>
+									</p:column>
+
+									<p:column headerText="" styleClass="Wid10">
+										<p:commandLink id="deleteLink" value="#{msg.buttonDelete}"
+											actionListener="#{paymentInputBean.deleteDetail(data)}"
+											process="paymentTypeTable"
+											update="paymentTypeTable :frm001:paymentAmount :frm001:changeAmount">
+										</p:commandLink>
+									</p:column>
+
+								</p:dataTable>
+
+
+							</p:outputPanel>
+						</div>
+
+
+						<div class="Container100">
+							<div class="ContainerIndent">
+								<p:commandButton id="btnRefresh" style="display:none"
+									value="#{msg.buttonAdd} #{msg.formPaymentTypeTitle}"
+									update=":frm001:paymentTypeTable" immediate="true"
+									process="@this frm001:paymentTypeTable" />
+								<p:commandButton
+									value="#{msg.buttonAdd} #{msg.formPaymentTypeTitle}"
+									update=":frm001:paymentTypeTable" immediate="true"
+									process="@this frm001:paymentTypeTable"
+									action="#{paymentInputBean.reinit()}" />
+							</div>
+						</div>
+					</p:panel>
+				</div>
+			</div>
+		</div>
+		<div class="Container100">
+			<div class="EposContainerIndent">
+				<div class="Container100">
+					<p:inputText id="paymentAmount"
+						value="#{paymentInputBean.paymentVO.paymentAmount}"
+						styleClass="Fright" style="text-align:right;margin-left:10px;"
+						onkeypress="return checkNumeric(event,this,false)" readonly="true">
+						<f:convertNumber pattern="###,###,###,###.###" />
+					</p:inputText>
+					<h:outputText value="Pembayaran" styleClass="Fright" />
+				</div>
+			</div>
+		</div>
+		<div class="Container100">
+			<div class="EposContainerIndent">
+				<div class="Container100">
+					<p:inputText id="changeAmount"
+						value="#{paymentInputBean.paymentVO.changeAmount}"
+						styleClass="Fright" style="text-align:right;margin-left:10px;"
+						readonly="true">
+						<f:convertNumber pattern="###,###,###,###.###" />
+					</p:inputText>
+					<h:outputText value="Sisa" styleClass="Fright" />
+				</div>
+			</div>
+		</div>
+		<div class="Container100">
+			<div class="EposContainerIndent">
+				<p:commandButton value="#{msg.buttonSave}"
+					actionListener="#{paymentInputBean.savePayment}"
+					styleClass="Fright" update=":frm001" />
+			</div>
+		</div>
+
+	</p:outputPanel>
+
+
+</ui:composition>

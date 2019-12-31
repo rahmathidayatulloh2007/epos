@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formPaymentTypeAddTitle}"
+				rendered="#{paymentTypeInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formPaymentTypeEditTitle}"
+				rendered="#{paymentTypeInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}" process="@this"
+				actionListener="#{paymentTypeBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{paymentTypeBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+		</div>
+	</div>
+
+	<div class="Container100"
+		style="font-weight: bold; border-bottom: solid 1px #d1d3d4;">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formPaymentTypeTitle}"></h:outputText>
+		</div>
+	</div>
+	<div class="Container100">
+
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+			<div class="ContainerIndent">
+				<p:messages id="messagesInput" showDetail="true" showSummary="false"
+					globalOnly="true" />
+			</div>
+
+			<!-- Nama Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPaymentTypeCompany}"
+							rendered="#{paymentTypeInputBean.adminMode == true}" />
+						<h:panelGroup style="color: red;"
+							rendered="#{paymentTypeInputBean.adminMode == true}"> *</h:panelGroup>
+					</div>
+					<div class="Container70 Responsive">
+
+						<p:selectOneMenu id="companyId"
+							value="#{paymentTypeInputBean.paymentTypeVO.companyId}"
+							rendered="#{paymentTypeInputBean.adminMode == true}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{paymentTypeInputBean.companySelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="companyId" />
+
+
+					</div>
+				</div>
+			</div>
+
+			<!-- Kode Jenis Pembayaran -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPaymentTypeCode}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+
+						<p:inputText id="paymentTypeCode"
+							value="#{paymentTypeInputBean.paymentTypeVO.paytypeCode}"
+							rendered="#{paymentTypeInputBean.MODE_TYPE == 'ADD'}"
+							styleClass="Wid90" />
+						<p:inputText
+							value="#{paymentTypeInputBean.paymentTypeVO.paytypeCode}"
+							rendered="#{paymentTypeInputBean.MODE_TYPE == 'EDIT'}"
+							readonly="true" styleClass="Wid90 readonly-bg" />
+						<p:message for="paymentTypeCode" />
+
+					</div>
+				</div>
+			</div>
+
+			<!-- Nama Jenis Pembayaran -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPaymentTypeName}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="paymentTypeName"
+							value="#{paymentTypeInputBean.paymentTypeVO.paytypeName}"
+							styleClass="Wid90" />
+						<p:message for="paymentTypeName" />
+					</div>
+				</div>
+			</div>
+
+			<!-- Methode Pembayaran -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPaymentTypeMethod}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="paymentMethod"
+							value="#{paymentTypeInputBean.paymentTypeVO.paymentMethodCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{paymentTypeInputBean.paymentMethodSelectItem}" />
+							<p:ajax event="change" immediate="true" update=":frm001:panelId" />
+						</p:selectOneMenu>
+						<p:message for="paymentMethod" />
+					</div>
+				</div>
+			</div>
+
+			<h:panelGroup id="panelId">
+				<h:panelGroup
+					rendered="#{paymentTypeInputBean.paymentTypeVO.paymentMethodCode == 'PAYMENTMETHOD_VOUCHER'}">
+					<!-- Tgl Diluncurkan -->
+					<div class="Container100">
+						<div class="EposContainerIndent">
+							<div class="Container30 Responsive">
+								<h:outputText value="#{msg.formPaymentTypeValue}" />
+							</div>
+							<div class="Container70 Responsive">
+								<p:inputText id="paytypeValue"
+									value="#{paymentTypeInputBean.paymentTypeVO.paytypeValue}"
+									styleClass="Wid90" />
+								<p:message for="paytypeValue" />
+
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>
+
+			<!-- Aktif -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPaymentTypeActive}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{paymentTypeInputBean.paymentTypeVO.activeFlag}"
+							style="width:80px;">
+							<f:selectItems value="#{paymentTypeInputBean.activeSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+		<!-- Grid Sebelah Kanan -->
+		<div class="Container50 Responsive"></div>
+	</div>
+
+
+</ui:composition>

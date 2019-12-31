@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formEquipmentTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{equipmentSearchBean.disableSearchAll}" value="#{equipmentSearchBean.searchAll}" 
+					    styleClass="WidPos" autocomplete="off" placeholder="#{msg.textSearch} #{msg.formEquipmentTitle}"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton actionListener="#{equipmentSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"></p:commandButton>
+					<p:commandButton actionListener="#{equipmentSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableEquipment"></p:commandButton>
+					<p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch" ></p:commandButton>
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{equipmentBean.modeDelete}"
+						update="frm001:outputPanelSearch :frm001:messages"
+						disabled="#{fn:length(equipmentSearchBean.selectedEquipments) == 0}"
+						styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}"  actionListener="#{equipmentBean.modeEdit}" update=":frm001"
+				            disabled="#{fn:length(equipmentSearchBean.selectedEquipments) == 0 or fn:length(equipmentSearchBean.selectedEquipments)>1}" styleClass="Fright"/>
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{equipmentBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+			<p:dataTable id="dataTableEquipment" value="#{equipmentSearchBean.pagingEquipment}"
+						selection="#{equipmentSearchBean.selectedEquipments}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.equipmentId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{equipmentSearchBean.paging}" paginator="true" rowIndexVar="index">
+			      
+			    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>		    
+     			<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+     			<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+     			<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>       
+     				
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      		
+     			
+     			<p:column headerText="#{msg.formEquipmentCompany}" 
+     				rendered="#{equipmentSearchBean.userPosition eq 'ADMIN_LEVEL'}">
+					<h:outputText value="#{data.companyName}" />
+				</p:column>
+				  				    		
+				<p:column headerText="#{msg.formEquipmentOutlet}" 
+					rendered="#{equipmentSearchBean.userPosition eq 'ADMIN_LEVEL' or equipmentSearchBean.userPosition eq 'COMPANY_LEVEL'}">
+					<h:outputText value="#{data.outletName}" />
+				</p:column>
+				<p:column headerText="#{msg.formEquipmentCode}" >
+					<h:outputText value="#{data.equipmentCode}" />
+				</p:column>
+				<p:column headerText="#{msg.formEquipmentName}" >
+					<h:outputText value="#{data.equipmentName}" />
+				</p:column>
+				<p:column headerText="#{msg.formEquipmentType}" >
+					<h:outputText value="#{data.equipmentTypeName}" />
+				</p:column>
+			</p:dataTable>
+		</div>
+ 	</div> 		 
+	<p:dialog	widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+				width="560" header="#{msg.textSearchs} #{msg.formEquipmentTitle}" styleClass="dialogClose">
+				<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputPanel id="outputPanleDialog">
+		    <p:outputPanel id="outputPanelCompanyDialog" rendered="#{equipmentSearchBean.userPosition eq 'ADMIN_LEVEL'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formEquipmentCompany}"/>
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu value="#{equipmentSearchBean.equipmentVOSearchDialog.companyId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+								<f:selectItems value="#{equipmentSearchBean.companySelectItem}"/>
+								<p:ajax event="change" listener="#{equipmentSearchBean.changeCompanyToOutlet}" 
+								            oncomplete="PF('dialogSearch').show()" update=":frm001:outletIdDialog"></p:ajax>
+							</p:selectOneMenu>	
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelOutletDialog" rendered="#{equipmentSearchBean.userPosition eq 'ADMIN_LEVEL' or equipmentSearchBean.userPosition eq 'COMPANY_LEVEL'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formEquipmentOutlet}"/>
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu id="outletIdDialog" value="#{equipmentSearchBean.equipmentVOSearchDialog.outletId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+								<f:selectItems value="#{equipmentSearchBean.outletSelectItem}"/>
+							</p:selectOneMenu>	
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>	
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentCode}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{equipmentSearchBean.equipmentVOSearchDialog.equipmentCode}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentName}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{equipmentSearchBean.equipmentVOSearchDialog.equipmentName}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>			
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentType}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{equipmentSearchBean.equipmentVOSearchDialog.equipmentTypeCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{equipmentSearchBean.equipmentTypeSelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentActive}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{equipmentSearchBean.equipmentVOSearchDialog.activeFlag}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{equipmentSearchBean.activeSelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableEquipment :frm001:searchAll"
+						actionListener="#{equipmentSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+					<p:commandButton value="#{msg.buttonClear}" actionListener="#{equipmentSearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableEquipment :frm001:searchAll :frm001:dialogSearch"/>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

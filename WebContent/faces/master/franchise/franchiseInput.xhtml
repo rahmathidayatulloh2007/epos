@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formFranchiseAddTitle}"
+				rendered="#{franchiseInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formFranchiseEditTitle}"
+				rendered="#{franchiseInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}"
+				actionListener="#{franchiseBean.modeSearch}" update=":frm001"
+				styleClass="Fright" process="@this" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{franchiseBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:messages id="messagesInput" showDetail="true" showSummary="false"
+				globalOnly="true" />
+		</div>
+		<!-- Grid Kiri -->
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseCode}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="franchiseCode"
+							value="#{franchiseInputBean.franchiseVO.franchiseCode}"
+							styleClass="Wid90" />
+						<p:message for="franchiseCode" />
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseName}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="franchiseName"
+							value="#{franchiseInputBean.franchiseVO.franchiseName}"
+							styleClass="Wid90" />
+						<p:message for="franchiseName" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchisePICName}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="picName"
+							value="#{franchiseInputBean.franchiseVO.picName}"
+							styleClass="Wid90" />
+						<p:message for="picName" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchisePICPhoneNo}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="picPhoneNo"
+							value="#{franchiseInputBean.franchiseVO.picPhoneNo}"
+							styleClass="Wid90" />
+						<p:message for="picPhoneNo" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseLogo}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:fileUpload id="upload" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+							widgetVar="wvFileUpload"
+							value="#{franchiseInputBean.uploadedFile}" mode="simple" />
+						<p:commandButton value="Submit" ajax="false"
+							actionListener="#{franchiseInputBean.handleUploadedFile()}"
+							update=":frm001" styleClass="style-button">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="View #{msg.formFranchiseLogo}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:graphicImage
+							rendered="#{franchiseInputBean.streamUploadId != null}"
+							value="#{mbImageStreamer.image}" width="180" height="200">
+							<f:param name="funcId"
+								value="#{franchiseInputBean.getUploadFuncId()}" />
+							<f:param name="uploadId"
+								value="#{franchiseInputBean.streamUploadId}" />
+						</p:graphicImage>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Grid Kanan -->
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseAddress}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="address" styleClass="Wid90"
+							value="#{franchiseInputBean.franchiseVO.address}" />
+						<p:message for="address" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseCity}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:remoteCommand name="onChangeCity"
+							actionListener="#{franchiseInputBean.onChangeCity()}"
+							update="frm001:province"></p:remoteCommand>
+						<p:selectOneMenu id="cityId" onchange="onChangeCity()"
+							value="#{franchiseInputBean.franchiseVO.cityId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{franchiseInputBean.citySelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="cityId" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseProvince}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="province"
+							value="#{franchiseInputBean.franchiseVO.provinceName}"
+							styleClass="Wid90" readonly="true" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchisePostalCode}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="postalCode"
+							value="#{franchiseInputBean.franchiseVO.postalCode}"
+							styleClass="Wid90" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formFranchiseActive}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="activeFlag"
+							value="#{franchiseInputBean.franchiseVO.activeFlag}">
+							<f:selectItems value="#{franchiseInputBean.activeSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</ui:composition>

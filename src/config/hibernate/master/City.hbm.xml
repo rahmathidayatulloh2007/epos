@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.master.city.model">
+	<class name="City" table="POS_CITY">
+		<id name="cityId" column="CITY_ID" type="long">
+			<generator class="native">
+				<param name="sequence">CITY_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="province" column="PROVINCE_ID"
+			class="com.wo.epos.module.master.province.model.Province" fetch="join">
+		</many-to-one>
+
+		<!-- property name="provinceId" column="PROVINCE_ID" type="long" /-->
+		
+		<property name="cityCode" column="CITY_CODE" type="string" />
+		<property name="cityName" column="CITY_NAME" type="string" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

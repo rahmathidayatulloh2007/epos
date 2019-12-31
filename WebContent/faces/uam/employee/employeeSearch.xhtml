@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formEmployeeTitle}" style="font-weight:bold;"/>
+				    	<p:growl id="growlMessage" showDetail="true" showSummary="false" globalOnly="true" />
+			<p:messages id="messages" showDetail="true" showSummary="false" />
+		</div>
+	</div>	
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					 <p:inputText id="searchAll" readonly="#{employeeSearchBean.disableSearchAll}"
+								value="#{employeeSearchBean.searchAll}" placeholder="#{msg.textSearch} #{msg.formEmployeeTitle}" styleClass="WidPos"/>
+				</div>
+				<div class="Container30">			
+				     <p:commandButton actionListener="#{employeeSearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>		
+					 <p:commandButton actionListener="#{employeeSearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableEmployee"/>
+					 <p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/>			
+				</div>
+				<div class="Container30">	
+
+					 <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{employeeBean.modeDelete}" 
+						    update="frm001:outputPanelSearch :frm001:messages" styleClass="Fright"
+						    disabled="#{fn:length(employeeSearchBean.selectedEmployee) == 0}">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+					 
+					 <p:commandButton id="editBtn" value="#{msg.buttonEdit}" actionListener="#{employeeBean.modeEdit}" 
+				            update=":frm001" styleClass="Fright"
+						    disabled="#{fn:length(employeeSearchBean.selectedEmployee) == 0 or fn:length(employeeSearchBean.selectedEmployee)>1}"/>
+					 <p:commandButton value="#{msg.buttonAdd}" actionListener="#{employeeBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		 <div class="ContainerIndent">
+			  <p:dataTable id="dataTableEmployee" value="#{employeeSearchBean.pagingEmployee}" 
+				      selection="#{employeeSearchBean.selectedEmployee}" 
+				        var="data" lazy="true" editable="true" rowKey="#{data.employeeId}"
+				         paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+				        rows="#{employeeSearchBean.paging}" paginator="true" rowIndexVar="index">
+				      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>      				
+     			    <p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>     
+      				
+      				<p:column selectionMode="multiple" style="width:27px;text-align:center"/>      				    				    
+					
+									
+					<p:column headerText="#{msg.formEmployeeCompany}" rendered="#{employeeSearchBean.userSession.companyId == null}">
+							<h:outputText value="#{data.companyName}" />
+					</p:column>	
+							
+					<p:column headerText="#{msg.formEmployeeNo}">
+						<h:outputText value="#{data.employeeNo}" />
+					</p:column>
+					<p:column headerText="#{msg.formEmployeeFullName}">
+						<h:outputText value="#{data.fullName}" />
+					</p:column>
+					<p:column headerText="#{msg.formEmployeeGender}">
+						<h:outputText value="#{data.genderName}" />
+					</p:column>
+					<p:column headerText="#{msg.formEmployeeBirthDate}">
+						<h:outputText value="#{employeeSearchBean.sdf.format(data.birthDate)}" rendered="#{data.birthDate != null}"/>
+					</p:column>
+					<p:column headerText="#{msg.formEmployeeBirthPlace}">
+						<h:outputText value="#{data.birthPlace}" />
+					</p:column>	
+					<p:column headerText="#{msg.formEmployeeReligion}">
+						<h:outputText value="#{data.religionName}" />
+					</p:column>	
+					<p:column headerText="#{msg.formEmployeeAddress}">
+						<h:outputText value="#{data.address}" />
+					</p:column>			
+					<p:column headerText="#{msg.formEmployeeCity}">
+						<h:outputText value="#{data.cityName}" />
+					</p:column>	
+			</p:dataTable>
+		</div>
+	</div>
+		
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" 
+					styleClass="dialog-calender dialogClose" width="650" 
+					header="#{msg.textSearchs} #{msg.formEmployeeTitle}">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	    <p:outputPanel id="outputPanelDialog"> 
+	       <div class="Container100">
+	            <p:outputPanel rendered="#{employeeSearchBean.userSession.companyId == null}">					
+			        <div class="Container100">
+						 <div class="EposContainerIndent">
+							  <div class="Container30">
+		               			   <h:outputText value="#{msg.formEmployeeCompany}"/>
+		          			  </div>
+						 	  <div class="Container70"> 
+					               <p:selectOneMenu value="#{employeeSearchBean.employeeVOSearchDialog.companyId}">
+										<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+										<f:selectItems value="#{employeeSearchBean.companySelectItem}"/>
+									</p:selectOneMenu>
+						 	  </div>
+						 </div>
+					</div>
+				</p:outputPanel>		
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeNo}"/>
+	           			  </div>
+					 	  <div class="Container70"> 
+	               			   <p:inputText value="#{employeeSearchBean.employeeVOSearchDialog.employeeNo}" styleClass="Wid90"/>
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeFullName}"/>
+	           			  </div>
+					 	  <div class="Container70">
+	               			   <p:inputText value="#{employeeSearchBean.employeeVOSearchDialog.fullName}" styleClass="Wid90"/>
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeGender}"/>
+	          			  </div>
+					 	  <div class="Container70">
+				               <p:selectOneMenu value="#{employeeSearchBean.employeeVOSearchDialog.genderCode}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									<f:selectItems value="#{employeeSearchBean.genderSelectItem}"/>
+								</p:selectOneMenu>	
+	          			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeBirthDate}"/>
+	           			  </div>
+					 	  <div class="Container70">
+				               <p:calendar navigator="true" value="#{employeeSearchBean.employeeVOSearchDialog.startDate}" 
+				                    showOn="button" styleClass="cal-input" pattern="#{employeeInputBean.dateFormat}" 
+				               		locale="#{employeeInputBean.dateLocale}" maxlength="11" />
+				               	<h:outputText value="s/d"/>	
+				               	<p:calendar navigator="true" value="#{employeeSearchBean.employeeVOSearchDialog.endDate}" 
+				                    showOn="button" styleClass="cal-input" pattern="#{employeeInputBean.dateFormat}" 
+				                    locale="#{employeeInputBean.dateLocale}" maxlength="11" />	
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeBirthPlace}"/>
+	           			  </div>
+					 	  <div class="Container70">
+	               			   <p:inputText value="#{employeeSearchBean.employeeVOSearchDialog.birthPlace}" styleClass="Wid90"/>
+	         			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeReligion}"/>
+	           			  </div>
+					 	  <div class="Container70">
+				               <p:selectOneMenu value="#{employeeSearchBean.employeeVOSearchDialog.religionCode}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									<f:selectItems value="#{employeeSearchBean.religionSelectItem}"/>
+								</p:selectOneMenu>	
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeAddress}"/>
+	          			  </div>
+					 	  <div class="Container70">
+	               			   <p:inputText value="#{employeeSearchBean.employeeVOSearchDialog.address}" styleClass="Wid90"/>
+	           			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+						  <div class="Container30">
+	               			   <h:outputText value="#{msg.formEmployeeCity}"/>
+	          			  </div>
+					 	  <div class="Container70">
+				               <p:selectOneMenu value="#{employeeSearchBean.employeeVOSearchDialog.cityId}">
+									<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+									<f:selectItems value="#{employeeSearchBean.citySelectItem}"/>
+							   </p:selectOneMenu>	
+	          			  </div>
+					 </div>
+				</div>	
+		        <div class="Container100">
+					 <div class="EposContainerIndent">
+			              <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableEmployee :frm001:searchAll"
+			                    actionListener="#{employeeSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+			              <p:commandButton value="#{msg.buttonClear}" actionListener="#{employeeSearchBean.clearDialog}"
+			                   oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableEmployee :frm001:searchAll :frm001:dialogSearch"/>
+			         </div>
+			    </div>
+		  </div>
+			    
+	   </p:outputPanel>  
+	</p:dialog>
+	
+</ui:composition>

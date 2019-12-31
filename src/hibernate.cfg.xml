@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:XE</property> -->
+		<!-- <property name="hibernate.connection.url">jdbc:oracle:thin:@AHIN-LAPTOP:1521:XE</property>
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="hibernate.connection.username">epos_v1</property>
+		<property name="hibernate.connection.password">epos_v1</property>
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property> -->
+		
+<!-- <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://192.168.0.22:5432/epos_db</property> -->
+		
+<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+	    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/epos_db</property> 
+		
+		<!-- <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property> -->
+	    <!-- <property name="hibernate.connection.url">jdbc:sqlserver://192.168.1.9:1433;DatabaseName=epos_v1</property> -->
+	    <!-- <property name="hibernate.connection.url">jdbc:sqlserver://wotlaptop2015:54458;DatabaseName=EPOS_V1</property> -->
+	    
+<!-- <property name="hibernate.connection.username">epos</property>
+	    <property name="hibernate.connection.password">epos123</property> -->
+	    
+<property name="hibernate.connection.username">postgres</property>
+	    <property name="hibernate.connection.password">123</property>
+	    
+	    <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+	    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+	   <!--  <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property> -->
+
+	<!-- 	<property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property> -->
+		<property name="hibernate.c3p0.acquire_increment">1</property>
+		<property name="hibernate.c3p0.idle_test_period">0</property>
+		<property name="hibernate.c3p0.min_size">10</property>
+		<property name="hibernate.c3p0.max_size">800</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.timeout">500</property>
+		<property name="hibernate.c3p0.idle_test_period">5000</property>
+		<property name="hibernate.c3p0.acquireRetryAttempts">1</property>
+		<property name="hibernate.c3p0.acquireRetryDelay">250</property>
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.use_sql_comments">false</property>
+		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		<property name="hibernate.current_session_context_class">thread</property>
+		<property name="hibernate.jdbc.batch_size">40</property>
+		<property name="hibernate.cache.use_second_level_cache">false</property>
+		<property name="hibernate.cache.use_query_cache">false</property>
+		<property name="hibernate.max_fetch_depth">4</property>
+
+		<!--  <mapping resource="config/hibernate/ResponsibilityDetail.hbm.xml" />
+		<mapping resource="config/hibernate/Responsibility.hbm.xml" />
+		<mapping resource="config/hibernate/SystemProp.hbm.xml" />
+		<mapping resource="config/hibernate/ParamDetail.hbm.xml" />
+		<mapping resource="config/hibernate/ParamHeader.hbm.xml" />
+		<mapping resource="config/hibernate/Menu.hbm.xml" />
+		<mapping resource="config/hibernate/RoleResponsibility.hbm.xml" />
+		<mapping resource="config/hibernate/User.hbm.xml" />
+		<mapping resource="config/hibernate/Employee.hbm.xml" />
+		<mapping resource="config/hibernate/JobOptima.hbm.xml" /> 
+		 -->
+		
+		 <!-- Master -->		 
+		 <mapping resource="config/hibernate/master/Equipment.hbm.xml" />
+		 <mapping resource="config/hibernate/master/PaymentType.hbm.xml" />
+		 <mapping resource="config/hibernate/master/Province.hbm.xml" /> 
+		 <mapping resource="config/hibernate/master/City.hbm.xml" />
+		 <mapping resource="config/hibernate/master/Franchise.hbm.xml" />
+		 <mapping resource="config/hibernate/master/SystemProperty.hbm.xml" />
+		 
+		
+		 <!-- Uam -->
+		 <mapping resource="config/hibernate/uam/Parameter.hbm.xml" /> 
+		 <mapping resource="config/hibernate/uam/ParameterDtl.hbm.xml" /> 		 
+		 <mapping resource="config/hibernate/uam/Menu.hbm.xml" /> 
+		 <mapping resource="config/hibernate/uam/Company.hbm.xml" />
+		 <mapping resource="config/hibernate/uam/Outlet.hbm.xml" />
+		 <mapping resource="config/hibernate/uam/Employee.hbm.xml" />
+		 <mapping resource="config/hibernate/uam/Role.hbm.xml" />
+		 <mapping resource="config/hibernate/uam/RoleDtl.hbm.xml" />
+
+		 <mapping resource="config/hibernate/uam/User.hbm.xml" />
+		 <mapping resource="config/hibernate/uam/OutletEmp.hbm.xml" />
+		 
+		 <!-- Inventory -->
+		 <mapping resource="config/hibernate/inv/Um.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/Category.hbm.xml" />		 
+		 <mapping resource="config/hibernate/inv/Item.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/ItemDiscount.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/ItemBom.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/Product.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/ProductBom.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/DO.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/DODtl.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/Rn.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/RnDtl.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/ItemStock.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/Customer.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/Vehicle.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/StockOpname.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/StockOpnameDtl.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/ItemConvert.hbm.xml" />
+		 <mapping resource="config/hibernate/inv/ItemConvertDtl.hbm.xml" />
+		 
+		 <!-- Purchasing -->		 
+		 <mapping resource="config/hibernate/purchasing/Supplier.hbm.xml" />
+		 <mapping resource="config/hibernate/purchasing/SupplierItem.hbm.xml" />
+		 <mapping resource="config/hibernate/purchasing/Po.hbm.xml" />
+		 <mapping resource="config/hibernate/purchasing/PoDtl.hbm.xml" />
+		 
+		 <!-- Sales -->		 
+		 <mapping resource="config/hibernate/sales/Register.hbm.xml" />
+		 <mapping resource="config/hibernate/sales/RegisterDtl.hbm.xml" />
+		 <mapping resource="config/hibernate/sales/SalesOrder.hbm.xml" />
+	     <mapping resource="config/hibernate/sales/SalesOrderDtl.hbm.xml" />
+	     <mapping resource="config/hibernate/sales/DraftSalesOrder.hbm.xml" />
+	     <mapping resource="config/hibernate/sales/DraftSalesOrderDtl.hbm.xml" />	 
+	     <mapping resource="config/hibernate/sales/Invoice.hbm.xml" />	
+	     <mapping resource="config/hibernate/sales/InvoiceDtl.hbm.xml" />
+	     <mapping resource="config/hibernate/sales/Receipt.hbm.xml" />	
+	     <mapping resource="config/hibernate/sales/ReceiptDtl.hbm.xml" />
+	     <mapping resource="config/hibernate/sales/Discount.hbm.xml" />	
+	     <mapping resource="config/hibernate/sales/DiscountDtl.hbm.xml" />
+	     <mapping resource="config/hibernate/sales/BusinessType.hbm.xml" />
+		 <mapping resource="config/hibernate/sales/Districts.hbm.xml" />
+		 <mapping resource="config/hibernate/sales/GroupOutlet.hbm.xml" />
+		<mapping resource="config/hibernate/sales/SubDistricts.hbm.xml" /> 
+		 
+	</session-factory>
+</hibernate-configuration>

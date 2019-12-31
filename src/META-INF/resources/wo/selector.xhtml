@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	<composite:interface>
+		<composite:attribute name="bean"
+                        required="true"
+			displayName="Caller bean which implement SelectorListener"/>
+                <composite:attribute name="updateOnSelected"
+			displayName="Comp updated when selected"/>                
+                <composite:attribute name="widgetVar"
+                        displayName="Widget var accessible by JS"/>
+                <composite:attribute name="title"
+                        displayName="name itself depict what it does"/>
+                <composite:attribute name="width"
+                        displayName="name itself depict what it does"/>
+                <composite:attribute name="height"
+                        displayName="name itself depict what it does"/>
+                <composite:attribute name="selectorInfo"
+                        displayName="selector info, columns, properties and db query"/>
+                
+                        
+
+	</composite:interface>
+
+	<composite:implementation>
+		<script language="javascript" type="text/javascript">
+			function search#{cc.attrs.id}AndShow(searchTxt, jsFunctionOnSelected) {
+				$(PF('txtSearch#{cc.attrs.id}').jqId).val(searchTxt);
+				if (jsFunctionOnSelected) {
+					doSearch#{cc.attrs.id}AndShow([
+                             {name: 'PARAM_CLIENT_ID', value:'#{cc.attrs.id}'},
+                             {name: 'PARAM_SEARCH', value: $(PF('txtSearch#{cc.attrs.id}').jqId).val()},
+                             {name: 'JS_FUNCTION_ONSELECTED', value: jsFunctionOnSelected}
+                             ]);
+				} else {
+					doSearch#{cc.attrs.id}AndShow([
+                             {name: 'PARAM_CLIENT_ID', value:'#{cc.attrs.id}'},
+                             {name: 'PARAM_SEARCH', value: $(PF('txtSearch#{cc.attrs.id}').jqId).val()}]);
+					
+				}
+				
+			}
+			
+			
+		</script>
+        
+        <p:dialog id="selectorDialog" modal="true" position="center" appendToBody="true" 
+                      header="#{cc.attrs.title}" widgetVar="#{cc.attrs.widgetVar}" 
+                      width="#{cc.attrs.width}" height="#{cc.attrs.height}"
+                      >  
+            <h:form id="selectorForm" onsubmit="return false;">
+                <p:remoteCommand 
+                    name="reset#{cc.attrs.id}AndShow"
+                    actionListener="#{mbLovCommon.reset(cc.attrs.id)}" 
+                    oncomplete="$(PF('txtSearch#{cc.attrs.id}').jqId).val('');PF('#{cc.attrs.widgetVar}').show();"
+                    update="selectorTable txtSearch"/>
+                
+                <p:remoteCommand 
+                    name="doSearch#{cc.attrs.id}"
+                    actionListener="#{mbLovCommon.search()}" 
+                    update="selectorTable"
+                                 />
+                <p:remoteCommand 
+                    name="doSearch#{cc.attrs.id}AndShow"
+                    
+                    actionListener="#{mbLovCommon.search()}" 
+                    oncomplete="PF('#{cc.attrs.widgetVar}').show();"
+                    update="selectorTable"
+                                 />
+
+                <p:remoteCommand 
+                    name="doResetQuery#{cc.attrs.id}"
+                    actionListener="#{mbLovCommon.resetDbQuery(cc.attrs.id)}" 
+                                 />
+                <table>
+                    <tr>
+                        <td>
+                            #{msgs.common_search} 
+                        </td>
+                        <td>: </td>
+                        <td>
+                            <p:inputText id="txtSearch" 
+                                         widgetVar="txtSearch#{cc.attrs.id}"
+                                         onkeypress="if (event.keyCode == 13){ doSearch#{cc.attrs.id}([{name: 'PARAM_CLIENT_ID', value:'#{cc.attrs.id}'},{name: 'PARAM_SEARCH', value: $(PF('txtSearch#{cc.attrs.id}').jqId).val()} ]);}"/>
+                            <script language="javascript" type="text/javascript">
+
+                                $(document).ready(function() {
+                                    $(PF('txtSearch#{cc.attrs.id}').jqId).val('#{mbLovCommon.getUserQueryString(cc.attrs.id)}');
+                                    
+                                });
+
+                            </script>                       
+
+                        </td>
+                    </tr>
+                </table>
+                
+                
+                <p:dataTable var="item" value="#{mbLovCommon.getDataModel(cc.attrs.id, cc.attrs.selectorInfo)}" rows="10"
+                            lazy="true" paginator="true" paginatorPosition="top"
+                            rowIndexVar="rowIndex"
+                            styleClass="table-needs-hover-marker"
+                            id="selectorTable" >  
+                    
+                    <p:columns value="#{mbLovCommon.getColumnModel(cc.attrs.id)}" 
+                               var="column" columnIndexVar="colIndex">
+                        <f:facet name="header">  
+                            #{column.header}  
+                        </f:facet>  
+                        <p:outputPanel id="panelLeft" 
+                                       rendered="#{mbLovCommon.alignLeft(item[column.property])}">
+                                       
+                            #{mbLovCommon.convertToDisplayValue(cc.attrs.selectorInfo, colIndex, item[column.property])}           
+                        </p:outputPanel>
+                        <p:outputPanel id="panelRight" style="width: 100%;"
+                                        rendered="#{mbLovCommon.alignRight(item[column.property])}">
+                            <div style="width: 100%; text-align: right;" >
+	                            #{mbLovCommon.convertToDisplayValue(cc.attrs.selectorInfo, colIndex, item[column.property])}           
+                            </div>                            
+                        </p:outputPanel>
+
+                    </p:columns>
+
+                    <p:column headerText="Activity" width="80">
+                        <p:commandLink id="btnSelect" value="Choose"
+                            actionListener="#{mbLovCommon.select(cc.attrs.id, cc.attrs.widgetVar, cc.attrs.bean, item, cc.attrs.selectorInfo)}" 
+                            update="#{cc.attrs.updateOnSelected} " 
+                            onsuccess="PF('#{cc.attrs.widgetVar}').hide();" 
+                            process="@this" >
+                        </p:commandLink>
+                        <script language="javascript" type="text/javascript">
+
+                            $(document).ready(function() {
+                                $('##{cc.attrs.id}\\:selectorForm\\:selectorTable\\:#{rowIndex}\\:btnSelect')
+                                    .parents('tr').first().children('td').attr('onclick', "$('##{cc.attrs.id}\\\\:selectorForm\\\\:selectorTable\\\\:#{rowIndex}\\\\:btnSelect').trigger('click');");
+                                $('##{cc.attrs.id}\\:selectorForm\\:selectorTable\\:#{rowIndex}\\:btnSelect')
+                                    .parents('td').first().attr('onclick', '');
+                            });
+
+                        </script>                       
+
+
+                    </p:column>  
+
+                </p:dataTable>
+                
+            </h:form>
+
+        </p:dialog>              
+            
+            
+	</composite:implementation>
+</html>

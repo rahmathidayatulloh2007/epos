@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dvs-config>
+
+	<!-- for localhost <database driver="oracle.jdbc.driver.OracleDriver" max-connection="100" 
+		max-idle-connection="20" max-wait-interval="-1" url="jdbc:oracle:thin:@localhost:1521:xe" 
+		user="tms" password="tms" /> -->
+
+	<ldap url="ldap://10.1.72.28:389" authentication="simple"
+		domain="dev.corp.btpn.co.id" />
+
+	<email smtp-server-host="smtp.gmail.com" smtp-server-port="587"
+		smtp-auth="true" smtp-starttls-enable="true" default-email-username="erec.btpn@gmail.com"
+		default-email-password="erecruitment" default-email-dvs="erec.btpn@gmail.com"
+		email-background-image="D:\EmailTemplate\tqNote.jpg"
+		email-background-image-height="500px" email-background-image-width="482px" />
+
+	<!-- <email smtp-server-host="10.1.71.29" smtp-server-port="25" smtp-auth="true" 
+		smtp-starttls-enable="true" default-email-username="v-ardika.imanadi@btpn.com" 
+		default-email-password="saroot8!btpn!" default-email-dvs="v-ardika.imanadi@btpn.com" 
+		/> -->
+
+	<application ui-validation="true" dummy-user="" />
+	<erec-app app-testing="true" no-ldap-admin-user=""
+		app-testing-email="medwin.susilo@btpn.com" />
+
+	<no-auth-urls>
+		<!-- url's which do not need to be protected, anyone can access, limited 
+			to url faces/* -->
+		<no-auth-url value="/faces/portal/portalTest.jsf" />
+		<no-auth-url value="/faces/portal/.*" isRegex="true" />
+	</no-auth-urls>
+	<auth-anyone-urls>
+		<!-- url's which need to be protected, any person who can login can access 
+			this, not limited to role. limited to url faces/* <auth-anyone-url value="/images/dynamic/*"/> -->
+		<auth-anyone-url value="/faces/portal/eventMonitor/*" />
+		<auth-anyone-url value="/faces/portal/eventSchedule/*" />
+		<auth-anyone-url value="/faces/portal/profil/*" />
+		<auth-anyone-url value="/faces/portal/searchEvent/*" />
+
+	</auth-anyone-urls>
+
+	<!-- Open Office Connection Config ============================= attribute 
+		"path" of tag "open-office-connection" can be eliminated if you want to using 
+		default value attribute "task-exec-timeout" of tag "open-office-connection" 
+		can be eliminated if you want to using default value (30000), value is in 
+		millisecond, ex : 30000 = 30 secs for tag child inside "open-office-connection" 
+		tag, choose one of following tag : <tcp-socket ports="2002" /> or <pipe names="office1,office2" 
+		/> NB : - the first child tag will be read, ignore other following tag - 
+		ports value can be more then one using comma separator, don't use space char 
+		after comma char, ex : "2002,2003" - names value can be more then one using 
+		comma separator, don't use space char after comma char, ex : "office1,office2" 
+		<open-office-connection path="" task-exec-timeout="1"> <tcp-socket ports="2002" 
+		/> <pipe names="office1,office2" /> </open-office-connection> OOo inter-process 
+		communication can use either TCP sockets or named pipes. The default is to 
+		use a TCP socket, on port 2002. Named pipes have the advantage of not taking 
+		up TCP ports (with their potential security implications), and they are marginally 
+		faster. However they require a native library to be loaded by the JVM, and 
+		this means having to set the java.library.path system property. That's why 
+		it's not the default. The path that needs to be added to java.library.path 
+		is different depending on the platform, but it should be the directory in 
+		the OOo installation containing libjpipe. On Linux it's e.g.: java -Djava.library.path=/opt/openoffice.org/ure/lib 
+		... while on Windows: java "-Djava.library.path=C:\Program Files\OpenOffice.org 
+		3\URE\bin" ... -->
+	<!-- <open-office-connection task-exec-timeout="30000" path=""> <tcp-socket 
+		ports="2002" /> </open-office-connection> -->
+</dvs-config>

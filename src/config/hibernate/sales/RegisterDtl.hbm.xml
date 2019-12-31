@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.sales.register.model">
+	<class name="RegisterDtl" table="POS_REGISTER_DTL">
+		<id name="regDtlId" column="REG_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">REGISTER_DTL_SEQ</param>
+			</generator>
+		</id>
+		
+        <many-to-one name="register" column="REG_ID" 
+              class="com.wo.epos.module.sales.register.model.Register" fetch="join">
+		</many-to-one>
+		
+        <property name="paymentMethodCode" column="PAYMENT_METHOD" type="string" />
+        <many-to-one name="paymentMethod" column="PAYMENT_METHOD" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		        
+        <property name="initFund" column="INIT_FUND" type="double" />
+        <property name="totalPayment" column="TOTAL_PAYMENT" type="double" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+	</class>
+</hibernate-mapping>

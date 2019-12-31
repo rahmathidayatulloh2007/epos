@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+		
+			<h:outputText value="#{msg.formStockOpnameAddTitle}"
+				rendered="#{stockOpnameInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formStockOpnameEditTitle}"
+				rendered="#{stockOpnameInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+				
+			<p:commandButton value="#{msg.buttonBack}" immediate="true" process="@this"
+				actionListener="#{stockOpnameBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{stockOpnameBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+			<p:messages id="messagesStockOpname" showDetail="true" showSummary="false" globalOnly="true"/>
+		</div>
+	</div>
+
+	<div class="Container100">
+		<!-- Grid Kiri -->
+		<div class="Container50 Responsive">
+			<p:outputPanel id="outputPanelStockOpnameInput"
+				rendered="#{stockOpnameInputBean.userPosition eq 'ADMIN_LEVEL'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formStockOpnameCompany}" />
+							<span style="color: red"> *</span>
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu id="companyInput"
+								disabled="#{stockOpnameInputBean.MODE_TYPE eq 'EDIT'}"
+								value="#{stockOpnameInputBean.stockOpnameVO.companyId}"
+>
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+								<f:selectItems value="#{stockOpnameInputBean.companySelectItem}" />
+								<p:ajax event="change"
+									listener="#{stockOpnameInputBean.changeCompanyToOutlet}"
+									update=":frm001:outletId"></p:ajax>
+							</p:selectOneMenu>
+							<p:message for="companyInput" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelOutletInput"
+				rendered="#{stockOpnameInputBean.userPosition eq 'ADMIN_LEVEL' or stockOpnameInputBean.userPosition eq 'COMPANY_LEVEL'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formVehicleOutlet}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="outletId"
+								disabled="#{stockOpnameInputBean.MODE_TYPE eq 'EDIT'}"
+								value="#{stockOpnameInputBean.stockOpnameVO.outletId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{stockOpnameInputBean.outletSelectItem}" />
+							</p:selectOneMenu>
+							<p:message for="outletId" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formStockOpnameNomorPerhitungan}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="nomorPerhitungan"
+							disabled="#{stockOpnameInputBean.MODE_TYPE eq 'EDIT'}"
+							value="#{stockOpnameInputBean.stockOpnameVO.opnameNo}"
+							readonly="true" styleClass="Wid90 readonly-bg" />
+
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formStockOpnameTanggalPerhitungan}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:calendar id="opnameDate"
+							value="#{stockOpnameInputBean.stockOpnameVO.opnameDate}"
+							showOn="button" pattern="#{stockOpnameInputBean.dateFormat}"
+							locale="#{stockOpnameInputBean.dateLocale}">
+						</p:calendar>
+						
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formStockOpnamePeriodePerhitungan}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="periodePerhitunganBulan" 
+							value="#{stockOpnameInputBean.stockOpnameVO.periodBulan}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{stockOpnameInputBean.bulanSelectItem}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu id="periodePerhitunganTahun" 
+							value="#{stockOpnameInputBean.stockOpnameVO.periodTahun}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{stockOpnameInputBean.tahunSelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="periodePerhitunganBulan" />
+						<p:message for="periodePerhitunganTahun" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Grid Kanan -->
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formStockOpnameDeskripsi}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="deskripsi" styleClass="Wid90"
+							value="#{stockOpnameInputBean.stockOpnameVO.notes}" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<p:outputPanel id="outputPanelDetail"
+		rendered="#{stockOpnameInputBean.MODE_TYPE eq 'EDIT'}">
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<p:dataTable id="dataTableStockOpnameDetail"
+					value="#{stockOpnameInputBean.stockOpnameVO.stockOpnameDtl}"
+					var="dataDetail" lazy="true" editable="true"
+					rowKey="#{data.opnameId}" rowIndexVar="index">
+
+					<p:column headerText="#{msg.formStockOpnameKodeBarang}">
+						<h:outputText value="#{dataDetail.item.itemCode}" />
+					</p:column>
+
+					<p:column headerText="#{msg.formStockOpnameNamaBarang}">
+						<h:outputText value="#{dataDetail.item.itemName}" />
+					</p:column>
+
+					<p:column headerText="#{msg.formStockOpnameSatuan}">
+						<h:outputText value="#{dataDetail.item.um.umName}" />
+					</p:column>
+					
+					<p:column headerText="#{msg.formStockOpnamePersediaan}">
+						<h:outputText value="#{dataDetail.stockQty}" />
+					</p:column>
+					
+					<p:column headerText="#{msg.formStockOpnamePemeriksaan}">
+						<p:inputText value="#{dataDetail.opnameQty}" />
+					</p:column>
+				</p:dataTable>
+			</div>
+		</div>
+	</p:outputPanel>
+</ui:composition>

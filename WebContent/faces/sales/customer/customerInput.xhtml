@@ -1,0 +1,429 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"	>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCustomerAddTitle}"
+				rendered="#{customerInputBeanSales.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formCustomerEditTitle}"
+				rendered="#{customerInputBeanSales.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}" immediate="true"
+				actionListener="#{customerBeanSales.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{customerBeanSales.modeSave}" update=":frm001"
+				styleClass="Fright" />
+		</div>
+	</div>
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCustomerBusinessInformation}" style="font-weight:bold;" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container30 Responsive">
+				<h:outputText value="#{msg.formSystemPropertyTypeOfBusiness}" />
+			</div>
+
+			<div class="Container30 Responsive">
+				<h:outputText value="#{msg.formCustomerType}" />
+			</div>
+
+			<div class="Container30 Responsive">
+				<h:outputText value="#{msg.formCustomerGroupOutlet}" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+	<div class="ContainerIndent">
+		<div class="Container30 Responsive">
+				<p:selectOneMenu id="businessType" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.businessTypeId}"
+					requiredMessage="#{msg.formCustomerTipeUsaha} #{msg.errorMustBeFilled}"
+					required="true">
+					<f:selectItem itemLabel="Pilih" />
+					<f:selectItems
+						value="#{customerInputBeanSales.businessTypeSelectItem}" />
+				</p:selectOneMenu>
+				<p:message for="businessType" />
+		</div>
+
+			<div class="Container30 Responsive">
+				<p:selectOneMenu id="customerType" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.customerTypeCode}"
+					requiredMessage="#{msg.formCustomerType} #{msg.errorMustBeFilled}"
+					required="true">
+					<f:selectItem itemLabel="Pilih" />
+					<f:selectItems
+						value="#{customerInputBeanSales.customerTypeSelectItem}" />
+				</p:selectOneMenu>
+				<p:message for="customerType" />
+			</div>
+
+			<div class="Container30 Responsive">
+			<p:selectOneMenu id="groupOutlet" style="width:85%"
+				value="#{customerInputBeanSales.customerVO.groupOutletId}"
+				requiredMessage="#{msg.formCustomerGroupOutlet} #{msg.errorMustBeFilled}"
+				required="true">
+				<f:selectItem itemLabel="Pilih" />
+				<f:selectItems
+					value="#{customerInputBeanSales.groupOutletSelectItem}" />
+			</p:selectOneMenu>
+			<p:message for="groupOutlet" />
+		</div>
+		</div>
+	</div>
+	
+	<hr />
+	
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerCustomerInformation}" style="font-weight:bold;" />
+			</div>
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerNpwp}" style="font-weight:bold;" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<div class="Container30 ">
+					<h:outputText value="#{msg.formCustomerCode}" />
+				</div>
+				<div class="Container30 ">
+					<h:outputText value="#{msg.formCustomerName}" />
+				</div>
+			</div>
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerFullName}" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<div class="Container30 ">
+					<p:inputText id="CustomerCode" maxlength="8" size="8"
+						value="#{customerInputBeanSales.customerVO.customerCode}"
+						rendered="#{customerInputBeanSales.MODE_TYPE eq 'ADD'}"
+						required="true"
+						requiredMessage="#{msg.formCustomerCode} #{msg.errorMustBeFilled}"
+						styleClass="Wid80" />
+
+					<p:inputText id="CustomerCode2" readonly="true" size="8"
+						value="#{customerInputBeanSales.customerVO.customerCode}"
+						rendered="#{customerInputBeanSales.MODE_TYPE eq 'EDIT'}"
+						styleClass="Wid80 readonly-bg" />
+					<p:message for="CustomerCode" />
+				</div>
+				<div class="Container70 ">
+					<p:inputText id="customerName" style="width:85%"
+						value="#{customerInputBeanSales.customerVO.customerName}"
+						requiredMessage="#{msg.formCustomerName} #{msg.errorMustBeFilled}"
+						required="true"  />
+					<p:message for="customerName" />
+				</div>
+			</div>
+			<div class="Container50 Responsive">
+				<p:inputText id="namaLengkapNpwp" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.fullNameNpwp}" 
+					styleClass="Wid90"/>
+				<p:message for="namaLengkapNpwp" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerAddress}" />
+			</div>
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerAddress}" />
+			</div>
+		</div>
+	</div>
+	
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<p:inputTextarea id="alamatCustomer" rows="6" cols="70"
+					value="#{customerInputBeanSales.customerVO.address}"
+					requiredMessage="#{msg.formCustomerAddress} #{msg.errorMustBeFilled}"
+					required="true" style="width:90%"/>
+				<p:message for="alamatCustomer" />
+			</div>
+			<div class="Container50 Responsive">
+				<p:inputTextarea id="alamatNpwp" rows="6" cols="70"
+					value="#{customerInputBeanSales.customerVO.addressNpwp}"
+					requiredMessage="#{msg.formCustomerAddress} #{msg.errorMustBeFilled}"
+					required="true" style="width:85%"/>
+				<p:message for="alamatNpwp" />
+			</div>
+		</div>
+	</div>
+
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<div class="Container50 ">
+					<h:outputText value="#{msg.formCustomerProvince}" />
+				</div>
+				<div class="Container50 ">
+					<h:outputText value="#{msg.formCustomerDistrict}" />
+				</div>
+			</div>
+			<div class="Container50 Responsive">
+			<h:outputText value="#{msg.formCustomerNoNpwp}" />
+			</div>
+		</div>
+	</div>
+
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<div class="Container50 ">
+					<p:selectOneMenu id="provinsi" style="width:80%"
+						value="#{customerInputBeanSales.customerVO.provinceId}"
+						requiredMessage="#{msg.formCustomerProvince} #{msg.errorMustBeFilled}"
+						required="true" styleClass="Wid80">
+						<f:selectItem itemLabel="Pilih" styleClass="Wid80"/>
+						<f:selectItems
+							value="#{customerInputBeanSales.provinceSelectItem}" styleClass="Wid80"/>
+					</p:selectOneMenu>
+					<p:message for="provinsi" />
+				</div>
+				<div class="Container50 ">
+					<p:selectOneMenu id="district" style="width:80%"
+						value="#{customerInputBeanSales.customerVO.districtId}"
+						requiredMessage="#{msg.formCustomerDistrict} #{msg.errorMustBeFilled}"
+						required="true" styleClass="Wid100">
+						<f:selectItem itemLabel="Pilih" />
+						<f:selectItems
+							value="#{customerInputBeanSales.districtsSelectItem}" />
+					</p:selectOneMenu>
+					<p:message for="district" />
+				</div>
+			</div>
+			<div class="Container50 Responsive">
+				<p:inputText id="nomorNpwp" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.npwpNo}" />
+				<p:message for="nomorNpwp" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<div class="Container50 ">
+					<h:outputText value="#{msg.formCustomerSubDistrict}" />
+				</div>
+				<div class="Container50 ">
+					<h:outputText value="#{msg.formOutletPostalCode}" />
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<div class="Container50 ">
+					<p:selectOneMenu id="subDistrict" 
+						value="#{customerInputBeanSales.customerVO.subDistrictId}"
+						requiredMessage="#{msg.formCustomerSubDistrict} #{msg.errorMustBeFilled}"
+						required="true" style="width:80%">
+						<f:selectItem itemLabel="Pilih" />
+						<f:selectItems
+							value="#{customerInputBeanSales.subDistrictsSelectItem}" />
+					</p:selectOneMenu>
+					<p:message for="subDistrict" />
+				</div>
+				<div class="Container50 ">
+					<p:inputText id="portalCode" style="width:80%"
+						value="#{customerInputBeanSales.customerVO.portalCode}"
+						requiredMessage="#{msg.formOutletPostalCode} #{msg.errorMustBeFilled}"
+						required="true" />
+					<p:message for="portalCode" />
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="Container100">
+		<hr />
+	</div>
+
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCustomerCustomerContactPerson}" style="font-weight:bold;" />
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerFullName}" />
+			</div>
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerEmail}" />
+			</div>
+
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<p:inputText id="namaLengkap" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.fullName}"
+					requiredMessage="#{msg.formCustomerFullName} #{msg.errorMustBeFilled}"
+					required="true" />
+				<p:message for="namaLengkap" />
+			</div>
+			<div class="Container50 Responsive">
+				<p:inputText id="email" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.emailAddress}"
+					requiredMessage="#{msg.formCustomerEmail} #{msg.errorMustBeFilled}"
+					required="true" />
+				<p:message for="email" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerFax}" />
+			</div>
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerPhoneNo}" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+		
+					<div class="Container50 Responsive">
+				<p:inputText id="telepon2" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.phoneNo2}" />
+			</div>
+
+			<div class="Container50 Responsive">
+				<p:inputText id="fax" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.fax}" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+			<h:outputText value="#{msg.formCustomerPhoneNo}" />
+			</div>
+		</div>
+	</div>
+	
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<p:inputText id="telepon" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.phoneNo}"
+					requiredMessage="#{msg.formCustomerPhoneNo} #{msg.errorMustBeFilled}"
+					required="true" />
+				<p:message for="telepon" />
+			</div>
+		</div>
+	</div>
+
+
+	<div class="Container100">
+		<hr />
+	</div>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCustomerCustomerAnother}" style="font-weight:bold;" />
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerSalesman}" />
+			</div>
+			<div class="Container50 Responsive">
+				<h:outputText value="#{msg.formCustomerLimitKredit}" />
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<p:inputText id="salesman" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.salesman}"
+					requiredMessage="#{msg.formCustomerSalesman} #{msg.errorMustBeFilled}"
+					required="true" />
+				<p:message for="salesman" />
+			</div>
+			<div class="Container50 Responsive">
+				<p:inputText id="limitKredit" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.depositBalance}"
+					requiredMessage="#{msg.formCustomerLimitKredit} #{msg.errorMustBeFilled}"
+					onkeypress="return checkNumeric(event,this,false)" required="true">
+					<p:ajax process="@this" />
+				</p:inputText>
+				<p:message for="limitKredit" />
+			</div>
+		</div>
+	</div>
+
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+			<h:outputText value="#{msg.formCustomerTermofPayment}" />
+			</div>
+		</div>
+	</div>
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">				
+				<p:inputText id="termOfPayment" style="width:85%"
+					value="#{customerInputBeanSales.customerVO.termOfPayment}"
+					requiredMessage="#{msg.formCustomerTermofPayment} #{msg.errorMustBeFilled}"
+					onkeypress="return checkNumeric(event,this,false)" required="true">
+					<p:ajax process="@this" />
+				</p:inputText>
+				<p:message for="termOfPayment" />
+			</div>
+		</div>
+	</div>
+
+
+
+</ui:composition>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.itemDiscount.model">
+	<class name="ItemDiscount" table="POS_ITEM_DISCOUNT">
+		<id name="ItemDiscountId" column="ITEM_DISCOUNT_ID" type="long">
+			<generator class="native">
+				<param name="sequence">ITEM_DISCOUNT_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="itemId" column="ITEM_ID"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join">
+		</many-to-one>
+
+	<many-to-one name="productId" column="PRODUCT_ID"
+		class="com.wo.epos.module.inv.item.model.Product" fetch="join">
+	</many-to-one>
+
+		<many-to-one name="customerType" column="CUSTOMER_TYPE"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+
+		<property name="Discount1" column="DISCOUNT_1" type="integer" />
+		<property name="Discount2" column="DISCOUNT_2" type="integer" />
+		<property name="Discount3" column="DISCOUNT_3" type="integer" />
+		
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+	</class>
+</hibernate-mapping>

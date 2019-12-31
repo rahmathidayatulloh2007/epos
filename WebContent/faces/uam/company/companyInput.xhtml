@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+	<div class="Container100">
+		<div class="ContainerIndent">
+		
+			<h:outputText value="#{msg.formCompanyAddTitle}" rendered="#{companyInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formCompanyEditTitle}" rendered="#{companyInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>		
+		    <p:commandButton value="#{msg.buttonBack}" immediate="true" actionListener="#{companyBean.modeSearch}" update=":frm001" styleClass="Fright"/>
+		    <p:commandButton value="#{msg.buttonSave}" actionListener="#{companyBean.modeSave}" update=":frm001" styleClass="Fright"/>
+		<p:messages id="messagesCompany" showDetail="true" showSummary="false" globalOnly="true"/>
+		</div>
+	</div>
+	
+	<!-- 
+    <table width="100%">
+		<tr align="right">
+			<td>
+			    <p:commandButton value="#{msg.buttonSave}"
+					   actionListener="#{companyBean.modeSave}" update=":frm001"/>
+			    <p:commandButton value="#{msg.buttonBack}" immediate="true"
+			           actionListener="#{companyBean.modeSearch}" update=":frm001"/>
+			</td>
+		</tr>
+	</table>
+	 -->
+     
+	<div class="Container100">
+		
+		<!-- Grid Sebelah Kiri -->
+		<div class="Container50 Responsive">
+		
+			<!-- Kode Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyCode}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="companyCode" value="#{companyInputBean.companyVO.companyCode}" rendered="#{companyInputBean.MODE_TYPE == 'ADD'}"
+							 styleClass="Wid90"/>
+						<p:inputText value="#{companyInputBean.companyVO.companyCode}" rendered="#{companyInputBean.MODE_TYPE == 'EDIT'}"
+							readonly="true" styleClass="Wid90 readonly-bg"/>
+							
+					</div>
+				</div>
+			</div>
+			
+			<!-- Nama Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyName}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="companyName" value="#{companyInputBean.companyVO.companyName}" 
+							 styleClass="Wid90"/>
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Jenis Perusahaan -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyType}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="companyType" 
+							value="#{companyInputBean.companyVO.companyTypeCode}" >
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{companyInputBean.companyTypeSelectItem}"/>
+							<p:ajax event="change" listener="#{companyInputBean.changeCompanyTypeFranchise}"
+							         update=":frm001:companyType :frm001:outputPanelFranchise outputPanelFranchise2"/>
+						</p:selectOneMenu>
+												
+					</div>
+				</div>
+			</div>
+			
+			<!-- Franchise -->
+			<p:outputPanel id="outputPanelFranchise" >
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive"> 
+						    <p:outputPanel id="outputPanelFranchise2" rendered="#{companyInputBean.flagFranchise == true}">
+							    <h:outputText value="#{msg.formFranchiseTitle}" rendered="#{companyInputBean.flagFranchise == true}" /><span class="redText"> *</span>
+							 </p:outputPanel>
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="franchiseId" value="#{companyInputBean.companyVO.franchiseId}" rendered="#{companyInputBean.flagFranchise == true}"
+							     >
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{companyInputBean.franchiseSelectItem}"/>
+							</p:selectOneMenu>
+							<!-- <p:message for="franchiseId" rendered="#{companyInputBean.flagFranchise == true}"/>	 -->					
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			
+			<!-- Nama Kontak -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyPicName}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="companyPicName" value="#{companyInputBean.companyVO.picName}" 
+							 styleClass="Wid90"/>
+							    
+					</div>
+				</div>
+			</div>
+			
+			<!-- Nomor Telepon -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyPicPhoneno}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="companyPicPhoneno" 
+							value="#{companyInputBean.companyVO.picPhoneno}" styleClass="Wid90" maxlength="32" />
+						 		
+					</div>
+				</div>
+			</div>
+		
+			<!-- Tanggal Daftar -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyReqisterOn}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:calendar id="registerOn" navigator="true" size="13"
+							value="#{companyInputBean.companyVO.registerOn}" showOn="button"
+							pattern="#{companyInputBean.dateFormat}" locale="#{companyInputBean.dateLocale}" maxlength="11" 
+							 />						
+						
+					</div>
+				</div>
+			</div>
+		
+			<!-- Jumlah Outlet -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyQuantityOutlet}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="quantityOutlet" readonly="true" size="4" value="#{companyInputBean.companyVO.outletQty}" styleClass="Wid90 readonly-bg" />
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Grid Sebelah Kanan -->
+		<div class="Container50 Responsive">
+		
+			<!-- Alamat -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyAddress}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="address" 
+							value="#{companyInputBean.companyVO.address}" 
+							 styleClass="Wid90"/>
+							
+					</div>
+				</div>
+			</div>
+			
+			<!-- Kota -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyCity}"/><span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="cityId" 
+							value="#{companyInputBean.companyVO.cityId}">						
+							<f:selectItems value="#{companyInputBean.citySelectItem}"/>						
+							<p:ajax event="change" listener="#{companyInputBean.changeCityProvice}" update=":frm001:cityId :frm001:provinceName"></p:ajax>
+						</p:selectOneMenu>
+								
+					</div>
+				</div>
+			</div>
+			
+			<!-- Propinsi -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyProvince}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="provinceName" value="#{companyInputBean.companyVO.provinceName}" styleClass="Wid90"/>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Kode Pos -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyPostalCode}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="postalCode" value="#{companyInputBean.companyVO.postalCode}" 
+							styleClass="Wid90" maxlength="8" onkeypress="return checkNumeric(event,this,true)" />
+					</div>
+				</div>
+			</div>
+			
+			<!-- Aktif -->
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formCompanyActive}"/>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="dialogActiveFlag"
+							value="#{companyInputBean.companyVO.activeFlag}" style="width:80px;">
+							<f:selectItems value="#{companyInputBean.activeSelectItem}"/>
+						</p:selectOneMenu>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  
+		<table width="70%">
+			<tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyCode}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:inputText id="companyCode" value="#{companyInputBean.companyVO.companyCode}" rendered="#{companyInputBean.MODE_TYPE == 'ADD'}"
+						required="true" requiredMessage="#{msg.formCompanyCode} #{msg.errorMustBeFilled}"/>
+					<p:inputText value="#{companyInputBean.companyVO.companyCode}" rendered="#{companyInputBean.MODE_TYPE == 'EDIT'}"
+						readonly="true"/>	
+					<p:message for="companyCode" />	
+				</td>
+						
+				<td width="10%">
+			        <h:outputText value="#{msg.formCompanyAddress}"/><span style="color: red"> *</span>
+			    </td>
+				<td width="5%" rowspan="2">
+				    <p:inputTextarea id="address" cols="50" rows="3"
+						value="#{companyInputBean.companyVO.address}" 
+						required="true" requiredMessage="#{msg.formCompanyAddress} #{msg.errorMustBeFilled}"/>
+					<p:message for="address" />		
+				</td>				
+			</tr>									 
+			<tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyName}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:inputText id="companyName" value="#{companyInputBean.companyVO.companyName}" 
+						required="true" requiredMessage="#{msg.formCompanyName} #{msg.errorMustBeFilled}"/>
+					<p:message for="companyName" />		
+				</td>	
+				<td></td>				
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyType}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:selectOneMenu id="companyType" required="true" requiredMessage="#{msg.formCompanyType} #{msg.errorMustBeFilled}"
+						value="#{companyInputBean.companyVO.companyTypeCode}" >
+						<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+						<f:selectItems value="#{companyInputBean.companyTypeSelectItem}"/>
+					</p:selectOneMenu>
+					<p:message for="companyType" />							
+				</td>				
+				<td width="10%">
+			        <h:outputText value="#{msg.formCompanyCity}"/><span style="color: red"> *</span>
+			    </td>
+				<td width="10%">				
+				    <p:selectOneMenu id="cityId" required="true" requiredMessage="#{msg.formCompanyCity} #{msg.errorMustBeFilled}"
+						value="#{companyInputBean.companyVO.cityId}">						
+						<f:selectItems value="#{companyInputBean.citySelectItem}"/>						
+						<p:ajax event="change" listener="#{companyInputBean.changeCityProvice}" 
+						       update=":frm001:cityId :frm001:provinceName"></p:ajax>
+					</p:selectOneMenu>			
+					<p:message for="cityId" />			
+				</td>	
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyPicName}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:inputText id="companyPicName" value="#{companyInputBean.companyVO.picName}" 
+				        required="true" requiredMessage="#{msg.formCompanyPicName} #{msg.errorMustBeFilled}"/>
+				    <p:message for="companyPicName" />		    
+				</td>
+				<td width="10%">
+			        <h:outputText value="#{msg.formCompanyProvince}"/>
+			    </td>
+				<td width="10%">
+				    <p:inputText id="provinceName"
+						value="#{companyInputBean.companyVO.provinceName}"/>						
+				</td>						
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyPicPhoneno}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+				    <p:inputText id="companyPicPhoneno" required="true" requiredMessage="#{msg.formCompanyPicPhoneno} #{msg.errorMustBeFilled}"
+						value="#{companyInputBean.companyVO.picPhoneno}" />
+					<p:message for="companyPicPhoneno" /> 		
+				</td>
+				<td width="10%">
+			        <h:outputText value="#{msg.formCompanyPostalCode}"/>
+			    </td>
+				<td width="10%">
+				   <p:inputText id="postalCode"
+						value="#{companyInputBean.companyVO.postalCode}"/>						
+				</td>							
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyReqisterOn}"/><span style="color: red"> *</span>
+			    </td>
+				<td>
+					<p:calendar id="registerOn" navigator="true" size="13"
+						value="#{companyInputBean.companyVO.registerOn}" showOn="button"
+						pattern="#{companyInputBean.dateFormat}" locale="#{companyInputBean.dateLocale}" maxlength="11" 
+						required="true" requiredMessage="#{msg.formCompanyReqisterOn} #{msg.errorMustBeFilled}" />						
+					<p:message for="registerOn" /> 	
+				</td>
+				<td width="10%">
+			        <h:outputText value="#{msg.formCompanyActive}"/>
+			    </td>
+				<td width="10%">
+				   <p:selectOneMenu id="dialogActiveFlag"
+						value="#{companyInputBean.companyVO.activeFlag}" style="width:80px;">
+						<f:selectItems value="#{companyInputBean.activeSelectItem}"/>
+					</p:selectOneMenu>						
+				</td>							
+			 </tr>
+			 <tr>
+			    <td>
+			        <h:outputText value="#{msg.formCompanyQuantityOutlet}"/>
+			    </td>
+				<td>
+				    <p:inputText id="quantityOutlet" readonly="true" size="4"
+						value="#{companyInputBean.companyVO.outletQty}" />
+				</td>
+				<td></td>					
+			 </tr>
+			 
+			
+		</table>
+		-->
+</ui:composition>

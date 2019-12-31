@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formSystemPropertyAddTitle}"
+				rendered="#{systemPropertyInput2Bean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formSystemPropertyEditTitle}"
+				rendered="#{systemPropertyInput2Bean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}" styleClass="Fright"
+				rendered="#{(systemPropertyBean.MODE_TYPE eq 'ADD_NON_ADMIN') == false}"
+				actionListener="#{systemPropertyBean.modeSearch}" update=":frm001"
+				process="@this" />
+			<p:commandButton value="#{msg.buttonSave}" styleClass="Fright"
+				actionListener="#{systemPropertyBean.modeSave}" update=":frm001" />
+		</div>
+	</div>
+	<div>
+		<h:outputText id="global"></h:outputText>
+		<p:message for="global" />
+	</div>
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:messages id="messagesInput" showDetail="true" showSummary="false"
+				globalOnly="true" />
+		</div>
+		<div class="Container50 Responsive">
+			<p:outputPanel
+				rendered="#{systemPropertyInput2Bean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formSystemPropertyCompany}" />
+							<span style="color: red"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="companyId2"
+								value="#{systemPropertyInput2Bean.companyId}"
+								rendered="#{systemPropertyInput2Bean.MODE_TYPE == 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems
+									value="#{systemPropertyInput2Bean.companySelectItem}" />
+								<p:ajax event="change"
+									listener="#{systemPropertyInput2Bean.companyOnChange}"
+									process="@this" update=":frm001" />
+							</p:selectOneMenu>
+
+							<p:inputText id="companyId3"
+								value="#{systemPropertyInput2Bean.companyName}"
+								rendered="#{systemPropertyInput2Bean.MODE_TYPE == 'EDIT'}"
+								readonly="true" styleClass="Wid90 readonly-bg" />
+
+							<p:message for="companyId2"
+								rendered="#{systemPropertyInput2Bean.MODE_TYPE == 'ADD'}" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+		</div>
+	</div>
+	<p:spacer></p:spacer>
+	<div class="ContainerIndent">
+		<h3 style="margin-top: -20">Aplikasi</h3>
+	</div>
+	<p:separator />
+	<div class="Container100">
+		<div class="Container50 Responsive">
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyTypeOfBusiness}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="businessType"
+							value="#{systemPropertyInput2Bean.businessType}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.jnsUsahaSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container50 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyLoginMax}" />
+					</div>
+					<div class="Container50 Responsive">
+
+						<p:spinner id="invalidloginMax"
+							value="#{systemPropertyInput2Bean.invalidloginMax}" min="0"
+							max="10" size="10" />
+						<p:message for="invalidloginMax" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p:spacer></p:spacer>
+	<div class="ContainerIndent">
+		<h3>Persediaan</h3>
+	</div>
+	<p:separator />
+	<div class="Container100">
+		<div class="Container50 Responsive">
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyAutomaticItemCode}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="automaticItemCode"
+							value="#{systemPropertyInput2Bean.automaticItemCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.kdBrgOtomatisSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyItemCodeFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="formatItemCode"
+							value="#{systemPropertyInput2Bean.formatItemCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatKdBrgSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText
+							value="#{msg.formSystemPropertyDeliveryItemNoFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="deliveryItemNoFormat"
+							value="#{systemPropertyInput2Bean.deliveryItemNoFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatNoPengirimanBrgSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container50 Responsive">
+							<h:outputText
+								value="#{msg.formSystemPropertyStockOpnameNoFormat}"
+								style="white-space: nowrap" />
+						</div>
+						<div class="Container50 Responsive">
+							<p:selectOneMenu id="stockOpnameNoFormat"
+								value="#{systemPropertyInput2Bean.stockOpnameNoFormat}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems
+									value="#{systemPropertyInput2Bean.formatNoStockOpnameSelectItem}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container50 Responsive">
+							<h:outputText
+								value="#{msg.formSystemPropertyReceiptItemNoFormat}" />
+						</div>
+						<div class="Container50 Responsive">
+							<p:selectOneMenu id="receiptItemNoFormat"
+								value="#{systemPropertyInput2Bean.receiptItemNoFormat}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems
+									value="#{systemPropertyInput2Bean.formatNoPenerimaanBrgSelectItem}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<p:spacer></p:spacer>
+	<div class="ContainerIndent">
+		<h3>Penjualan</h3>
+	</div>
+	<p:separator />
+	<div class="Container100">
+		<div class="Container50 Responsive">
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyAutomaticProdCode}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="automaticProdCode"
+							value="#{systemPropertyInput2Bean.automaticProdCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.kdProdOtomatisSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyProdCodeFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="prodCodeFormat"
+							value="#{systemPropertyInput2Bean.prodCodeFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatKdProdSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertySalesNoFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="salesNoFormat"
+							value="#{systemPropertyInput2Bean.salesNoFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatNoPenjualanSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyInvoiceNoFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="invoiceNoFormat"
+							value="#{systemPropertyInput2Bean.invoiceNoFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatNoFakPenjualanSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container50 Responsive">
+							<h:outputText value="#{msg.formSystemPropertyReceiptNoFormat}" />
+						</div>
+						<div class="Container50 Responsive">
+							<p:selectOneMenu id="receiptNoFormat"
+								value="#{systemPropertyInput2Bean.receiptNoFormat}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems
+									value="#{systemPropertyInput2Bean.formatNoPenerimaanSelectItem}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container50 Responsive">
+							<h:outputText value="#{msg.formSystemPropertySalesTax}" />
+						</div>
+						<div class="Container50 Responsive">
+							<p:selectOneMenu id="salesTax"
+								value="#{systemPropertyInput2Bean.salesTax}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems
+									value="#{systemPropertyInput2Bean.pajakBarangPenjualanSelectItem}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container50 Responsive">
+							<h:outputText value="#{msg.formSystemPropertyTaxValue}" />
+						</div>
+						<div class="Container50 Responsive">
+							<p:inputText id="taxValue"
+								value="#{systemPropertyInput2Bean.taxValue}" size="20" />
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container50 Responsive">
+							<h:outputText value="#{msg.formSystemPropertyShippingCosts}" />
+						</div>
+						<div class="Container50 Responsive">
+							<p:inputText id="deliveryCost"
+								value="#{systemPropertyInput2Bean.deliveryCost}" size="10" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p:spacer></p:spacer>
+	<div class="ContainerIndent">
+		<h3>Pembelian</h3>
+	</div>
+	<p:separator />
+	<div class="Container100">
+		<div class="Container50 Responsive">
+
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyPurchaceNoFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="purchaceNoFormat"
+							value="#{systemPropertyInput2Bean.purchaceNoFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatnoPembelianBrgSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText
+							value="#{msg.formSystemPropertyPurchaceInvoiceNoFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="purchaceInvoiceNoFormat"
+							value="#{systemPropertyInput2Bean.purchaceInvoiceNoFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatNoFakPembelianSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container40 Responsive">
+						<h:outputText value="#{msg.formSystemPropertyPaymentNoFormat}" />
+					</div>
+					<div class="Container60 Responsive">
+						<p:selectOneMenu id="paymentNoFormat"
+							value="#{systemPropertyInput2Bean.paymentNoFormat}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems
+								value="#{systemPropertyInput2Bean.formatNoPembayaranSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

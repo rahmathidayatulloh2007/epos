@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.itemConvert.model">
+	<class name="ItemConvert" table="POS_ITEM_CONVERT">
+		<id name="convertId" column="CONVERT_ID" type="long">
+			<generator class="native">
+				<param name="sequence">ITEM_CONVERT_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="company" column="COMPANY_ID"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join" >
+		</many-to-one>
+
+		<!-- 		
+		<many-to-one name="outlet" column="OUTLET_ID"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join" >
+		</many-to-one>
+		-->
+		
+		<property name="convertNo" column="CONVERT_NO" type="string" />
+		<property name="convertDate" column="CONVERT_DATE" type="date" />
+		
+		<many-to-one name="item" column="ITEM_ID"
+			class="com.wo.epos.module.inv.item.model.Item" fetch="join" >
+		</many-to-one>
+		
+		<property name="itemQty" column="ITEM_QTY" type="double" />
+		<property name="convertDesc" column="CONVERT_DESC" type="string" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+		<bag name="listItemConvertDtl" inverse="true" cascade="save-update, delete-orphan"
+			order-by="CONVERT_DTL_ID asc">
+			<key column="CONVERT_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.inv.itemConvert.model.ItemConvertDtl" />
+		</bag>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.inv.rn.model">
+	<class name="RnDtl" table="POS_RN_DTL">
+		<id name="rnDtlId" column="RN_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">RN_DTL_SEQ</param>
+			</generator>
+		</id>
+		
+		<!-- <property name="outletId" column="OUTLET_ID" type="long" />
+		<many-to-one name="outlet" column="OUTLET_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join" >
+		</many-to-one> -->
+		
+		<many-to-one name="rn" column="RN_ID"
+			class="com.wo.epos.module.inv.rn.model.Rn" fetch="join" >
+		</many-to-one>
+			
+		<property name="poDtlId" column="PO_DTL_ID" type="long" />
+		<many-to-one name="poDtl" column="PO_DTL_ID" insert="false" update="false"
+			class="com.wo.epos.module.purchasing.po.model.PoDtl" fetch="join" >
+		</many-to-one>
+		
+		<property name="doDtlId" column="DO_DTL_ID" type="long" />
+		<many-to-one name="DODtl" column="DO_DTL_ID" insert="false" update="false"
+			class="com.wo.epos.module.inv.DO.model.DODtl" fetch="join" >
+		</many-to-one>
+	
+		<property name="lineNo" column="LINE_NO" type="integer" />
+		<property name="receiveQty" column="RECEIVE_QTY" type="double" />
+		
+		<property name="receiveUmId" column="RECEIVE_UM" type="long" />
+		<many-to-one name="receiveUm" column="RECEIVE_UM" insert="false" update="false"
+			class="com.wo.epos.module.inv.um.model.Um" fetch="join" >
+		</many-to-one>
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />		
+					
+	</class>
+</hibernate-mapping>
+

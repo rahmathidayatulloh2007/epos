@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.sales.draftSalesOrder.model">
+	<class name="DraftSalesOrderDtl" table="POS_DSO_DTL">
+		<id name="soDtlId" column="SO_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">DSO_DTL_SEQ</param>
+			</generator>
+		</id>
+
+        <many-to-one name="draftSalesOrder" column="SO_ID" 
+			class="com.wo.epos.module.sales.draftSalesOrder.model.DraftSalesOrder" fetch="join">
+		</many-to-one>
+		
+		<property name="productId" column="PRODUCT_ID" type="long" />		
+        <many-to-one name="product" column="PRODUCT_ID" insert="false" update="false"
+			class="com.wo.epos.module.inv.item.model.Product" fetch="join">
+		</many-to-one>
+		
+		<property name="lineNo" column="LINE_NO" type="integer"/>
+						
+		<property name="orderQty" column="ORDER_QTY" type="double" />
+		
+		<property name="orderUmId" column="ORDER_UM" type="long" />
+		<many-to-one name="orderUm" column="ORDER_UM" insert="false" update="false"
+			class="com.wo.epos.module.inv.um.model.Um" fetch="join">
+		</many-to-one>
+		
+		<property name="unitPrice" column="UNIT_PRICE" type="double" />
+		
+		<property name="discTypeCode" column="DISC_TYPE" type="string" />		
+        <many-to-one name="discType" column="DISC_TYPE" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+		<property name="discPercent" column="DISC_PERCENT" type="double" />
+		<property name="discValue" column="DISC_VALUE" type="double" />
+		
+		<property name="totalPriceDiscount" column="TOTAL_PRICE_DISCOUNT" type="double" />
+		<property name="discount1" column="DISCOUNT_1" type="integer" />
+		<property name="discount2" column="DISCOUNT_2" type="integer" />
+		<property name="discount3" column="DISCOUNT_3" type="integer" />
+			
+		<property name="deliveryStatusCode" column="DELIVERY_STATUS" type="string" />		
+        <many-to-one name="deliveryStatus" column="DELIVERY_STATUS" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+		<property name="preparationStatusCode" column="PREPARATION_STATUS" type="string" />		
+        <many-to-one name="preparationStatus" column="PREPARATION_STATUS" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+		<property name="notes" column="NOTES" type="string"/>
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+					
+	</class>
+</hibernate-mapping>

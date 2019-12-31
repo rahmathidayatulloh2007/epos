@@ -1,0 +1,1 @@
+<% response.sendRedirect("portal/loginP.jsf"); %>

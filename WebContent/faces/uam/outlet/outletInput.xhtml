@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+   <div class="Container100">
+		<div class="ContainerIndent">
+		
+			<h:outputText value="#{msg.formOutletAddTitle}" rendered="#{outletInputBean.MODE_TYPE == 'ADD'}" style="font-weight:bold;"/>
+			<h:outputText value="#{msg.formOutletEditTitle}" rendered="#{outletInputBean.MODE_TYPE == 'EDIT'}" style="font-weight:bold;"/>	
+
+			 <p:commandButton value="Kembali" immediate="true" actionListener="#{outletBean.modeSearch}" 
+			          update=":frm001" styleClass="Fright"/>		
+			 <p:commandButton value="#{msg.buttonSave}" actionListener="#{outletBean.modeSave}"
+			          update=":frm001" styleClass="Fright"/>
+			  <p:messages id="messagesOutlet" showDetail="true" showSummary="false" globalOnly="true" />	        			 
+		</div>
+   </div>  
+	
+   <div class="Container100">    
+         <!-- Grid Kiri --> 
+		 <div class="Container50 Responsive">	
+		 	<p:outputPanel rendered="#{outletInputBean.companyId == null}">
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletCompany}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:selectOneMenu id="companyName" 
+								   value="#{outletInputBean.outletVO.companyId}" disabled="#{outletInputBean.MODE_TYPE!=null and outletInputBean.MODE_TYPE eq 'EDIT'}">
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{outletInputBean.companySelectItem}"/>
+							 </p:selectOneMenu>
+							 				
+						</div>
+				   </div>
+		      </div>		
+		      </p:outputPanel>	 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletCode}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						    <p:inputText id="outletCode" value="#{outletInputBean.outletVO.outletCode}" rendered="#{outletInputBean.MODE_TYPE == 'ADD'}"
+								 styleClass="Wid90"/>
+							<!-- <p:message for="outletCode" rendered="#{outletInputBean.MODE_TYPE == 'ADD'}" />	 -->	
+							<p:inputText id="outletCode2" value="#{outletInputBean.outletVO.outletCode}" styleClass="Wid90"
+								    	disabled="true"	rendered="#{outletInputBean.MODE_TYPE == 'EDIT'}" />	
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletName}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:inputText id="outletName" value="#{outletInputBean.outletVO.outletName}" styleClass="Wid90"/>
+							 					  												
+						</div>
+				   </div>
+		      </div>			 
+		      <p:outputPanel rendered="#{outletInputBean.MODE_TYPE == 'EDIT'}" >
+			      <div class="Container100">
+					   <div class="EposContainerIndent">
+						    <div class="Container30 Responsive">
+				        		 <h:outputText value="#{msg.formOutletPicName}"/><span style="color: red"> *</span>
+				    		</div>
+					        <div class="Container70 Responsive">
+								 <p:selectOneMenu id="picName" 
+								     value="#{outletInputBean.outletVO.picEmployeeId}">
+								     <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								     <f:selectItems value="#{outletInputBean.picNameSelectItem}"/>
+								 </p:selectOneMenu>
+								 						  												
+							</div>
+					   </div>
+			      </div>
+		      </p:outputPanel>	
+		      
+		      <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletActive}"/>
+			  			 </div>
+				        <div class="Container70 Responsive">
+						     <p:selectOneMenu id="dialogActiveFlag" 
+								     value="#{outletInputBean.outletVO.activeFlag}">
+								  <f:selectItems value="#{outletInputBean.activeSelectItem}"/>
+							 </p:selectOneMenu>					
+							  	
+						</div>
+				   </div>
+		      </div>	
+		  </div>		
+		  <!-- Grid Kanan --> 
+		  <div class="Container50 Responsive">	
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletAddress}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:inputTextarea id="address" styleClass="Wid90" value="#{outletInputBean.outletVO.address}" />
+							 		
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletCity}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">			
+						     <p:selectOneMenu id="cityId" 
+								   value="#{outletInputBean.outletVO.cityId}">
+								   <f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								   <f:selectItems value="#{outletInputBean.citySelectItem}"/>		
+										
+								   <p:ajax event="change" listener="#{outletInputBean.changeCityProvince}" 
+								         update=":frm001:cityId :frm001:provinceName"></p:ajax>								 		
+							 </p:selectOneMenu>			
+										
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletProvince}"/><span style="color: red"> *</span>
+			    		</div>
+				        <div class="Container70 Responsive">
+						     <p:inputText id="provinceName" 
+								    value="#{outletInputBean.outletVO.provinceName}" disabled="true" styleClass="Wid90"/>
+							  							
+						</div>
+				   </div>
+		      </div>			 
+			  <div class="Container100">
+				   <div class="EposContainerIndent">
+					    <div class="Container30 Responsive">
+			        		 <h:outputText value="#{msg.formOutletPostalCode}"/>
+			    		</div>
+				        <div class="Container70 Responsive">
+							 <p:inputText id="postalCode" value="#{outletInputBean.outletVO.postalCode}" styleClass="Wid90"/>						
+						</div>
+				   </div>
+		      </div>
+	     </div>
+	</div>
+	
+</ui:composition>

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.purchasing.po.model">
+	<class name="Po" table="POS_PO">
+		<id name="poId" column="PO_ID" type="long">
+			<generator class="native">
+				<param name="sequence">PO_SEQ</param>
+			</generator>
+		</id>
+		
+		<property name="companyId" column="COMPANY_ID" type="long" />
+		<many-to-one name="company" column="COMPANY_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join" >
+		</many-to-one>
+		
+		<property name="outletId" column="OUTLET_ID" type="long" />
+		<many-to-one name="outlet" column="OUTLET_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.outlet.model.Outlet" fetch="join" >
+		</many-to-one>
+		
+		<property name="poNo" column="PO_NO" type="string" />
+		<property name="poDate" column="PO_DATE" type="date" />
+		
+		<property name="supplierId" column="SUPPLIER_ID" type="long" />
+		<many-to-one name="supplier" column="SUPPLIER_ID" insert="false" update="false"
+			class="com.wo.epos.module.purchasing.supplier.model.Supplier" fetch="join" >
+		</many-to-one>
+
+		<property name="notes" column="NOTES" type="string" />
+		<property name="closeReason" column="CLOSE_REASON" type="string"/>
+		
+		<property name="taxTypeCode" column="TAX_TYPE" type="string" />
+		<many-to-one name="taxType" column="TAX_TYPE" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join" >
+		</many-to-one>
+		
+		<property name="taxValue" column="TAX_VALUE" type="double" />
+
+		<property name="statusCode" column="STATUS" type="string" />
+		<many-to-one name="status" column="STATUS" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join" >
+		</many-to-one>
+		
+		<property name="itemResume" column="ITEM_RESUME" type="string" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+		
+		
+		<bag name="listPoDetail" inverse="true" cascade="save-update, delete-orphan"
+			order-by="PO_DTL_ID asc">
+			<key column="PO_ID"/>
+			<one-to-many
+				class="com.wo.epos.module.purchasing.po.model.PoDtl" />
+		</bag>
+		
+			
+	</class>
+</hibernate-mapping>

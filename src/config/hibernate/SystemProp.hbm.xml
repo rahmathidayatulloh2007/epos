@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.mst.system_property.model">
+	<class name="SystemProp" table="WO_MST_SYSTEM_PROPERTY">
+		<id name="system_property_id" column="SYSTEM_PROPERTY_ID" type="long">
+			<generator class="native">
+				<param name="sequence">SYSTEM_PROPERTY_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="paramDetail" column="DATA_TYPE"
+			class="com.wo.epos.module.mst.parameter_dtl.model.ParamDetail"
+			property-ref="parameter_dtl_code" fetch="join" />
+
+		<property name="value" column="VALUE" type="string" />
+		<!--
+			<property name="data_type" column="DATA_TYPE" type="string" />
+		-->
+		<property name="name" column="NAME" type="string" />
+		<property name="system_property_code" column="SYSTEM_PROPERTY_CODE"
+			type="string" />
+		<property name="enabled_flag" column="ENABLED_FLAG" type="string" />
+
+		<property name="creation_date" column="CREATION_DATE" type="timestamp" />
+		<property name="created_by" column="CREATED_BY" type="string" />
+		<property name="last_update_date" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="last_update_by" column="LAST_UPDATE_BY" type="string" />
+
+
+	</class>
+</hibernate-mapping>

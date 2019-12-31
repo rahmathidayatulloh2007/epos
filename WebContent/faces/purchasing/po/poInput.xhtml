@@ -1,0 +1,589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<style>
+.readonly-bg input {
+	opacity: 0.75;
+	background-color: #f4f4f4;
+}
+
+.Wid70 input{
+	width: 70%;
+}
+
+.Wid90 input{
+	width: 90%;
+}
+</style>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formPoAddTitle}"
+				rendered="#{poInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formPoEditTitle}"
+				rendered="#{poInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}"
+				actionListener="#{poBean.modeSearch}" update=":frm001"
+				styleClass="Fright" process="@this" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{poBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+
+			<p:commandButton id="btnClosePO"
+				oncomplete="PF('dialogReason').show();" value="Close"
+				update=":frm001:dialogSearch" styleClass="Fright"
+				rendered="#{poInputBean.poVO.statusCode eq 'PO_NEW' or poInputBean.poVO.statusCode eq 'PO_PARTIAL'}" />
+
+		</div>
+
+		<!-- 	<h:inputHidden id="closeReason"
+			value="#{poInputBean.poVO.closeReason}" /> -->
+
+		<div class="ContainerIndent">
+			<p:messages id="messagesInput" showDetail="true" showSummary="false"
+				globalOnly="true" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<p:outputPanel id="outputPanelCompany"
+				rendered="#{poInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formPoCompany}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="companyId"
+								value="#{poInputBean.poVO.companyId}"
+								rendered="#{poInputBean.MODE_TYPE eq 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{poInputBean.companySelectItem}" />
+								<p:ajax event="change" listener="#{poInputBean.changeCompany}"
+									update=":frm001:outletId :frm001:supplierId :frm001:dataTableBarang" />
+							</p:selectOneMenu>
+							<p:inputText value="#{poInputBean.poVO.companyName}"
+								rendered="#{poInputBean.MODE_TYPE eq 'EDIT'}" readonly="true"
+								styleClass="Wid90 readonly-bg" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelOutlet"
+				rendered="#{poInputBean.userSession.outletId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formPoOutlet}" />
+						</div>
+						<div class="Container70 Responsive">
+							<p:selectOneMenu id="outletId"
+								value="#{poInputBean.poVO.outletId}"
+								rendered="#{poInputBean.MODE_TYPE eq 'ADD'}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{poInputBean.outletSelectItem}" />
+							</p:selectOneMenu>
+							<p:inputText value="#{poInputBean.poVO.outletName}"
+								rendered="#{poInputBean.MODE_TYPE eq 'EDIT'}" readonly="true"
+								styleClass="Wid90 readonly-bg" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPoNo}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputText id="poNo" value="#{poInputBean.poVO.poNo}"
+							maxlength="16" autocomplete="off" readonly="true"
+							styleClass="Wid90 readonly-bg" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPoDate}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:calendar id="poDate" navigator="true"
+							value="#{poInputBean.poVO.poDate}" showOn="button"
+							pattern="#{poInputBean.dateFormat}"
+							locale="#{poInputBean.dateLocale}" maxlength="11"
+							styleClass="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							disabled="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}" />
+						<p:message for="poDate" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPoSupplier}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<!-- <p:autoComplete id="supplierId" dropdown="true" completeMethod="#{poInputBean.completeSupplier}" 
+					              value="#{poInputBean.completeSupplier}"  
+					              required="true" requiredMessage="#{msg.formPoSupplier} #{msg.errorMustBeFilled}" > 
+					        </p:autoComplete> -->
+
+						<!-- <p:ajax event="itemSelect" 
+					                   listener="#{poInputBean.handleSelect}" />    -->
+						<p:selectOneMenu id="supplierId"
+							value="#{poInputBean.poVO.supplierId}" panelStyle="width:280px"
+							effect="fade" style="width:260px" filter="true"
+							filterMatchMode="startsWith"
+							styleClass="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							disabled="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+							<f:selectItems value="#{poInputBean.supplierSelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="supplierId" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPoTax}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="taxId"
+							value="#{poInputBean.poVO.taxTypeCode}"
+							styleClass="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							disabled="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+							<f:selectItems value="#{poInputBean.taxSelectItem}" />
+							<p:ajax event="change" listener="#{poInputBean.eventSubTotal()}"
+								update=":frm001:dataTableBarang :frm001:outputPanelTotal" />
+						</p:selectOneMenu>
+						<p:message for="taxId" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formPoNotes}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:inputTextarea id="note" value="#{poInputBean.poVO.notes}"
+							styleClass="Wid90 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}" />
+					</div>
+				</div>
+			</div>
+			<p:outputPanel rendered="#{poInputBean.MODE_TYPE eq 'EDIT'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formPoStatus}" />
+						</div>
+						<div class="Container70 Responsive">
+
+							<h:inputHidden id="poStatusCode" styleClass="readonly-bg"
+								value="#{poInputBean.poVO.statusCode}" />
+
+							<p:inputText id="poStatus" styleClass="readonly-bg"
+								value="#{poInputBean.poVO.statusName}" readonly="true" />
+							<!-- <p:selectOneMenu id="poStatus"
+								value="#{poInputBean.poVO.statusCode}">
+															<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+								<f:selectItems value="#{poInputBean.statusSelectItem}" />
+							</p:selectOneMenu> -->
+							<p:message for="taxId" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formReason}" 
+							rendered="#{poInputBean.poVO.statusCode eq 'PO_CLOSE'}"/>
+						</div>
+						<div class="Container70 Responsive">
+							<h:inputHidden id="closeReason"
+								value="#{poInputBean.poVO.closeReason}" />
+
+							<p:inputTextarea id="closeReasonView"
+								value="#{poInputBean.poVO.closeReason}"
+								rendered="#{poInputBean.poVO.statusCode eq 'PO_CLOSE'}"
+								styleClass="Wid90 readonly-bg" readonly="true" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br></br>
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:commandButton value="#{msg.buttonAdd}"
+				update=":frm001:dataTableBarang"
+				actionListener="#{poInputBean.addItem}" process="@this"
+				rendered="#{poInputBean.poVO.statusCode eq 'PO_NEW' or poInputBean.poVO.statusCode == null}" />
+		</div>
+	</div>
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<!-- <p:messages id="messageDiscPercent" showDetail="true"
+				showSummary="false" globalOnly="true"
+				rendered="#{poInputBean.poVO.poDate != null and (poInputBean.poVO.taxTypeCode != null or poInputBean.poVO.taxTypeCode != null)}" /> -->
+			<p:outputPanel id="outputPanelTableBarang">
+				<p:dataTable id="dataTableBarang" var="data"
+					value="#{poInputBean.listPoDtlVO}" rowIndexVar="indexRow"
+					editable="true" lazy="true">
+
+					<p:column headerText="#{msg.action}" style="text-align:center"
+						styleClass="Wid7"
+						rendered="#{poInputBean.poVO.statusCode eq 'PO_NEW' or poInputBean.poVO.statusCode == null}">
+						<p:commandLink id="deleteLink" value="#{msg.buttonDelete}"
+							process="@this dataTableBarang"
+							update="dataTableBarang :frm001:outputPanelTotal"
+							actionListener="#{poInputBean.eventDeletePo(data)}">
+							<p:collector value="#{data}"
+								removeFrom="#{poInputBean.listPoDtlVO}" unique="true" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{msg.formPoItemCode}" styleClass="Wid13">
+						<p:inputText id="itemCode" value="#{data.itemCode}"
+							styleClass="Wid90 readonly-bg" readonly="true" />
+					</p:column>
+					<p:column headerText="#{msg.formPoItemName}" styleClass="Wid15">
+						<div class="Container100">
+							<p:outputPanel>
+								<div class="Container100">
+									<p:selectOneMenu id="itemName" value="#{data.itemId}"
+										panelStyle="width:100px" effect="fade" style="width:80%"
+										filter="true" filterMatchMode="startsWith"
+										styleClass="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+										disabled="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}">
+										<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+										<f:selectItems value="#{poInputBean.itemSelectItem}" />
+										<p:ajax event="change"
+											listener="#{poInputBean.handleSelectItem(indexRow)}"
+											process="@this"
+											update="itemCode itemName umName unitPrice totalPo" />
+									</p:selectOneMenu>
+
+								</div>
+							</p:outputPanel>
+						</div>
+					</p:column>
+					<p:column headerText="#{msg.formPoUm}" styleClass="Wid7">
+						<p:inputText id="umName" value="#{data.umName}" readonly="true"
+							styleClass="Wid90 readonly-bg" />
+					</p:column>
+					<p:column headerText="#{msg.formPoQuantity}" styleClass="Wid8">
+						<!-- <p:outputLabel value="#{poInputBean.poVO.statusCode}" /> -->
+						<!-- 						<p:inputText id="qty" type="number" value="#{data.orderQty}"
+							styleClass="Wid90 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}"
+							style="text-align:right"
+							onkeypress="return checkNumeric(event,this,false)">
+
+							<p:ajax event="change" listener="#{poInputBean.eventSubTotal()}"
+								update="totalPo :frm001:outputPanelTotal" />
+
+						</p:inputText> -->
+
+						<pe:inputNumber id="qty" value="#{data.orderQty}"
+							styleClass="Wid90 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}"
+							decimalSeparator="," thousandSeparator="." emptyValue="0"
+							decimalPlaces="0" style="text-align:right">
+
+							<p:ajax event="change" listener="#{poInputBean.eventSubTotal()}"
+								update="totalPo :frm001:outputPanelTotal" />
+						</pe:inputNumber>
+
+					</p:column>
+					<p:column headerText="#{msg.formPoPrice}" styleClass="Wid10">
+						<pe:inputNumber id="unitPrice" value="#{data.unitPrice}"
+							decimalSeparator="," thousandSeparator="." emptyValue="0"
+							decimalPlaces="0" style="text-align:right"
+							styleClass="Wid90 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+							readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}">
+							<p:ajax event="change" listener="#{poInputBean.eventSubTotal()}"
+								update="totalPo :frm001:outputPanelTotal" />
+						</pe:inputNumber>
+					</p:column>
+
+					<!-- <p:column headerText="#{msg.formPoDisc}" styleClass="Wid22">
+						<p:outputPanel id="outputPanelDiscount">
+							<div class="Container100">
+								<div class="Container50">
+									<p:selectOneMenu id="discTypeCode" value="#{data.discTypeCode}"
+										style="width:80%">
+										<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+										<f:selectItems value="#{poInputBean.discountSelectItem}" />
+										<p:ajax event="change"
+											listener="#{poInputBean.eventDiscounTypeCode(indexRow)}"
+											update="outputPanelDiscount :frm001:outputPanelTotal" />
+									</p:selectOneMenu>
+								</div>
+								<div class="Container50">
+									<p:inputText id="discPercent" value="#{data.discPercent}"
+										styleClass="Wid80"
+										onkeypress="return checkNumeric(event,this,true)"
+										style="text-align:right"
+										rendered="#{data.discTypeCode == 'DISCTYPE_PERCENT'}">
+										<p:ajax event="change" listener="#{poInputBean.eventSubTotal}"
+											update=":frm001:outputPanelTotal" />
+									</p:inputText>
+									<p:inputText id="discValue" value="#{data.discValue}"
+										styleClass="Wid80"
+										onkeypress="return checkNumeric(event,this,false)"
+										style="text-align:right"
+										rendered="#{data.discTypeCode == 'DISCTYPE_VALUE'}">
+										<p:ajax event="change" listener="#{poInputBean.eventSubTotal}"
+											update=":frm001:outputPanelTotal" />
+									</p:inputText>
+
+									<p:inputText id="discNoDiscount" styleClass="Wid80"
+										disabled="true"
+										rendered="#{data.discTypeCode == '' or data.discTypeCode == 'DISCTYPE_WITHOUT' or data.discTypeCode == null}">
+									</p:inputText>
+								</div>
+							</div>
+
+							<div class="Container100" >
+								<div class="Container50">
+									<p:selectOneMenu id="discTypeCode2"
+										value="#{data.discTypeCode2}" style="width:80%">
+										<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+										<f:selectItems value="#{poInputBean.discountSelectItem2}" />
+										<p:ajax event="change"
+											listener="#{poInputBean.eventDiscounTypeCode2(indexRow)}"
+											update="outputPanelDiscount :frm001:outputPanelTotal" />
+									</p:selectOneMenu>
+								</div>
+								<div class="Container50">
+									<p:inputText id="discPercentExt" value="#{data.discPercentExt}"
+										styleClass="Wid80"
+										onkeypress="return checkNumeric(event,this,true)"
+										style="text-align:right"
+										rendered="#{data.discTypeCode2 == 'DISCTYPE_PERCENT'}">
+										<p:ajax event="change" listener="#{poInputBean.eventSubTotal}"
+											update=":frm001:outputPanelTotal" />
+									</p:inputText>
+									<p:inputText id="discValueExt" value="#{data.discValueExt}"
+										styleClass="Wid80"
+										onkeypress="return checkNumeric(event,this,false)"
+										style="text-align:right"
+										rendered="#{data.discTypeCode2 == 'DISCTYPE_VALUE'}">
+										<p:ajax event="change" listener="#{poInputBean.eventSubTotal(indexRow)}"
+											update=":frm001:outputPanelTotal" />
+									</p:inputText>
+
+									<p:inputText id="discNoDiscountExt" styleClass="Wid80"
+										disabled="true"
+										rendered="#{data.discTypeCode2 == '' or data.discTypeCode2 == 'DISCTYPE_WITHOUT' or data.discTypeCode2 == null}">
+									</p:inputText>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:column> -->
+
+
+					<p:column headerText="#{msg.formPoDisc}" styleClass="Wid10">
+						<p:outputPanel id="outputPanelDiscount">
+							<div class="Container100">
+
+								<div class="Container50">
+									<!-- <p:inputText id="discPercent" value="#{data.discPercent}"
+										styleClass="Wid70 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+										readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}"
+										onkeypress="return checkNumeric(event,this,true)"
+										style="text-align:right">
+										<p:ajax event="change"
+											listener="#{poInputBean.eventSubTotal()}"
+											update=":frm001:outputPanelTotal :frm001:messageDiscPercent" />
+									</p:inputText> -->
+
+									<pe:inputNumber id="discPercent" value="#{data.discPercent}"
+										decimalSeparator="," thousandSeparator="." emptyValue="0"
+										decimalPlaces="0" style="text-align:right"
+										styleClass="Wid70 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+										readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}">
+										<p:ajax event="change"
+											listener="#{poInputBean.eventSubTotal()}"
+											update=":frm001:outputPanelTotal" />
+									</pe:inputNumber>
+								</div>
+								<div class="Container50">
+									<!-- <p:inputText id="discPercentExt" value="#{data.discPercentExt}"
+										styleClass="Wid70 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+										readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}"
+										onkeypress="return checkNumeric(event,this,true)"
+										style="text-align:right; margin:0px 10px">
+										<p:ajax event="change"
+											listener="#{poInputBean.eventSubTotal()}"
+											update=":frm001:outputPanelTotal " />
+									</p:inputText>
+ -->
+									<pe:inputNumber id="discPercentExt"
+										value="#{data.discPercentExt}" thousandSeparator="."
+										emptyValue="0" decimalSeparator="," decimalPlaces="0"
+										style="text-align:right"
+										styleClass="Wid70 #{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null ?'readonly-bg':''}"
+										readonly="#{poInputBean.poVO.statusCode != 'PO_NEW' and poInputBean.poVO.statusCode != null}">
+										<p:ajax event="change"
+											listener="#{poInputBean.eventSubTotal()}"
+											update=":frm001:outputPanelTotal" />
+									</pe:inputNumber>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:column>
+
+
+
+					<p:column headerText="#{msg.formPoTotal}" styleClass="Wid10">
+						<p:inputText id="totalPo" value="#{data.totalPo}" readonly="true"
+							styleClass="Wid90 readonly-bg" style="text-align:right">
+							<f:convertNumber pattern="###,###,###,###,###.##" />
+						</p:inputText>
+					</p:column>
+				</p:dataTable>
+			</p:outputPanel>
+		</div>
+	</div>
+
+	<p:outputPanel id="outputPanelTotal">
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<div class="Container80 Responsive">
+					<h:outputText value="#{msg.formPoSubtotal}" styleClass="Fright"
+						style="text-align:right" />
+				</div>
+				<div class="Container20 Responsive">
+					<p:inputText value="#{poInputBean.poVO.subTotal}" readonly="true"
+						styleClass="Wid45 Fright readonly-bg" style="text-align:right">
+						<f:convertNumber pattern="###,###,###,###,###.##" />
+					</p:inputText>
+				</div>
+			</div>
+		</div>
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<div class="Container80 Responsive">
+					<h:outputText value="#{msg.formPoDisc}" styleClass="Fright" />
+				</div>
+				<div class="Container20 Responsive">
+					<p:inputText value="#{poInputBean.poVO.discount}" readonly="true"
+						styleClass="Wid45 Fright readonly-bg" style="text-align:right">
+						<f:convertNumber pattern="###,###,###,###,###.##" />
+					</p:inputText>
+				</div>
+			</div>
+		</div>
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<div class="Container80 Responsive">
+					<h:outputText
+						value="#{msg.formPoPpn} #{poInputBean.sysPropPpn.systemPropertyValue}%"
+						styleClass="Fright" style="text-align:right" />
+				</div>
+				<div class="Container20 Responsive">
+					<p:inputText value="#{poInputBean.poVO.ppn}" readonly="true"
+						styleClass="Wid45 Fright readonly-bg" style="text-align:right">
+						<f:convertNumber pattern="###,###,###,###,###.##" />
+					</p:inputText>
+				</div>
+			</div>
+		</div>
+
+		<!-- <div class="Container100">
+			<div class="ContainerIndent">
+				<div class="Container80 Responsive">
+					<h:outputText value="total Temp" styleClass="Fright"
+						style="text-align:right" />
+				</div>
+				<div class="Container20 Responsive">
+					<p:inputText value="#{poInputBean.poVO.totalTemp}" readonly="true"
+						styleClass="Wid45 Fright readonly-bg" style="text-align:right">
+						<f:convertNumber pattern="###,###,###,###,###.##" />
+					</p:inputText>
+				</div>
+			</div>
+		</div> -->
+
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<div class="Container80 Responsive">
+					<h:outputText value="#{msg.formPoTotal}" styleClass="Fright"
+						style="text-align:right" />
+				</div>
+				<div class="Container20 Responsive">
+					<p:inputText value="#{poInputBean.poVO.total}" readonly="true"
+						styleClass="Wid45 Fright readonly-bg" style="text-align:right">
+						<f:convertNumber pattern="###,###,###,###,###.##" />
+					</p:inputText>
+				</div>
+			</div>
+		</div>
+	</p:outputPanel>
+
+
+	<!-- DialogCloseReason -->
+	<p:dialog widgetVar="dialogReason" id="dialogReason" modal="true"
+		position="center" width="500" header="#{msg.formReason}"
+		styleClass="dialogClose">
+		<p:ajax event="close" oncomplete="$('.dialogReason').hide()"
+			update="btnClosePO" />
+
+		<p:outputPanel id="outputPanelDialog">
+			<div class="Container100">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formReason}" />
+						</div>
+						<div class="Container70">
+							<p:message id="msgCloseReason" for="closeReasonDialog"
+								display="closeReasonDialog" />
+							<p:inputText id="closeReasonDialog"
+								value="#{poInputBean.closeReasonDialog}" autocomplete="off"
+								styleClass="Wid90" />
+						</div>
+					</div>
+				</div>
+
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<p:commandButton value="#{msg.buttonSave}" update=":frm001"
+							actionListener="#{poInputBean.changeStatusPoClose}" />
+						<!-- update="closeReason closeReasonDialog poStatus poStatusCode btnClosePO poStatusCode2" -->
+
+						<p:commandButton value="#{msg.buttonCancel}"
+							oncomplete="PF('dialogReason').hide();" />
+					</div>
+				</div>
+			</div>
+		</p:outputPanel>
+
+	</p:dialog>
+	<!-- End -->
+
+
+
+</ui:composition>

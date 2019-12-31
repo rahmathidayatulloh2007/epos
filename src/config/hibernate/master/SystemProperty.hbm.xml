@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.master.systemProperty.model">
+	<class name="SystemProperty" table="POS_SYSTEM_PROPERTY">
+		<id name="systemPropertyId" column="SYSTEM_PROPERTY_ID" type="long">
+			<generator class="native">
+				<param name="sequence">SYSTEM_PROPERTY_SEQ</param>
+			</generator>
+		</id>
+
+		<property name="systemPropertyName" column="SYSTEM_PROPERTY_NAME" type="string" />
+		<property name="systemPropertyValue" column="SYSTEM_PROPERTY_VALUE" type="string" />
+		<property name="systemPropertyDesc" column="SYSTEM_PROPERTY_DESC" type="string" />
+		
+        <property name="companyId" column="COMPANY_ID" type="long" />
+        <many-to-one name="company" column="COMPANY_ID" insert="false" update="false"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join">
+		</many-to-one>
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+	</class>
+</hibernate-mapping>

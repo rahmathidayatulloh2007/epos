@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.uam.company.model">
+	<class name="Company" table="POS_COMPANY">
+		<id name="companyId" column="COMPANY_ID" type="long">
+			<generator class="native">
+				<param name="sequence">COMPANY_SEQ</param>
+			</generator>
+		</id>
+
+		<property name="companyCode" column="COMPANY_CODE" type="string" />
+		<property name="companyName" column="COMPANY_NAME" type="string" />
+		
+        <property name="companyTypeCode" column="COMPANY_TYPE" type="string" />
+        <many-to-one name="companyType" column="COMPANY_TYPE" insert="false" update="false"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+		<property name="franchiseId" column="FRANCHISE_ID" type="long" />
+        <many-to-one name="franchise" column="FRANCHISE_ID" insert="false" update="false"
+			class="com.wo.epos.module.master.franchise.model.Franchise" fetch="join">
+		</many-to-one>
+		
+        <property name="address" column="ADDRESS" type="string" />
+        
+        <property name="cityId" column="CITY_ID" type="long" />
+        <many-to-one name="city" column="CITY_ID" insert="false" update="false"
+			class="com.wo.epos.module.master.city.model.City" fetch="join">
+		</many-to-one>
+				        
+        <property name="postalCode" column="POSTAL_CODE" type="string" />
+        <property name="picName" column="PIC_NAME" type="string" />
+        <property name="picPhoneno" column="PIC_PHONENO" type="string" />
+        
+        <property name="registerOn" column="REGISTER_ON" type="date" />
+        
+        <property name="paymentFlag" column="PAYMENT_FLAG" type="string" />
+        
+        <property name="outletQty" column="OUTLET_QTY" type="long" />
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON"	type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+	</class>
+</hibernate-mapping>

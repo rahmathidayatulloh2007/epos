@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	template="../../templates/template.xhtml">
+	
+	<ui:define name="metadata">
+	</ui:define>
+	<ui:define name="title">
+		<h:outputText value="#{msg.formRoleTitle}"></h:outputText>
+	</ui:define>
+	<ui:define name="ajaxLoading">
+	</ui:define>
+	<ui:define name="heading">
+		<h:outputText value="#{msg.formRoleTitle}"></h:outputText>
+	</ui:define>
+	<ui:define name="content">
+	    <h:form id="frm001">
+	       <p:outputPanel id="outputPanelAdd" rendered="#{roleBean.MODE_TYPE eq 'ADD'}">
+		       <ui:include src="roleInput.xhtml"/>
+		   </p:outputPanel>
+		   <p:outputPanel id="outputPanelSearch" rendered="#{roleBean.MODE_TYPE eq 'SEARCH'}">
+		       <ui:include src="roleSearch.xhtml"/>
+		   </p:outputPanel>		
+		   <p:outputPanel id="outputPanelMenuAccess" rendered="#{roleBean.MODE_TYPE eq 'MENU_ACCESS'}">
+		       <ui:include src="roleMenuAccess.xhtml"/>
+		   </p:outputPanel>	
+	    </h:form>
+	</ui:define>
+</ui:composition>

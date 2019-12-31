@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<p:commandButton value="Kembali" immediate="true"
+				actionListener="#{outletBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+		</div>
+	</div>
+
+	<div class="Container100">
+		<!-- Grid Kiri -->
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletCompany}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.companyName}" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletCode}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.outletVO.outletCode}" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletName}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.outletVO.outletName}" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletActive}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.outletVO.activeFlag}" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Grid Kanan -->
+		<div class="Container50 Responsive">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletAddress}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.outletVO.address}" />
+
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletCity}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.cityName}" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletProvince}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.outletVO.provinceName}" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formOutletPostalCode}" />
+					</div>
+					<div class="Container70 Responsive">
+						<h:outputText value="#{outletEmpBean.outletVO.postalCode}" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<div class="ContainerIndent">
+				<h3 style="margin-top: 0">Employee</h3>
+
+				<p:dataTable var="vo" value="#{outletEmpBean.listEmployee}"
+					lazy="true" rowIndexVar="row">
+
+					<p:column headerText="#{msg.formEmployeeNo}" style="width:50px;">
+						<h:outputText value="#{vo.employeeNo}" />
+					</p:column>
+					<p:column headerText="#{msg.formEmployeeFullName}"
+						style="width:200px;">
+						<h:outputText value="#{vo.employeeName}" />
+					</p:column>
+					<p:column headerText="#{msg.formEmployeePosition}"
+						style="width:100px;">
+						<h:outputText value="#{vo.position}" />
+					</p:column>
+				</p:dataTable>
+			</div>
+		</div>
+	</div>
+</ui:composition>

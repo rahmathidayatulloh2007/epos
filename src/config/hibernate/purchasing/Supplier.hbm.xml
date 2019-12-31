@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.purchasing.supplier.model">
+	<class name="Supplier" table="POS_SUPPLIER">
+		<id name="supplierId" column="SUPPLIER_ID" type="long">
+			<generator class="native">
+				<param name="sequence">SUPPLIER_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="company" column="COMPANY_ID"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join">
+		</many-to-one>
+
+		<property name="supplierCode" column="SUPPLIER_CODE" type="string" />
+		<property name="supplierName" column="SUPPLIER_NAME" type="string" />
+
+        <property name="address" column="ADDRESS" type="string" />
+        
+        <many-to-one name="city" column="CITY_ID"
+			class="com.wo.epos.module.master.city.model.City" fetch="join">
+		</many-to-one>
+		        
+        <property name="postalCode" column="POSTAL_CODE" type="string" />
+        <property name="phoneNo" column="PHONE_NO" type="string" />
+        <property name="faxNo" column="FAX_NO" type="string" />
+        
+        <many-to-one name="picTitle" column="PIC_TITLE"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+        <property name="picName" column="PIC_NAME" type="string" />                
+        <property name="apBalance" column="AP_BALANCE" type="long" />  
+        
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+	</class>
+</hibernate-mapping>

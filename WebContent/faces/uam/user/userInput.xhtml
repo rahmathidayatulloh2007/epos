@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+
+			<h:outputText value="#{msg.formUserAddTitle}"
+				rendered="#{userInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formUserEditTitle}"
+				rendered="#{userInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+
+			<p:commandButton value="#{msg.buttonBack}" immediate="true"
+				actionListener="#{userBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{userBean.modeSave}" update=":frm001"
+				styleClass="Fright" />
+			<p:messages id="messagesInput" showDetail="true" showSummary="false"
+				globalOnly="true" />
+		</div>
+	</div>
+	<div class="Container100">
+		<div class="Container50 Responsive">
+
+			<p:outputPanel
+				rendered="#{userInputBean.userSession.companyId == null}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formUserCompany}" />
+						</div>
+						<div class="Container70 Responsive">
+							<!-- <p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'ADD'}"> -->
+							<p:selectOneMenu id="companyId"
+								value="#{userInputBean.userVO.companyId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{userInputBean.companySelectItem}" />
+								<p:ajax event="change"
+									listener="#{userInputBean.changeUserCompany}"
+									update=":frm001:companyId :frm001:userEmployee :frm001:userRoleId" />
+							</p:selectOneMenu>
+							<!-- </p:outputPanel> -->
+							<!--  <p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'EDIT'}">
+							    <p:inputText value="#{userInputBean.userVO.companyName}" readonly="true" styleClass="Wid90 readonly-bg"/>	
+							 </p:outputPanel> -->
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formUserName}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'ADD'}">
+							<p:inputText id="userName"
+								value="#{userInputBean.userVO.userCode}" maxlength="32"
+								autocomplete="off" styleClass="Wid90" />
+
+						</p:outputPanel>
+						<p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'EDIT'}">
+							<p:inputText value="#{userInputBean.userVO.userCode}"
+								readonly="true" styleClass="Wid90 readonly-bg" />
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
+			<p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'ADD'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formUserPassword}" />
+							<span style="color: red"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:password id="userPassword" maxlength="64"
+								value="#{userInputBean.userVO.userPassword}" styleClass="Wid90" />
+
+						</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30 Responsive">
+							<h:outputText value="#{msg.formUserConfirmasiPassword}" />
+							<span style="color: red"> *</span>
+						</div>
+						<div class="Container70 Responsive">
+							<p:password id="userPasswordConfirm" maxlength="64" rendered="#{userInputBean.MODE_TYPE eq 'ADD'}"
+								value="#{userInputBean.userVO.userPasswdConfirm}"
+								styleClass="Wid90" />
+
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formUserEmployee}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'ADD'}">
+							<p:selectOneMenu id="userEmployee"
+								value="#{userInputBean.userVO.employeeId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+								<f:selectItems value="#{userInputBean.employeeSelectItem}" />
+							</p:selectOneMenu>
+
+						</p:outputPanel>
+						<p:outputPanel rendered="#{userInputBean.MODE_TYPE eq 'EDIT'}">
+							<p:inputText value="#{userInputBean.userVO.employeeName}"
+								readonly="true" styleClass="readonly-bg Wid90" />
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formUserRole}" />
+						<span style="color: red"> *</span>
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="userRoleId"
+							value="#{userInputBean.userVO.roleId}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"></f:selectItem>
+							<f:selectItems value="#{userInputBean.roleSelectItem}" />
+						</p:selectOneMenu>
+
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30 Responsive">
+						<h:outputText value="#{msg.formUserActive}" />
+					</div>
+					<div class="Container70 Responsive">
+						<p:selectOneMenu id="activeFlag"
+							value="#{userInputBean.userVO.activeFlag}">
+							<f:selectItems value="#{userInputBean.activeSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

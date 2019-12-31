@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formEquipmentAddTitle}"
+				rendered="#{equipmentInputBean.MODE_TYPE == 'ADD'}"
+				style="font-weight:bold;" />
+			<h:outputText value="#{msg.formEquipmentEditTitle}"
+				rendered="#{equipmentInputBean.MODE_TYPE == 'EDIT'}"
+				style="font-weight:bold;" />
+			<p:commandButton value="#{msg.buttonBack}" immediate="true"
+				actionListener="#{equipmentBean.modeSearch}" update=":frm001"
+				styleClass="Fright" />
+			<p:commandButton value="#{msg.buttonSave}"
+				actionListener="#{equipmentBean.modeSave}"
+				update=":frm001 :frm001:outputPanelOutletInput" styleClass="Fright" />
+		</div>
+	</div>
+	<div class="Container100">
+		<div class="Container50 Responsive">
+			<div class="ContainerIndent">
+				<p:messages id="messagesInput" showDetail="true" showSummary="false"
+					globalOnly="true" />
+			</div>
+			<p:outputPanel id="outputPanelCompanyInput"
+				rendered="#{equipmentInputBean.userPosition eq 'ADMIN_LEVEL'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formEquipmentCompany}" />
+							<span class="redText"> *</span>
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu id="companyInput"
+								value="#{equipmentInputBean.equipmentVO.companyId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+								<f:selectItems value="#{equipmentInputBean.companySelectItem}" />
+								<p:ajax event="change"
+									listener="#{equipmentInputBean.changeCompanyToOutlet}"
+									update=":frm001:outletIdInput"></p:ajax>
+							</p:selectOneMenu>
+							<p:message for="companyInput" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<p:outputPanel id="outputPanelOutletInput"
+				rendered="#{equipmentInputBean.userPosition eq 'ADMIN_LEVEL' or equipmentInputBean.userPosition eq 'COMPANY_LEVEL'}">
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+							<h:outputText value="#{msg.formEquipmentOutlet}" />
+							<span class="redText"> *</span>
+						</div>
+						<div class="Container70">
+							<p:selectOneMenu id="outletIdInput"
+								value="#{equipmentInputBean.equipmentVO.outletId}">
+								<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+								<f:selectItems value="#{equipmentInputBean.outletSelectItem}" />
+							</p:selectOneMenu>
+							<p:message for="outletIdInput" />
+						</div>
+					</div>
+				</div>
+			</p:outputPanel>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentCode}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70">
+						<p:inputText id="equipmentCodeInput"
+							value="#{equipmentInputBean.equipmentVO.equipmentCode}"
+							styleClass="Wid90" autocomplete="false" />
+						<p:message for="equipmentCodeInput" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentName}" />
+					</div>
+					<div class="Container70">
+						<p:inputText id="equipmentNameInput"
+							value="#{equipmentInputBean.equipmentVO.equipmentName}"
+							styleClass="Wid90" autocomplete="false" />
+						<p:message for="equipmentNameInput" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentType}" />
+						<span class="redText"> *</span>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu id="equipmentTypeInput"
+							value="#{equipmentInputBean.equipmentVO.equipmentTypeCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}" />
+							<f:selectItems
+								value="#{equipmentInputBean.equipmentTypeSelectItem}" />
+						</p:selectOneMenu>
+						<p:message for="equipmentTypeInput" />
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formEquipmentActive}" />
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu
+							value="#{equipmentInputBean.equipmentVO.activeFlag}">
+							<f:selectItems value="#{equipmentInputBean.activeSelectItem}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

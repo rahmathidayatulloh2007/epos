@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.uam.parameter.model">
+	<class name="ParameterDtl" table="POS_PARAMETER_DTL">
+		<!-- <id name="parameterDtlId" column="PARAMETER_DTL_ID" type="long">
+			<generator class="native">
+				<param name="sequence">PARAMETER_DTL_SEQ</param>
+			</generator>
+		</id> -->
+		<id name="parameterDtlCode" column="PARAMETER_DTL_CODE" type="string">
+			<generator class="assigned" />
+		</id>
+
+		<many-to-one name="parameter" column="PARAMETER_CODE"
+			class="com.wo.epos.module.uam.parameter.model.Parameter"
+			fetch="join">
+		</many-to-one>
+
+		<property name="parameterDtlName" column="PARAMETER_DTL_NAME" type="string" />
+		<property name="parameterDtlDesc" column="PARAMETER_DTL_DESC" type="string" />
+
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+
+
+	</class>
+</hibernate-mapping>

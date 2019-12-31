@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formDiscountTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>
+	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />
+	
+	<div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					<p:inputText id="searchAll" readonly="#{discountSearchBean.disableSearchAll}" value="#{discountSearchBean.searchAll}" styleClass="Wid100" placeholder="#{msg.textSearch} #{msg.formDiscountTitle}"/>
+				</div>
+				<div class="Container30">
+					<p:commandButton icon="ui-icon-refresh" actionListener="#{discountSearchBean.clear}" update=":frm001"></p:commandButton>
+					<p:commandButton icon="ui-icon-search" actionListener="#{discountSearchBean.search}" update=":frm001:dataTableDiscount"></p:commandButton>
+					<p:commandButton icon="ui-icon-circle-arrow-s" oncomplete="PF('dialogSearch').show();" update=":frm001:dialogSearch"></p:commandButton>
+				</div>
+				<div class="Container30">
+				    
+				    <p:commandButton id="deleteBtn" value="#{msg.buttonDelete}" actionListener="#{discountBean.modeDelete}" 
+				            update="frm001:outputPanelSearch " disabled="#{fn:length(discountSearchBean.selectedDiscount) == 0}" styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>        
+				            
+				            
+				            
+				     <p:commandButton id="editBtn" value="#{msg.buttonEdit}"  actionListener="#{discountBean.modeEdit}" update=":frm001"
+				            disabled="#{fn:length(discountSearchBean.selectedDiscount) == 0 or fn:length(discountSearchBean.selectedDiscount)>1}" styleClass="Fright"/>
+				     <p:commandButton value="#{msg.buttonAdd}" actionListener="#{discountBean.modeAdd}" update=":frm001" styleClass="Fright"/>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	
+ 	<div class="Container100">
+ 		<div class="ContainerIndent">
+			<p:dataTable id="dataTableDiscount" value="#{discountSearchBean.pagingDiscount}"
+						selection="#{discountSearchBean.selectedDiscount}" 
+			        	var="data" lazy="true" editable="true" rowKey="#{data.discountId}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+						rows="#{discountSearchBean.paging}" paginator="true" rowIndexVar="index">
+			      
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/> 
+      				<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>        
+      				
+     			<p:column selectionMode="multiple" style="width:27px;text-align:center"/>  
+     			
+     			<p:column headerText="#{msg.formDiscountCompany}" rendered="#{discountSearchBean.adminMode == true}">
+					<h:outputText value="#{data.companyName}" />
+				</p:column>		    				    				    
+			
+				<p:column headerText="#{msg.formDiscountCode}" >
+					<h:outputText value="#{data.discountCode}" />
+				</p:column>
+				<p:column headerText="#{msg.formDiscountName}" >
+					<h:outputText value="#{data.discountName}" />
+				</p:column>			
+				<p:column headerText="#{msg.formDiscountValue}" >
+					<h:outputText value="#{data.discountValue}" />
+				</p:column>	
+				<p:column headerText="#{msg.formDiscountCategory}" >
+					<h:outputText value="#{data.discountCategoryName}" />
+				</p:column>
+				<p:column headerText="#{msg.formDiscountProvider}" >
+					<h:outputText value="#{data.discountProviderName}" />
+				</p:column>	
+				<p:column headerText="#{msg.formDiscountResume}" >
+					<h:outputText value="#{data.categoryResume}" />
+				</p:column>	
+
+			</p:dataTable>
+		</div>
+ 	</div>
+ 	
+	 
+	<p:dialog	widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center" styleClass="dialog-calender dialogClose"
+				width="560" header="#{msg.textSearchs} #{msg.formDiscountTitle}">
+				<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+		<p:outputPanel id="outputPanelDialog">
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountCompany}" rendered="#{discountInputBean.adminMode == true}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{discountSearchBean.discountVOSearchDialog.companyId}" rendered="#{discountInputBean.adminMode == true}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{discountSearchBean.companySelectItem}"/>
+					</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountCode}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{discountSearchBean.discountVOSearchDialog.discountCode}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountName}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{discountSearchBean.discountVOSearchDialog.discountName}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountCategory}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{discountSearchBean.discountVOSearchDialog.discountCategoryCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{discountSearchBean.discountCategorySelectItem}"/>
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountProvider}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{discountSearchBean.discountVOSearchDialog.discountProviderCode}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{discountSearchBean.discountProviderSelectItem}"/>
+						</p:selectOneMenu>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountCategory}"/>
+					</div>
+					<div class="Container70">
+						<p:inputText value="#{discountSearchBean.discountVOSearchDialog.categoryResume}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<div class="Container30">
+						<h:outputText value="#{msg.formDiscountActive}"/>
+					</div>
+					<div class="Container70">
+						<p:selectOneMenu value="#{discountSearchBean.discountVOSearchDialog.activeFlag}">
+							<f:selectItem itemValue="" itemLabel="#{msg.textChoose}"/>
+							<f:selectItems value="#{discountSearchBean.activeSelectItem}"/>
+						</p:selectOneMenu>	
+					</div>
+				</div>
+			</div>
+			
+			<div class="Container100">
+				<div class="EposContainerIndent">
+					<p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableDiscount :frm001:searchAll"
+						actionListener="#{discountSearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+					<p:commandButton value="#{msg.buttonClear}" actionListener="#{discountSearchBean.clearDialog}"
+						oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableDiscount :frm001:searchAll :frm001:dialogSearch"/>
+				</div>
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	
+</ui:composition>

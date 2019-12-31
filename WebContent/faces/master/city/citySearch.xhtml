@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    
+    <div class="Container100">
+		<div class="ContainerIndent">
+			<h:outputText value="#{msg.formCityTitle}" style="font-weight:bold;"/>
+		</div>
+	</div>	
+	<p:growl id="growlMessage" showDetail="false" showSummary="true" globalOnly="true" />
+    <p:messages id="messages" showDetail="true" showSummary="false" />	
+    <div class="Container100">
+		<div class="ContainerIndent">
+			<div class="Container100">
+				<div class="Container40">
+					 <p:inputText id="searchAll" value="#{citySearchBean.searchAll}" styleClass="WidPos" autocomplete="off" 
+					        readonly="#{citySearchBean.disableSearchAll}" placeholder="#{msg.textSearch} #{msg.formCityTitle}"/>
+				</div>
+				<div class="Container30">					
+					 <p:commandButton actionListener="#{citySearchBean.clear}" icon="ui-icon-refresh" update=":frm001"/>		
+					 <p:commandButton actionListener="#{citySearchBean.search}" icon="ui-icon-search" update=":frm001:dataTableCity"/>	 
+					 <p:commandButton oncomplete="PF('dialogSearch').show();" icon="ui-icon-circle-arrow-s" update=":frm001:dialogSearch"/>				
+				</div>
+				<div class="Container30">
+
+					<p:commandButton id="deleteBtn" value="#{msg.buttonDelete}"
+						actionListener="#{cityBean.modeDelete}"
+						disabled="#{fn:length(citySearchBean.selectedCities) == 0}"
+						update="frm001:outputPanelSearch :frm001:messages"
+						styleClass="Fright">
+						<p:confirm header="Confirmation"
+							message="#{msg.formDeleteMessage}"
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+
+					<p:commandButton id="editBtn" value="#{msg.buttonEdit}" styleClass="Fright"
+						    actionListener="#{cityBean.modeEdit}" update=":frm001" 
+						    disabled="#{fn:length(citySearchBean.selectedCities) == 0 or fn:length(citySearchBean.selectedCities)>1}"/>
+					 <p:commandButton value="#{msg.buttonAdd}" actionListener="#{cityBean.modeAdd}" 
+				            update=":frm001" styleClass="Fright"/>	
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="Container100">
+ 		<div class="ContainerIndent">
+		     <p:dataTable id="dataTableCity" value="#{citySearchBean.pagingCity}" var="data" lazy="true" editable="true" 
+					selection="#{citySearchBean.selectedCities}" rowKey="#{data.cityId}" 
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} 
+						{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				        rows="#{citySearchBean.paging}" paginator="true" rowIndexVar="index">
+				   
+				    <p:ajax event="rowSelectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>
+      				<p:ajax event="rowUnselectCheckbox" update=":frm001:deleteBtn :frm001:editBtn"/>  
+      			 	<p:ajax event="toggleSelect" update=":frm001:deleteBtn :frm001:editBtn"/>
+      			 	<p:ajax event="rowSelect" update=":frm001:deleteBtn :frm001:editBtn"/>     
+				   
+				    <p:column selectionMode="multiple" style="width:27px;text-align:center"/>
+				    
+					<p:column headerText="#{msg.formCityCode}">
+						<h:outputText value="#{data.cityCode}" style="center" />
+					</p:column>
+					
+					<p:column headerText="#{msg.formCityName}">
+						<h:outputText value="#{data.cityName}" />
+					</p:column>	
+					
+					<p:column headerText="#{msg.formCityProvince}">
+						<h:outputText value="#{data.provinceName}" />
+					</p:column>					
+			 </p:dataTable>
+		</div>
+	</div>
+	
+	<p:dialog widgetVar="dialogSearch" id="dialogSearch" modal="true" position="center"
+					width="500" header="#{msg.textSearchs} #{msg.formProvinceTitle}" styleClass="dialogClose">
+					<p:ajax event="close" oncomplete="$('.dialogClose').hide()"/>
+	   <p:outputPanel id="outputPanleDialog"> 
+	       <div class="Container100">				
+		        <div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+		                     <h:outputText value="#{msg.formCityCode}"/>
+		           		</div>
+					    <div class="Container70">
+		               		 <p:inputText value="#{citySearchBean.cityVOSearchDialog.cityCode}" autocomplete="off" styleClass="Wid90"/>
+		           		</div>
+					</div>
+				</div>	
+		        <div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+		                     <h:outputText value="#{msg.formCityName}"/>
+		           		</div>
+					    <div class="Container70">
+		               		 <p:inputText value="#{citySearchBean.cityVOSearchDialog.cityName}" autocomplete="off" styleClass="Wid90"/>
+		           		</div>
+					</div>
+				</div>				
+				<div class="Container100">
+					<div class="EposContainerIndent">
+						<div class="Container30">
+		                     <h:outputText value="#{msg.formCityProvince}"/>
+		           		</div>
+					    <div class="Container70">
+		               		 <p:selectOneMenu value="#{citySearchBean.cityVOSearchDialog.provinceId}">	
+									<f:selectItems value="#{citySearchBean.provinceSelect}"></f:selectItems>
+							 </p:selectOneMenu>
+		           		</div>
+					</div>
+				</div>
+				<div class="Container100">
+					<div class="EposContainerIndent">	
+		                 <p:commandButton value="#{msg.buttonSearch}" update=":frm001:dataTableCity :frm001:searchAll"
+		                        actionListener="#{citySearchBean.searchDialog}" oncomplete="PF('dialogSearch').hide()"/>
+		                 <p:commandButton value="#{msg.buttonClear}" actionListener="#{citySearchBean.clearDialog}"
+		                        oncomplete="PF('dialogSearch').show();" update=":frm001:dataTableCity :frm001:searchAll :frm001:dialogSearch"/>
+		            </div>
+		        </div> 
+		    </div>       
+	   </p:outputPanel>  
+	</p:dialog>		
+	
+</ui:composition>

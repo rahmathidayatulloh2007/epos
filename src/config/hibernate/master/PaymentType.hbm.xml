@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.epos.module.master.paymentType.model">
+	<class name="PaymentType" table="POS_PAYMENT_TYPE">
+	
+		<id name="paytypeId" column="PAYTYPE_ID" type="long">
+			<generator class="native">
+				<param name="sequence">PAYMENT_TYPE_SEQ</param>
+			</generator>
+		</id>
+		
+		<property name="paytypeCode" column="PAYTYPE_CODE" type="string" />
+		
+		<many-to-one name="company" column="COMPANY_ID"
+			class="com.wo.epos.module.uam.company.model.Company" fetch="join">
+		</many-to-one>      
+		
+		<many-to-one name="paymentMethod" column="PAYMENT_METHOD"
+			class="com.wo.epos.module.uam.parameter.model.ParameterDtl" fetch="join">
+		</many-to-one>
+		
+		<property name="paytypeName" column="PAYTYPE_NAME" type="string" />
+        <property name="paytypeValue" column="PAYTYPE_VALUE" type="long" />
+       
+		<property name="activeFlag" column="ACTIVE_FLAG" type="string" />
+		<property name="createOn" column="CREATE_ON" type="timestamp" />
+		<property name="createBy" column="CREATE_BY" type="string" />
+		<property name="updateOn" column="UPDATE_ON" type="timestamp" />
+		<property name="updateBy" column="UPDATE_BY" type="string" />
+			
+	</class>
+</hibernate-mapping>
